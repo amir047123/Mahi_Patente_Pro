@@ -15,6 +15,8 @@ export default {
       colors: {
         primary: "#433CEB",
         secondary: "#CB2A8A",
+        primaryText: "#333333",
+        secondaryText: "#666666",
       },
       backgroundImage: {
         gradient: "linear-gradient(94deg, #FF1493 -24.05%, #1746FF 127.9%)",

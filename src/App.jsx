@@ -1,26 +1,20 @@
-
-import './App.css'
-import Hero from './Components/Home/Hero';
-import MobileApp from './Components/Home/MobileApp';
-import SuccessStory from './Components/Home/SuccessStory';
-import WhatYouWillLearn from './Components/Home/WhatYouWillLearn';
-import WhyChoseUs from './Components/Home/WhyChoseUs';
-import Footer from './Shared/Footer/Footer';
-import Navbar from './Shared/Navbar/Navbar';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Home from "./Pages/Home";
+import PublicRoutes from "./Routes/PublicRoutes";
 
 function App() {
-
   return (
     <div className="">
-     <Navbar/>
-     <Hero/>
-     <WhyChoseUs/>
-     <WhatYouWillLearn/>
-     <MobileApp/>
-     <SuccessStory/>
-     <Footer/>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {PublicRoutes.map(({ path, Component }, index) => (
+          <Route key={index} path={path} element={<Component />} />
+        ))}
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
     </div>
   );
 }
 
-export default App
+export default App;

@@ -6,11 +6,11 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const links = [
-    { href: "#features", label: "Home" },
-    { href: "#environmental", label: "Courses" },
-    { href: "#specifications", label: "Pricing" },
-    { href: "#charging", label: "About Us" },
-    { href: "#testimonials", label: "Contact" },
+    { href: "/", label: "Home" },
+    { href: "/courses", label: "Courses" },
+    { href: "/pricing", label: "Pricing" },
+    { href: "/about-us", label: "About Us" },
+    { href: "/Contact", label: "Contact" },
   ];
 
   return (
@@ -42,13 +42,13 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center justify-center space-x-8">
               {links.map((link) => (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
+                  to={link.href}
                   className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
 
