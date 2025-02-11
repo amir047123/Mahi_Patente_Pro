@@ -87,11 +87,11 @@ function Heading5({ children, variant = "bold", className }) {
   );
 }
 
-function Heading6({ children, variant = "bold", className }) {
+function Heading6({ children, variant = "semibold", className }) {
   return (
     <h6
       className={cn(
-        "text-[1.25rem]", //20px
+        "xl:text-[18px] text-[16px]", //20px
         variant === "bold" && "font-bold",
         variant === "semibold" && "font-semibold",
         variant === "medium" && "font-medium",

@@ -1,13 +1,14 @@
 import CourseCard from "@/Components/Courses/CourseCard";
 import CourseFilter from "@/Components/Courses/CourseFilter";
 import Typography from "@/Components/Typography";
+import Footer from "@/Shared/Footer/Footer";
 import Navbar from "@/Shared/Navbar/Navbar";
 
 const Courses = () => {
   return (
     <div>
       <Navbar />
-      <div className="max-w-screen-max_screen mx-auto xl:px-0 lg:px-8 md:px-6 px-4 md:pt-28 pt-20">
+      <div className="max-w-screen-max_screen mx-auto xl:px-0 lg:px-8 md:px-6 px-4 pt-28  pb-20">
         {/* Header Section */}
         <div className="text-center mb-12">
           <Typography.Heading2 className="">
@@ -32,7 +33,15 @@ const Courses = () => {
           <CourseCard />
           <CourseCard />
         </div>
+
+        <button className="bg-gradient p-[2px] rounded-full mx-auto block mt-14">
+          <div className="bg-white px-10 py-2 rounded-full">
+            <span className="bg-gradient text-transparent bg-clip-text font-medium">Load More</span>
+          </div>
+        </button>
       </div>
+
+      <Footer />
     </div>
   );
 };
