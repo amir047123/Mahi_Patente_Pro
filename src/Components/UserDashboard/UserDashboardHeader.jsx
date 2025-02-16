@@ -5,7 +5,7 @@ import demoUser from '@/assets/UserDashboard/demoUser.svg'
 import { ChevronDown } from "lucide-react";
 const UserDashboardHeader = () => {
     return (
-      <header className=" w-full border-b ">
+      <header className=" w-full border-b bg-white">
         <div className="md:h-[71px] h-16 flex  items-center max-w-screen-max_screen mx-auto px-5">
           <SidebarTrigger className="block md:hidden" />
 

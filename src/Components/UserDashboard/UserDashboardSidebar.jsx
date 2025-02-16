@@ -1,9 +1,12 @@
-import { Calendar,  Inbox, LayoutDashboard, Search, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  List,
+  MessageCircleQuestion,
+} from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -11,6 +14,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
+import { IoSettingsOutline } from "react-icons/io5";
+import { MdOutlineLogout } from "react-icons/md";
 
 // Menu items.
 const items = [
@@ -20,25 +25,16 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Theory",
+    url: "/user-dashboard/theory",
+    icon: List,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Quiz",
+    url: "/user-dashboard/quiz",
+    icon: MessageCircleQuestion,
   },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  
 ];
 
 export function UserDashboardSidebar() {
@@ -83,24 +79,24 @@ export function UserDashboardSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-        <a
-          href="#"
-          className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
+        <SidebarMenuItem
+          className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary"
+          key="Settings"
         >
-          <img
-            alt=""
-            src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            className="size-10 rounded-full object-cover"
-          />
-
-          <div>
-            <p className="text-xs">
-              <strong className="block font-medium">Eric Frusciante</strong>
-
-              <span> eric@frusciante.com </span>
-            </p>
-          </div>
-        </a>
+          <Link className="flex items-center gap-2" to="settings">
+            <IoSettingsOutline className="" />
+            <span className="text-[16px] ml-1.5 font-medium ">Settings</span>
+          </Link>
+        </SidebarMenuItem>
+        <SidebarMenuItem
+          className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary"
+          key="Settings"
+        >
+          <Link className="flex items-center gap-2" to="settings">
+            <MdOutlineLogout />
+            <span className="text-[16px] ml-1.5 font-medium ">Logout</span>
+          </Link>
+        </SidebarMenuItem>
       </div>
     </Sidebar>
   );
