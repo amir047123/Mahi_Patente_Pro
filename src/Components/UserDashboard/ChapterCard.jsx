@@ -1,8 +1,12 @@
 import chapterImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import Typography from '../Typography';
+import { Link } from "react-router-dom";
 const ChapterCard = () => {
     return (
-      <div className="bg-white p-4 flex  gap-4 rounded-lg sm:max-w-sm">
+      <Link
+        to={`/user-dashboard/theory/1`}
+        className="bg-white p-4 flex  gap-4 rounded-lg sm:max-w-sm"
+      >
         <img
           className="max-h-[162px] max-w-[30%] rounded-xl"
           src={chapterImg}
@@ -30,7 +34,7 @@ const ChapterCard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     );
 };
 

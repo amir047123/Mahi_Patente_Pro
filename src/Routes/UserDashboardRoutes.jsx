@@ -1,4 +1,7 @@
+import UserDashboardChapterDetails from "@/Pages/UserDashboard/UserDashboardChapterDetails";
 import UserDashboardIndex from "@/Pages/UserDashboard/UserDashboardIndex";
+import UserDashboardQuizLayout from "@/Pages/UserDashboard/UserDashboardQuizLayout";
+import UserDashboardSubjectDetails from "@/Pages/UserDashboard/UserDashboardSubjectDetails";
 import UserDashboardTheory from "@/Pages/UserDashboard/UserDashboardTheory";
 
 
@@ -6,6 +9,9 @@ const UserDashboardRoutes = [
   { path: "", Component: UserDashboardIndex },
   { path: "overview", Component: UserDashboardIndex },
   { path: "theory", Component: UserDashboardTheory },
+  { path: "theory/:id", Component: UserDashboardChapterDetails },
+  { path: "theory/:id/:id", Component: UserDashboardSubjectDetails },
+  { path: "quiz", Component: UserDashboardQuizLayout },
 ];
 
 export default UserDashboardRoutes;

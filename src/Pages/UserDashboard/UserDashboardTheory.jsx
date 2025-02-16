@@ -1,23 +1,27 @@
 import ChapterCard from "@/Components/UserDashboard/ChapterCard";
+import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+
 
 const UserDashboardTheory = () => {
+  
     return (
+      <>
+        <DashboardBreadcrumb items={[{ name: "Theory", path: "theory" }]} />
         <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5">
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-            <ChapterCard/>
-          
-           
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
+          <ChapterCard />
         </div>
+      </>
     );
 };
 

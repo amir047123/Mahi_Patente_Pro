@@ -13,7 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 
@@ -37,7 +37,12 @@ const items = [
   
 ];
 
+
+
 export function UserDashboardSidebar() {
+    const { pathname } = useLocation();
+    const currentPath = pathname.split("/")[2];
+
   return (
     <Sidebar>
       <SidebarContent className="bg-white">
@@ -63,7 +68,10 @@ export function UserDashboardSidebar() {
             <SidebarMenu className="space-y-1">
               {items.map((item) => (
                 <SidebarMenuItem
-                  className="hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary"
+                  className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
+                    (currentPath === item.url.split("/")[2]) &&
+                    "text-secondary bg-[#EBF2FB] "
+                  }`}
                   key={item.title}
                 >
                   <Link className="flex items-center gap-2" to={item.url}>
