@@ -5,7 +5,7 @@ import { BsPerson } from "react-icons/bs";
 import Typography from "../Typography";
 import { CiKeyboard, CiLock } from "react-icons/ci";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "../ui/checkbox";
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);

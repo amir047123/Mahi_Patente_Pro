@@ -1,8 +1,4 @@
-import {
-  LayoutDashboard,
-  List,
-  MessageCircleQuestion,
-} from "lucide-react";
+import { LayoutDashboard, List, MessageCircleQuestion } from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
   Sidebar,
@@ -12,7 +8,7 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/Components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
@@ -34,14 +30,11 @@ const items = [
     url: "/user-dashboard/quiz",
     icon: MessageCircleQuestion,
   },
-  
 ];
 
-
-
 export function UserDashboardSidebar() {
-    const { pathname } = useLocation();
-    const currentPath = pathname.split("/")[2];
+  const { pathname } = useLocation();
+  const currentPath = pathname.split("/")[2];
 
   return (
     <Sidebar>
@@ -69,7 +62,7 @@ export function UserDashboardSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem
                   className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
-                    (currentPath === item.url.split("/")[2]) &&
+                    currentPath === item.url.split("/")[2] &&
                     "text-secondary bg-[#EBF2FB] "
                   }`}
                   key={item.title}

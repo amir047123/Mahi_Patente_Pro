@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/Components/ui/sidebar";
 import { UserDashboardSidebar } from "@/Components/UserDashboard/UserDashboardSidebar";
 
 export default function UserDashboardLayout({ children }) {
