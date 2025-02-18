@@ -1,6 +1,6 @@
 import bg from "../../assets/Home/Hero/hero_bg.svg";
 import img from "../../assets/Home/Hero/hero-img.svg";
-import Typography from "../Typography";
+import Typography from "@/Components/Typography";
 
 const Hero = () => {
   return (

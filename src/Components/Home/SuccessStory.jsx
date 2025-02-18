@@ -1,6 +1,6 @@
-import Typography from "../Typography";
+import Typography from "@/Components/Typography";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import demoImg from '@/assets/Home/SuccessStudents/demo-user.svg'
+import demoImg from "@/assets/Home/SuccessStudents/demo-user.svg";
 
 const SuccessStory = () => {
   return (
@@ -8,7 +8,7 @@ const SuccessStory = () => {
       {/* Header Section */}
       <div className="text-center mb-12">
         <Typography.Heading2 className="">
-          Success Stories from {" "}
+          Success Stories from{" "}
           <span className="bg-gradient text-transparent bg-clip-text w-fit">
             Our Students
           </span>

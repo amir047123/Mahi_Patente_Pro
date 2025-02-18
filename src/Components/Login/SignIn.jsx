@@ -1,5 +1,5 @@
 import loginImg from "@/assets/Login/login_img.svg";
-import Typography from "../Typography";
+import Typography from "@/Components/Typography";
 import SignInForm from "./SignInForm";
 
 const SignIn = () => {

@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 const DashboardBreadcrumb = ({ items }) => {
   return (
@@ -28,7 +29,7 @@ const DashboardBreadcrumb = ({ items }) => {
         </li>
 
         {items?.map((item) => (
-          <>
+          <Fragment key={item?.name}>
             <li className="rtl:rotate-180">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +52,7 @@ const DashboardBreadcrumb = ({ items }) => {
                 {item?.name}
               </Link>
             </li>
-          </>
+          </Fragment>
         ))}
       </ol>
     </nav>

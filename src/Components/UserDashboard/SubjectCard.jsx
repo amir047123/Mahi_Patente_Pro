@@ -1,5 +1,5 @@
 import chapterImg from "@/assets/UserDashboard/subject-demo-img.svg";
-import Typography from "../Typography";
+import Typography from "@/Components/Typography";
 import { Link } from "react-router-dom";
 const SubjectCard = () => {
   return (

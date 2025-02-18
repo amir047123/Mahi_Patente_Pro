@@ -1,163 +1,180 @@
-import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import {
-  Clock,
-  Volume2,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  AlignJustify,
-} from "lucide-react";
-import { useState } from "react";
-import demoImg from '@/assets/UserDashboard/quiz-img.svg'
 import Typography from "@/Components/Typography";
-import { CiCircleCheck } from "react-icons/ci";
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import FastManiaCategoryCard from "@/Components/UserDashboard/Quiz/FastManiaCategoryCard";
+import MinisterialQuizCard from "@/Components/UserDashboard/Quiz/MinisterialQuizCard";
+import * as Tabs from "@radix-ui/react-tabs";
+import { ListChecks, TimerReset } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
+import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
+import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/MinisterialCategoryCard";
 
 const UserDashboardQuizLayout = () => {
-    const [range,setRange]=useState("1-10");
-    const [position,setPosition]=useState(1);
+  const [tab, setTab] = useState("fastMania");
+  const activeTab =
+    "data-[state=active]:text-primary data-[state=active]:!font-semibold data-[state=active]:border-b-4 data-[state=active]:border-primary";
+
+  const fastManiaCardsData = [
+    {
+      id: 1,
+      title: "Guess the Signal",
+      description: "Guess the Signal",
+      icon: "Signpost",
+      time: "2 min",
+      bgColor: "bg-red-500/50",
+      timeBGColor: "bg-red-400",
+    },
+    {
+      id: 2,
+      title: "Choose 4 Signal",
+      description: "Choose 4 Signal",
+      icon: "Grid2x2Check",
+      time: "2 min",
+      bgColor: "bg-green-500/50",
+      timeBGColor: "bg-green-400",
+    },
+  ];
+
+  const ministerialCardData = [
+    {
+      id: 1,
+      title: "Road, vehicles, driver duties",
+      description: "Road, vehicles, driver duties",
+      icon: demoImg,
+      progress: 50,
+      total: 50,
+    },
+    {
+      id: 2,
+      title: "Danger signs",
+      description: "Danger signs",
+      icon: demoImg2,
+      progress: 40,
+      total: 50,
+    },
+    {
+      id: 3,
+      title: "Priority signs",
+      description: "Priority signs",
+      icon: demoImg,
+      progress: 50,
+      total: 50,
+    },
+    {
+      id: 4,
+      title: "Road, vehicles, driver duties",
+      description: "Road, vehicles, driver duties",
+      icon: demoImg,
+      progress: 55,
+      total: 55,
+    },
+    {
+      id: 5,
+      title: "Danger signs",
+      description: "Danger signs",
+      icon: demoImg2,
+      progress: 50,
+      total: 50,
+    },
+    {
+      id: 6,
+      title: "Priority signs",
+      description: "Priority signs",
+      icon: demoImg,
+      progress: 50,
+      total: 60,
+    },
+  ];
+
+  const ministerialCategoryData = [
+    {
+      id: 1,
+      title: "Official Quiz",
+      description: "Simulate a Ministerial Quiz as if you were taking an exam.",
+      slug: "official-quiz",
+      icon: demoImg,
+      time: "50 min",
+      questions: 50,
+      bgColor: "#FCFFD9",
+    },
+    {
+      id: 2,
+      title: "Error Review",
+      description: "Make a quiz with all the mistakes you made.",
+      slug: "error-review",
+      icon: demoImg2,
+      time: "50 min",
+      questions: 50,
+      bgColor: "#F7ECDF",
+    },
+  ];
+
   return (
     <>
-      <DashboardBreadcrumb items={[{ name: "Quiz", path: "quiz" }]} />
-      <div className="">
-        <div className="grid grid-cols-3">
-          <button
-            onClick={() => setRange("1-10")}
-            className={`text-secondaryText p-3 rounded-t-lg ${
-              range === "1-10" ? "bg-[#E5E7EB] !text-secondary" : ""
-            }`}
+      <Tabs.Root defaultValue="fastMania">
+        <Tabs.List
+          aria-label="quiz tabs"
+          className="flex items-center gap-10 mb-4 border-b border-slate-300"
+        >
+          <Tabs.Trigger
+            value="fastMania"
+            className={`flex items-center gap-2 py-2 ${activeTab}`}
+            onClick={() => setTab("fastMania")}
           >
-            <div className="bg-white rounded-lg px-10 py-2.5 font-semibold">
-              Question 1 to 10
-            </div>
-          </button>
-          <button
-            onClick={() => setRange("11-20")}
-            className={`text-secondaryText p-3 rounded-t-lg ${
-              range === "11-20" ? "bg-[#E5E7EB] !text-secondary" : ""
-            }`}
-          >
-            <div className="bg-white rounded-lg px-10 py-2.5 font-semibold">
-              Question 11 to 20
-            </div>
-          </button>
-          <button
-            onClick={() => setRange("21-30")}
-            className={`text-secondaryText p-3 rounded-t-lg ${
-              range === "21-30" ? "bg-[#E5E7EB] !text-secondary" : ""
-            }`}
-          >
-            <div className="bg-white rounded-lg px-10 py-2.5 font-semibold">
-              Question 21 to 30
-            </div>
-          </button>
-        </div>
-
-        {/* Question number buttons */}
-        <div className="col-span-1 md:col-span-3 grid grid-cols-5 md:grid-cols-10 gap-2 bg-[#E5E7EB] p-3 rounded-r-lg rounded-bl-lg">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-            <button
-              onClick={() => setPosition(num)}
-              key={num}
-              className={`rounded-lg bg-white py-2 font-semibold text-2xl shadow-sm text-center 
-                ${num === position ? " text-[#CB2A8A]" : " text-[#9CA3AF]"}`}
+            <TimerReset size={20} />
+            <Typography.Base
+              variant={tab === "fastMania" ? "semibold" : "regular"}
             >
-              {num}
-            </button>
-          ))}
-        </div>
-
-        <div className="col-span-1 md:col-span-3 flex items-center space-x-1 overflow-x-auto bg-[#E5E7EB] p-3 mt-3 rounded-md">
-          {[...Array(30)].map((_, i) => {
-            const num = i + 1;
-
-            return (
-              <div
-                key={num}
-                className={`text-[#9CA3AF] bg-white rounded-sm w-[29px] h-[23px] flex items-center justify-center text-[12px] font-medium`}
-              >
-                {num}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="grid grid-cols-3 gap-5 mt-5">
-          <div className="col-span-1 bg-white rounded-lg overflow-hidden">
-            <img className="mx-auto" src={demoImg} alt="" />
+              Fast Mania
+            </Typography.Base>
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            value="ministrial"
+            className={`flex items-center gap-2 py-2 font-normal ${activeTab}`}
+            onClick={() => setTab("ministrial")}
+          >
+            <ListChecks size={20} />
+            <Typography.Base
+              variant={tab === "ministrial" ? "semibold" : "regular"}
+            >
+              Ministrial
+            </Typography.Base>
+          </Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="fastMania">
+          <div className="flex items-center gap-4 mb-10">
+            {fastManiaCardsData?.map((item, index) => (
+              <FastManiaCategoryCard key={index} item={item} />
+            ))}
           </div>
-          <div className="col-span-2 bg-white rounded-lg flex flex-col justify-between pb-5">
-            <div>
-              <div className="flex items-center justify-between p-4 border-b">
-                <div className="flex items-center gap-5">
-                  <Typography.Body
-                    variant="medium"
-                    className="text-secondaryText"
-                  >
-                    Question No.
-                  </Typography.Body>
-                  <button className="px-3 py-2 rounded-md border text-secondary">
-                    3
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-5">
-                  <Typography.Body
-                    variant="medium"
-                    className="text-secondaryText"
-                  >
-                    Remaining Time:
-                  </Typography.Body>
-                  <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
-                    <Clock size={20} /> 32 : 31
-                  </button>
-                </div>
-              </div>
-
-              <div className="p-4">
-                <Typography.Body>
-                  The road can be divided into carriageways. The sign shown may
-                  be associated with a maximum speed limit sign
-                </Typography.Body>
-              </div>
-            </div>
-
-            <div className="w-full flex items-center gap-5 px-4">
-              <button className="w-full  flex items-center justify-center py-2.5 rounded-full bg-[#E3FAFF] text-green-500 font-medium gap-2 border">
-                <CiCircleCheck className="text-xl" /> True
-              </button>
-              <button className="w-full flex items-center justify-center py-2.5 rounded-full bg-[#E3FAFF] text-red-500 font-medium gap-2 border">
-                <IoIosCloseCircleOutline className="text-xl" /> False
-              </button>
+          <div>
+            <Typography.Heading4 variant="semibold" className="mt-4">
+              Feed Quiz Question
+            </Typography.Heading4>
+          </div>
+        </Tabs.Content>
+        <Tabs.Content value="ministrial">
+          <div className="flex items-center gap-4 mb-10">
+            {ministerialCategoryData?.map((item, index) => (
+              <Link key={index} to={`/user-dashboard/quiz/${item?.slug}`}>
+                <MinisterialCategoryCard item={item} />
+              </Link>
+            ))}
+          </div>
+          <div>
+            <Typography.Heading4 variant="semibold" className="mt-4">
+              Quiz by chapter of the theory
+            </Typography.Heading4>
+            <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5 mt-5">
+              {ministerialCardData?.map((item, index) => (
+                <Link key={index} to={`/user-dashboard/theory/1`}>
+                  <MinisterialQuizCard item={item} />
+                </Link>
+              ))}
             </div>
           </div>
-        </div>
-
-        {/* prev and next btn */}
-        <div className="col-span-1 md:col-span-3 flex justify-between mt-5">
-          <div className="flex space-x-2">
-            <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2">
-              <IoIosCloseCircleOutline className="text-xl" />
-              Close
-            </button>
-            <button className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium">
-              <AlignJustify className="w-4 h-4 mr-1" />
-              Summary
-            </button>
-          </div>
-
-          <div className="flex space-x-2">
-            <button className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 font-medium">
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Prev
-            </button>
-            <button className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 font-medium">
-              Next
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </button>
-          </div>
-        </div>
-      </div>
+        </Tabs.Content>
+      </Tabs.Root>
     </>
   );
 };

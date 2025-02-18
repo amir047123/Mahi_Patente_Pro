@@ -91,9 +91,9 @@ export function UserDashboardSidebar() {
         </SidebarMenuItem>
         <SidebarMenuItem
           className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary"
-          key="Settings"
+          key="Logout"
         >
-          <Link className="flex items-center gap-2" to="settings">
+          <Link className="flex items-center gap-2" to="logout">
             <MdOutlineLogout />
             <span className="text-[16px] ml-1.5 font-medium ">Logout</span>
           </Link>

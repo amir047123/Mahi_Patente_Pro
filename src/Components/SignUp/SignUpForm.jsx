@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 // import CustomIcon from "../../../Components/Ui/CustomIcon";
 import { BsPerson } from "react-icons/bs";
-import Typography from "../Typography";
+import Typography from "@/Components/Typography";
 import { CiKeyboard, CiLock } from "react-icons/ci";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { IoMdPhonePortrait } from "react-icons/io";

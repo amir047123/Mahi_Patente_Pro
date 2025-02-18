@@ -1,10 +1,23 @@
 import Typography from "@/Components/Typography";
+import { CheckIcon } from "lucide-react";
 
-const ChapterCard = ({ item }) => {
+const MinisterialQuizCard = ({ item }) => {
   const progressWidth = `${(item?.progress * 100) / item?.total}%`;
+  const completed = item?.progress === item?.total;
 
   return (
-    <div className="bg-white flex  gap-4 rounded-lg sm:max-w-sm">
+    <div className="bg-white flex gap-4 rounded-lg sm:max-w-sm relative">
+      <div className="flex items-center text-white absolute top-4 right-4">
+        <div
+          className={`rounded-full size-6 ${
+            completed
+              ? "bg-blue-500 text-white p-1"
+              : "border-2 border-slate-500"
+          }`}
+        >
+          {completed && <CheckIcon size={16} />}
+        </div>
+      </div>
       <img
         className="max-h-[162px] max-w-[30%] rounded-xl"
         src={item?.icon}
@@ -39,4 +52,4 @@ const ChapterCard = ({ item }) => {
   );
 };
 
-export default ChapterCard;
+export default MinisterialQuizCard;

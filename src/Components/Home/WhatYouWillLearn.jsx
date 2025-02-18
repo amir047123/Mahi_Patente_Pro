@@ -1,12 +1,10 @@
-import Typography from "../Typography";
-
+import Typography from "@/Components/Typography";
 import roadSign from "../../assets/Home/WhatYouWillLearn/road-sign.svg";
 import mock from "../../assets/Home/WhatYouWillLearn/mock-exam.svg";
 import traffic from "../../assets/Home/WhatYouWillLearn/trafic-roules.svg";
 import tips from "../../assets/Home/WhatYouWillLearn/driving-tips.svg";
 import right from "../../assets/Home/WhatYouWillLearn/right-ind.svg";
 import left from "../../assets/Home/WhatYouWillLearn/left-ind.svg";
-
 
 const WhatYouWillLearn = () => {
   return (
