@@ -52,7 +52,7 @@ const SignInForm = () => {
               <input
                 className="w-full bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
                 id="number"
-                type="number"
+                type="text"
                 placeholder="Enter Your mobile number"
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
