@@ -32,43 +32,26 @@ export function useCrudOperations(endpoint) {
       queryKey: [
         endpoint,
         filters?.currentPage,
-        filters?.endDate,
         filters?.itemPerPage,
-        filters?.method,
         filters?.searchText,
-        filters?.startDate,
         filters?.status,
-        filters?.type,
-        filters?.userType,
         filters?.email,
         filters?.userId,
-        filters?.statusOrder,
-        filters?.timeFrame,
+        filters?.withSubCategories,
       ],
       queryFn: async () => {
         const queryParams = new URLSearchParams();
         if (filters?.currentPage)
           queryParams.append("page", filters?.currentPage.toString());
-        if (filters?.endDate)
-          queryParams.append("endDate", filters?.endDate.toString());
         if (filters?.itemPerPage)
           queryParams.append("limit", filters?.itemPerPage.toString());
-        if (filters?.method)
-          queryParams.append("method", filters?.method.toString());
         if (filters?.searchText)
           queryParams.append("search", filters?.searchText);
-        if (filters?.startDate)
-          queryParams.append("startDate", filters?.startDate);
         if (filters?.status) queryParams.append("status", filters?.status);
-        if (filters?.type) queryParams.append("type", filters?.type);
-        if (filters?.userType)
-          queryParams.append("userType", filters?.userType);
         if (filters?.email) queryParams.append("email", filters?.email);
         if (filters?.userId) queryParams.append("userId", filters?.userId);
-        if (filters?.statusOrder)
-          queryParams.append("statusOrder", filters?.statusOrder);
-        if (filters?.timeFrame)
-          queryParams.append("timeFrame", filters?.timeFrame);
+        if (filters?.withSubCategories)
+          queryParams.append("withSubCategories", filters?.withSubCategories);
 
         const response = await fetch(
           `${baseURL}/${endpoint}?${queryParams.toString()}`,

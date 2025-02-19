@@ -3,11 +3,13 @@ import FastManiaCategoryCard from "@/Components/UserDashboard/Quiz/FastManiaCate
 import MinisterialQuizCard from "@/Components/UserDashboard/Quiz/MinisterialQuizCard";
 import * as Tabs from "@radix-ui/react-tabs";
 import { ListChecks, TimerReset } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/MinisterialCategoryCard";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import toast from "react-hot-toast";
 
 const UserDashboardQuizLayout = () => {
   const [tab, setTab] = useState("fastMania");
@@ -108,6 +110,35 @@ const UserDashboardQuizLayout = () => {
       bgColor: "#F7ECDF",
     },
   ];
+  const [filters, setFilters] = useState({
+    totalPages: 1,
+    currentPage: 1,
+    itemPerPage: 10,
+    searchText: "",
+    withSubCategories: true,
+  });
+  const { useFetchEntities } = useCrudOperations("quiz-category/all");
+
+  const {
+    data: response,
+    isSuccess,
+    error,
+    isError,
+    isLoading,
+  } = useFetchEntities(filters);
+
+  useEffect(() => {
+    if (isSuccess && response?.data?.totalPages !== 0) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        totalPages: response?.data?.totalPages,
+      }));
+    }
+  }, [isSuccess, response, filters?.currentPage]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
 
   return (
     <>
@@ -155,8 +186,8 @@ const UserDashboardQuizLayout = () => {
         </Tabs.Content>
         <Tabs.Content value="ministrial">
           <div className="flex items-center gap-4 mb-10">
-            {ministerialCategoryData?.map((item, index) => (
-              <Link key={index} to={`/user-dashboard/quiz/${item?.slug}`}>
+            {response?.data?.[0]?.subcategories?.map((item, index) => (
+              <Link key={index} to={`/user-dashboard/quiz/${item?._id}`}>
                 <MinisterialCategoryCard item={item} />
               </Link>
             ))}
