@@ -5,6 +5,7 @@ import demoImg from "@/assets/UserDashboard/quiz-img.svg";
 import Typography from "@/Components/Typography";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const OfficialQuiz = () => {
   const [range, setRange] = useState("1-10");
@@ -138,10 +139,10 @@ const OfficialQuiz = () => {
               <IoIosCloseCircleOutline className="text-xl" />
               Close
             </button>
-            <button className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium">
+            <Link to="/user-dashboard/quiz/summary" className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium">
               <AlignJustify className="w-4 h-4 mr-1" />
               Summary
-            </button>
+            </Link>
           </div>
 
           <div className="flex space-x-2">
