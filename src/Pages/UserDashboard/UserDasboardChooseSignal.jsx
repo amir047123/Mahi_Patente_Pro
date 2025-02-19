@@ -17,7 +17,7 @@ const UserDasboardChooseSignal = () => {
       <DashboardBreadcrumb
         items={[
           { name: "Quiz", path: "quiz" },
-          { name: "choose-4-to-1-signal", path: "Choose 4 to 1 Signal" },
+          { name: "Choose 4 to 1 Signal", path: "quiz/choose-4-to-1-signal" },
         ]}
       />
 

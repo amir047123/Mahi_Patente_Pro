@@ -188,8 +188,8 @@ const UserDashboardQuizLayout = () => {
         </Tabs.Content>
         <Tabs.Content value="ministrial">
           <div className="flex items-center gap-4 mb-10">
-            {response?.data?.[0]?.subcategories?.map((item, index) => (
-              <Link key={index} to={`/user-dashboard/quiz/${item?._id}`}>
+            {ministerialCategoryData?.map((item, index) => (
+              <Link key={index} to={`/user-dashboard/quiz/${item?.slug}`}>
                 <MinisterialCategoryCard item={item} />
               </Link>
             ))}
