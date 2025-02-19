@@ -1,9 +1,10 @@
 import Typography from "@/Components/Typography";
 import LucideIcon from "@/Components/ui/icon";
+import { Link } from "react-router-dom";
 
 export default function FastManiaCategoryCard({ item }) {
   return (
-    <button
+    <Link to={`/user-dashboard/quiz/${item?.path}`}
       className={`p-4 rounded-2xl text-left max-w-[150px] ${item?.bgColor}`}
     >
       <LucideIcon name={item?.icon} size={32} className="text-[#333333]/50" />
@@ -16,6 +17,6 @@ export default function FastManiaCategoryCard({ item }) {
         <LucideIcon name={item?.icon} size={20} />
         <Typography.Base variant="regular">{item?.time}</Typography.Base>
       </div>
-    </button>
+    </Link>
   );
 }

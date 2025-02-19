@@ -87,27 +87,27 @@ const OfficialQuiz = () => {
           </div>
           <div className="col-span-2 bg-white rounded-lg flex flex-col justify-between pb-5">
             <div>
-              <div className="flex items-center justify-between p-4 border-b">
-                <div className="flex items-center gap-5">
+              <div className="flex items-center justify-between md:p-4 p-2 border-b">
+                <div className="flex items-center md:gap-5 gap-2">
                   <Typography.Body
                     variant="medium"
-                    className="text-secondaryText"
+                    className="text-secondaryText whitespace-nowrap"
                   >
-                    Question No.
+                    <span className="hidden md:inline-block">Question</span> No.
                   </Typography.Body>
-                  <button className="px-3 py-2 rounded-md border text-secondary">
+                  <button className="px-3 py-2 font-semibold rounded-md border text-secondary">
                     3
                   </button>
                 </div>
 
-                <div className="flex items-center gap-5">
+                <div className="flex items-center md:gap-5 gap-2">
                   <Typography.Body
                     variant="medium"
-                    className="text-secondaryText"
+                    className="text-secondaryText whitespace-nowrap"
                   >
                     Remaining Time:
                   </Typography.Body>
-                  <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
+                  <button className="px-3 font-semibold whitespace-nowrap md:text-xl text-base py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
                     <Clock size={20} /> 32 : 31
                   </button>
                 </div>
@@ -139,7 +139,10 @@ const OfficialQuiz = () => {
               <IoIosCloseCircleOutline className="text-xl" />
               Close
             </button>
-            <Link to="/user-dashboard/quiz/summary" className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium">
+            <Link
+              to="/user-dashboard/quiz/summary"
+              className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium"
+            >
               <AlignJustify className="w-4 h-4 mr-1" />
               Summary
             </Link>

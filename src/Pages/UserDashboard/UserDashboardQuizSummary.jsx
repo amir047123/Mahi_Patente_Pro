@@ -4,6 +4,7 @@ import { Check, CircleHelp, Clock } from "lucide-react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import quizImg from '@/assets/UserDashboard/quiz-img.svg'
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 
 const UserDashboardQuizSummary = () => {
@@ -21,7 +22,9 @@ const UserDashboardQuizSummary = () => {
             <Typography.Heading4 className="text-secondaryText ">
               Summary
             </Typography.Heading4>
-            <IoCloseCircleOutline className="text-red-600 text-2xl" />
+            <Link to="/user-dashboard/quiz">
+              <IoCloseCircleOutline className="text-red-600 text-2xl" />
+            </Link>
           </div>
 
           <div className="w-full overflow-x-auto my-5 ">
@@ -33,7 +36,9 @@ const UserDashboardQuizSummary = () => {
                     <Typography.Body>Image</Typography.Body>
                   </th>
                   <th className="p-4 border border-gray-300 text-left">
-                    <Typography.Body className="whitespace-nowrap">Question Text</Typography.Body>
+                    <Typography.Body className="whitespace-nowrap">
+                      Question Text
+                    </Typography.Body>
                   </th>
                   <th className="p-4 border border-gray-300 text-center">
                     <Typography.Body>True</Typography.Body>
@@ -112,10 +117,13 @@ const UserDashboardQuizSummary = () => {
         </div>
         <div className="flex items-center justify-between mt-5">
           <div className="flex gap-5 text-primaryText">
-            <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2">
+            <Link
+              to="/user-dashboard/quiz"
+              className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2"
+            >
               <IoIosCloseCircleOutline className="text-xl" />
               Close Quiz
-            </button>
+            </Link>
             <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center  gap-2 text-sm">
               <CircleHelp size={18} className="text-sm" />
               Start New Quiz
