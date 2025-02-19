@@ -5,9 +5,11 @@ import UserDashboardIndex from "@/Pages/UserDashboard/UserDashboardIndex";
 import UserDashboardQuizLayout from "@/Pages/UserDashboard/UserDashboardQuizLayout";
 import UserDashboardSubjectDetails from "@/Pages/UserDashboard/UserDashboardSubjectDetails";
 import UserDashboardTheory from "@/Pages/UserDashboard/UserDashboardTheory";
+import Practice from "@/Shared/Practice/Practice";
 
 const UserDashboardRoutes = [
   { path: "", Component: UserDashboardIndex },
+  { path: "practice", Component: Practice },
   { path: "overview", Component: UserDashboardIndex },
   { path: "theory", Component: UserDashboardTheory },
   { path: "theory/:id", Component: UserDashboardChapterDetails },

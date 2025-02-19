@@ -6,12 +6,11 @@ import UserDashboard from "./Pages/UserDashboard/UserDashboard";
 import UserDashboardIndex from "./Pages/UserDashboard/UserDashboardIndex";
 import UserDashboardRoutes from "./Routes/UserDashboardRoutes";
 import { Toaster } from "react-hot-toast";
-import { AuthProvider } from "./Context/AuthContext";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 
 function App() {
   return (
-    <AuthProvider>
+    <>
       <Toaster position="bottom-right flex" />
 
       <Routes>
@@ -31,7 +30,7 @@ function App() {
         </Route>
         {/* </Route> */}
       </Routes>
-    </AuthProvider>
+    </>
   );
 }
 
