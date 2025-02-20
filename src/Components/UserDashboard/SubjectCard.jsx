@@ -1,12 +1,11 @@
 import chapterImg from "@/assets/UserDashboard/subject-demo-img.svg";
 import Typography from "@/Components/Typography";
-import { Link } from "react-router-dom";
-const SubjectCard = () => {
+const SubjectCard = ({ subject }) => {
   return (
-    <Link to="2" className="bg-white p-4 flex  gap-4 rounded-lg sm:max-w-sm">
+    <>
       <img
         className="max-h-[162px] max-w-[30%] rounded-xl"
-        src={chapterImg}
+        src={subject?.image || chapterImg}
         alt="image"
       />
       <div className="flex flex-col justify-between">
@@ -15,7 +14,7 @@ const SubjectCard = () => {
             className="text-primaryText leading-7  mt-1"
             variant="semibold"
           >
-            Intersections at grade and at...
+            {subject?.name}
           </Typography.Heading5>
           <Typography.Body variant="medium" className="text-secondaryText mt-1">
             10 Questions
@@ -28,7 +27,7 @@ const SubjectCard = () => {
           </button>
         </div>
       </div>
-    </Link>
+    </>
   );
 };
 

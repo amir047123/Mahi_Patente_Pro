@@ -1,4 +1,5 @@
 import Typography from "@/Components/Typography";
+import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 
 const ChapterCard = ({ item }) => {
   const progressWidth = `${(item?.progress * 100) / item?.total}%`;
@@ -7,19 +8,19 @@ const ChapterCard = ({ item }) => {
     <div className="bg-white flex  gap-4 rounded-lg sm:max-w-sm">
       <img
         className="max-h-[162px] max-w-[30%] rounded-xl"
-        src={item?.icon}
+        src={item?.icon || demoImg}
         alt="image"
       />
       <div className="flex flex-col justify-between w-full p-4">
         <div>
           <Typography.Body variant="medium" className="text-secondaryText">
-            Chapter {item?.id}
+            Chapter {item?.order}
           </Typography.Body>
           <Typography.Heading5
             className="text-primaryText leading-7  mt-1"
             variant="semibold"
           >
-            {item?.title}
+            {item?.name}
           </Typography.Heading5>
         </div>
 

@@ -1,32 +1,57 @@
 import Typography from "@/Components/Typography";
 import QuizCard from "@/Components/UserDashboard/QuizCard";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import chapterImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useParams } from "react-router-dom";
 
 const UserDashboardSubjectDetails = () => {
+  const { id } = useParams();
+  const [breadCrumbData, setBreadCrumbData] = useState([
+    { name: "Theory", path: "theory" },
+  ]);
+
+  const { useEntityById } = useCrudOperations("quiz");
+
+  const {
+    data: response,
+    isSuccess,
+    error,
+    isError,
+    isLoading,
+  } = useEntityById(id);
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      console.log(response?.data);
+      setBreadCrumbData([
+        { name: "Theory", path: "theory" },
+        {
+          name: `${response?.data?.chapter?.name}`,
+          path: `theory/${response?.data?.chapter?._id}`,
+        },
+        {
+          name: `${response?.data?.subject?.name}`,
+          path: `theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}`,
+        },
+      ]);
+    }
+  }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
   return (
     <>
-      <DashboardBreadcrumb
-        role="user"
-        items={[
-          { name: "Theory", path: "theory" },
-          {
-            name: "Road, vehicles, driver duties",
-            path: "theory/Road, vehicles, driver duties",
-          },
-          {
-            name: "Platforms and sidewalks",
-            path: "theory/Road, vehicles, driver duties/Platforms and sidewalks",
-          },
-        ]}
-      />
+      <DashboardBreadcrumb role="user" items={breadCrumbData} />
 
       <div className="py-5 border-b mb-5 flex items-center justify-between">
         <div className=" gap-4 flex items-center ">
           <img
             className="h-[100px] object-cover rounded-xl"
-            src={chapterImg}
+            src={response?.data?.subject?.image || chapterImg}
             alt="image"
           />
 
@@ -35,7 +60,7 @@ const UserDashboardSubjectDetails = () => {
               className="text-primaryText leading-7  mt-2"
               variant="semibold"
             >
-              Intersections at grade and .
+              {response?.data?.subject?.name}
             </Typography.Heading3>
             <button className="bg-blue-600 hover:bg-blue-500 font-medium rounded-full text-white py-1.5 px-6  text-sm mt-5">
               In Progress
@@ -51,9 +76,9 @@ const UserDashboardSubjectDetails = () => {
       </div>
 
       <div className="space-y-4">
-        <QuizCard />
-        <QuizCard />
-        <QuizCard />
+        {response?.data?.questions?.map((question, index) => (
+          <QuizCard key={index} question={question} />
+        ))}
       </div>
     </>
   );

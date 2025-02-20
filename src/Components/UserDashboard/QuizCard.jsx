@@ -5,20 +5,19 @@ import { AiOutlineSound } from "react-icons/ai";
 import { CiBookmarkCheck } from "react-icons/ci";
 import { LuMessageCircleMore } from "react-icons/lu";
 
-const QuizCard = () => {
+const QuizCard = ({ question }) => {
   return (
     <div className="md:grid grid-cols-3 flex items-center gap-4 bg-white rounded-lg p-5">
       <div className="col-span-1">
-        <img className="" src={quizDemo} alt="img" />
+        <img className="" src={question?.media?.image || quizDemo} alt="img" />
       </div>
       <div className="flex flex-col justify-between col-span-2">
-        <div className="flex">
+        <div className="flex justify-between">
           <Typography.Body variant="medium" className="text-primaryText mt-2">
-            The road can be divided into carriageways. The sign shown may be
-            associated with a maximum speed limit sign
+            {question?.question}
           </Typography.Body>
           <button className="bg-[#2CD673] rounded-lg px-3.5 py-1.5 md:text-2xl text-xl w-fit h-fit text-white">
-            V
+            {question?.correctAnswer}
           </button>
         </div>
 
