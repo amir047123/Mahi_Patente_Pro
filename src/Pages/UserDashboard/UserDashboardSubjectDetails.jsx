@@ -8,6 +8,7 @@ const UserDashboardSubjectDetails = () => {
   return (
     <>
       <DashboardBreadcrumb
+        role="user"
         items={[
           { name: "Theory", path: "theory" },
           {
@@ -41,15 +42,18 @@ const UserDashboardSubjectDetails = () => {
             </button>
           </div>
         </div>
-        <Link to="/user-dashboard/quiz" className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm">
+        <Link
+          to="/user-dashboard/quiz"
+          className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
+        >
           Start Quiz
         </Link>
       </div>
 
       <div className="space-y-4">
-        <QuizCard/>
-        <QuizCard/>
-        <QuizCard/>
+        <QuizCard />
+        <QuizCard />
+        <QuizCard />
       </div>
     </>
   );

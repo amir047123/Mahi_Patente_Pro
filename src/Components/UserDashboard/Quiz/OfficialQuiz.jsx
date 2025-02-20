@@ -13,6 +13,7 @@ const OfficialQuiz = () => {
   return (
     <>
       <DashboardBreadcrumb
+        role="user"
         items={[
           { name: "Quiz", path: "quiz" },
           { name: "Official Quiz", path: "quiz/official-quiz" },

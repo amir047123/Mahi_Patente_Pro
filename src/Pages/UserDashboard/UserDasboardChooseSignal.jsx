@@ -15,6 +15,7 @@ const UserDasboardChooseSignal = () => {
   return (
     <div>
       <DashboardBreadcrumb
+        role="user"
         items={[
           { name: "Quiz", path: "quiz" },
           { name: "Choose 4 to 1 Signal", path: "quiz/choose-4-to-1-signal" },

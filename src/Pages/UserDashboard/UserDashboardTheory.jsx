@@ -58,7 +58,10 @@ const UserDashboardTheory = () => {
 
   return (
     <>
-      <DashboardBreadcrumb items={[{ name: "Theory", path: "theory" }]} />
+      <DashboardBreadcrumb
+        role="user"
+        items={[{ name: "Theory", path: "theory" }]}
+      />
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5">
         {theoryCardData?.map((item, index) => (
           <Link key={index} to={`/user-dashboard/theory/1`}>

@@ -70,6 +70,7 @@ const ErrorReview = () => {
   return (
     <>
       <DashboardBreadcrumb
+        role="user"
         items={[
           { name: "Quiz", path: "quiz" },
           { name: "Error Review", path: "quiz/error-review" },

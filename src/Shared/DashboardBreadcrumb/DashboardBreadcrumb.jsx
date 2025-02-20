@@ -1,12 +1,13 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-const DashboardBreadcrumb = ({ items }) => {
+
+const DashboardBreadcrumb = ({ role, items }) => {
   return (
     <nav aria-label="Breadcrumb" className="mb-2">
       <ol className="flex items-center gap-1 text-sm text-secondaryText dark:text-white">
         <li>
           <Link
-            to={`/user-dashboard`}
+            to={`/${role}-dashboard`}
             className="block transition hover:text-secondaryText/90 hover:dark:text-gray-200"
           >
             <span className="sr-only"> Home </span>
@@ -46,7 +47,7 @@ const DashboardBreadcrumb = ({ items }) => {
             </li>
             <li>
               <Link
-                to={`/user-dashboard/${item?.path}`}
+                to={`/${role}-dashboard/${item?.path}`}
                 className="block transition hover:text-primary text-secondary font-medium"
               >
                 {item?.name}

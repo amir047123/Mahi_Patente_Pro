@@ -7,6 +7,7 @@ const UserDashboardChapterDetails = () => {
   return (
     <>
       <DashboardBreadcrumb
+        role="user"
         items={[
           { name: "Theory", path: "theory" },
           {
