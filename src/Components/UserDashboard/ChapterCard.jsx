@@ -8,7 +8,7 @@ const ChapterCard = ({ item }) => {
     <div className="bg-white flex  gap-4 rounded-lg sm:max-w-sm">
       <img
         className="max-h-[162px] max-w-[30%] rounded-xl"
-        src={item?.icon || demoImg}
+        src={item?.image || demoImg}
         alt="image"
       />
       <div className="flex flex-col justify-between w-full p-4">

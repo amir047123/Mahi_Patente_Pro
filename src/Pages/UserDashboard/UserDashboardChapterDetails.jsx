@@ -46,7 +46,7 @@ const UserDashboardChapterDetails = () => {
       <div className=" gap-4 flex items-center py-5 border-b mb-5">
         <img
           className="h-[100px] object-cover rounded-xl"
-          src={chapterImg}
+          src={response?.data?.chapter?.image || chapterImg}
           alt="image"
         />
 

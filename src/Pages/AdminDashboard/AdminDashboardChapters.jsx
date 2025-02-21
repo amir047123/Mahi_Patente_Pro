@@ -1,5 +1,6 @@
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useQueryClient } from "@tanstack/react-query";
@@ -79,19 +80,29 @@ const AdminDashboardChapters = () => {
               placeholder="Chapter Number"
               label="Chapter Number"
             />
-            <CustomSelect
-              name="category"
-              label="Select Category"
-              options={categoryOptions}
-              placeholder="Select Category"
-            />
 
-            <CustomSelect
-              name="status"
-              label="Select Status"
-              options={statusOptions}
-              placeholder="Select Status"
-            />
+            <div className="col-span-2 grid grid-cols-3 gap-6">
+              <CustomSelect
+                name="category"
+                label="Select Category"
+                options={categoryOptions}
+                placeholder="Select Category"
+              />
+
+              <CustomImageUpload
+                name="image"
+                label="Upload Image"
+                placeholder="Upload Image"
+              />
+
+              <CustomSelect
+                name="status"
+                label="Select Status"
+                options={statusOptions}
+                placeholder="Select Status"
+              />
+            </div>
+
             <div className="col-span-2">
               <CustomInput
                 type="textarea"

@@ -93,11 +93,19 @@ const AdminDashboardQuizQuestions = () => {
       options: [{}],
     },
   });
-  const { handleSubmit, reset, control, resetField } = methods;
+  const {
+    handleSubmit,
+    reset,
+    control,
+    resetField,
+    formState: { errors },
+  } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "options",
   });
+
+  console.log(errors);
 
   const { createEntity } = useCrudOperations("quiz/create");
 
@@ -110,11 +118,12 @@ const AdminDashboardQuizQuestions = () => {
           : formData?.correctAnswerTextImage,
       options:
         formData?.meta?.quizType === "true_false"
-          ? [
-              { type: "true_false", value: "true" },
-              { type: "true_false", value: "false" },
-            ]
-          : formData?.options,
+          ? ["True", "False"]
+          : formData?.meta?.quizType === "text"
+          ? formData?.options?.map((item) => item?.value)
+          : formData?.options?.map((item) => item?.image),
+      correctAnswerTrueFalse: undefined,
+      correctAnswerTextImage: undefined,
     };
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
@@ -149,10 +158,10 @@ const AdminDashboardQuizQuestions = () => {
     resetField("correctAnswerTextImage");
 
     if (quizType === "image_selector") {
-      append({ type: "image", value: "" });
-      append({ type: "image", value: "" });
-      append({ type: "image", value: "" });
-      append({ type: "image", value: "" });
+      append({ image: "" });
+      append({ image: "" });
+      append({ image: "" });
+      append({ image: "" });
     }
     //  else if (quizType === "true_false") {
     // append({ type: "true_false", value: "" });
@@ -161,10 +170,10 @@ const AdminDashboardQuizQuestions = () => {
     // resetField("correctAnswer");
     // }
     else if (quizType === "text") {
-      append({ type: "text", value: "" });
-      append({ type: "text", value: "" });
-      append({ type: "text", value: "" });
-      append({ type: "text", value: "" });
+      append({ value: "" });
+      append({ value: "" });
+      append({ value: "" });
+      append({ value: "" });
     } else {
       remove();
     }
@@ -225,12 +234,24 @@ const AdminDashboardQuizQuestions = () => {
               placeholder="Select Difficulty"
             />
 
-            <CustomImageUpload
-              name="media.image"
-              placeholder="Upload Image"
-              label="Upload Image"
-            />
-            <CustomInput name="media.sound" placeholder="Sound" label="Sound" />
+            <div className={`${quizType !== "image_selector" ? "" : "hidden"}`}>
+              <CustomImageUpload
+                required={quizType !== "image_selector"}
+                name="media.image"
+                placeholder="Upload Image"
+                label="Upload Image"
+              />
+            </div>
+
+            <div
+              className={`${quizType !== "image_selector" ? "" : "col-span-2"}`}
+            >
+              <CustomInput
+                name="media.sound"
+                placeholder="Sound"
+                label="Sound"
+              />
+            </div>
 
             <div className="col-span-2 border border-slate-300"></div>
 
@@ -263,30 +284,33 @@ const AdminDashboardQuizQuestions = () => {
               <CustomInput
                 required={quizType !== "true_false"}
                 name="correctAnswerTextImage"
-                placeholder="Correct Answer"
-                label="Correct Answer"
+                placeholder="Correct Answer Number"
+                label="Correct Answer Number"
+                type="number"
+                max={4}
               />
             </div>
 
             {fields.map((_, index) => (
               <div key={index} className="gap-6">
-                {/* <CustomSelect
-                  name={`options[${index}].type`}
-                  label={`Select Options Type ${index + 1}`}
-                  options={[
-                    { key: "text", label: "Text" },
-                    { key: "image", label: "Image" },
-                    { key: "true_false", label: "True/False" },
-                  ]}
-                  placeholder="Select Options Type"
-                  index={index}
-                /> */}
+                <div className={`${quizType === "text" ? "" : "hidden"} `}>
+                  <CustomInput
+                    required={quizType === "text"}
+                    name={`options[${index}].value`}
+                    placeholder="Options Value"
+                    label={`Select Options Value ${index + 1}`}
+                    index={index}
+                  />
+                </div>
 
                 <div
-                  className={`${quizType !== "true/false" ? "" : "hidden"} `}
+                  className={`${
+                    quizType === "image_selector" ? "" : "hidden"
+                  } `}
                 >
-                  <CustomInput
-                    name={`options[${index}].value`}
+                  <CustomImageUpload
+                    required={quizType === "image_selector"}
+                    name={`options[${index}].image`}
                     placeholder="Options Value"
                     label={`Select Options Value ${index + 1}`}
                     index={index}

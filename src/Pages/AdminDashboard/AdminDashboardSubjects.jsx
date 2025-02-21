@@ -1,5 +1,6 @@
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useQueryClient } from "@tanstack/react-query";
@@ -54,11 +55,6 @@ const AdminDashboardSubjects = () => {
     });
   };
 
-  const statusOptions = [
-    { key: "Active", label: "Active" },
-    { key: "Inactive", label: "Inactive" },
-  ];
-
   return (
     <>
       <DashboardBreadcrumb
@@ -86,12 +82,10 @@ const AdminDashboardSubjects = () => {
               placeholder="Select Chapter"
             />
 
-            <CustomSelect
-              required={false}
-              name="status"
-              label="Select Status (Dummy)"
-              options={statusOptions}
-              placeholder="Select Status"
+            <CustomImageUpload
+              name="image"
+              label="Upload Image"
+              placeholder="Upload Image"
             />
             <div className="col-span-2">
               <CustomInput
