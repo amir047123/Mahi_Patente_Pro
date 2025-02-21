@@ -1,5 +1,6 @@
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useQueryClient } from "@tanstack/react-query";
@@ -223,7 +224,12 @@ const AdminDashboardQuizQuestions = () => {
               options={dificultyOptions}
               placeholder="Select Difficulty"
             />
-            <CustomInput name="media.image" placeholder="Image" label="Image" />
+
+            <CustomImageUpload
+              name="media.image"
+              placeholder="Upload Image"
+              label="Upload Image"
+            />
             <CustomInput name="media.sound" placeholder="Sound" label="Sound" />
 
             <div className="col-span-2 border border-slate-300"></div>
