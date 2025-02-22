@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useImageUploader from "@/Hooks/useImageUploader";
 import { CircleX, Paperclip } from "lucide-react";
@@ -25,6 +25,8 @@ const CustomImageUpload = ({
     register,
     formState: { errors },
   } = useFormContext();
+
+  const fileInputRef = useRef(null);
 
   let errorMessage;
   let fieldName;
@@ -75,6 +77,9 @@ const CustomImageUpload = ({
       if (uploadedFileUrl) {
         setValue(name, uploadedFileUrl, { shouldValidate: true });
         setSelectedFile(uploadedFileUrl);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
         console.error("Failed to upload file. Please try again.");
         setUploadedFile(null);
@@ -147,7 +152,11 @@ const CustomImageUpload = ({
             <div className="relative inline-block w-full">
               <label
                 htmlFor={name}
-                className="flex items-center justify-between px-4 bg-white dark:bg-[#1A2B3C] text-gray-600 rounded-3xl border-2 py-2 shadow-sm cursor-pointer hover:bg-white/70 dark:border dark:border-gray-700"
+                className={`flex items-center justify-between px-4 text-gray-600 rounded-3xl py-2 ${
+                  isEditable
+                    ? "cursor-pointer bg-white border-2 shadow-sm dark:border dark:border-gray-700 dark:bg-[#1A2B3C] hover:bg-white/70"
+                    : "cursor-not-allowed bg-white/70"
+                }`}
               >
                 <span>Choose File</span>
                 <Paperclip size={20} />
@@ -158,6 +167,7 @@ const CustomImageUpload = ({
                 accept="image/*, application/pdf"
                 className="hidden"
                 onChange={handleFileChange}
+                ref={fileInputRef}
               />
             </div>
             {selectedFile && (

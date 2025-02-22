@@ -189,6 +189,13 @@ const AdminDashboardQuizQuestions = () => {
           : formData?.meta?.quizType === "text"
           ? formData?.options?.map((item) => item?.value)
           : formData?.options?.map((item) => item?.image),
+      media: {
+        ...formData?.media,
+        image:
+          formData?.meta?.quizType === "image_selector"
+            ? undefined
+            : formData?.media?.image,
+      },
     };
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
@@ -316,7 +323,7 @@ const AdminDashboardQuizQuestions = () => {
                 label="Select Chapter"
                 options={chapterOptions}
                 placeholder="Select Chapter"
-                isHidden={quizCategory !== "Theory"}
+                isEditable={quizCategory === "Theory"}
               />
               <CustomSelect
                 required={quizCategory === "Theory"}
@@ -324,7 +331,7 @@ const AdminDashboardQuizQuestions = () => {
                 label="Select Subject"
                 options={subjectOptions}
                 placeholder="Select Subject"
-                isHidden={quizCategory !== "Theory"}
+                isEditable={quizCategory === "Theory"}
               />
             </div>
 
@@ -346,19 +353,10 @@ const AdminDashboardQuizQuestions = () => {
               name="media.image"
               placeholder="Upload Image"
               label="Upload Image"
-              isHiden={quizType === "image_selector"}
+              isEditable={quizType !== "image_selector"}
             />
 
-            <div
-              className={`${quizType !== "image_selector" ? "" : "col-span-2"}`}
-            >
-              <CustomInput
-                name="media.sound"
-                placeholder="Sound"
-                label="Sound"
-                isHidden={quizType === "image_selector"}
-              />
-            </div>
+            <CustomInput name="media.sound" placeholder="Sound" label="Sound" />
 
             <div className="col-span-2 border border-slate-300"></div>
 

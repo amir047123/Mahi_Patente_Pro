@@ -100,7 +100,7 @@ const CustomInput = ({
             ${
               isEditable
                 ? "border shadow bg-white focus:outline-none focus:shadow-outline"
-                : "bg-gray-100 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
+                : "bg-white/70 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
             } ${
               errorMessage
                 ? "border-red-500"

@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 const SignUpForm = () => {
   const { login, verifyOtp, otpSent, setOtpSent, user } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
-  const [number, setNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(300);
@@ -36,6 +36,7 @@ const SignUpForm = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log(data);
     if (otpSent) {
       if (data?.otp?.length !== 6) {
         setError("otp", {
@@ -46,7 +47,7 @@ const SignUpForm = () => {
         return;
       }
       try {
-        await verifyOtp(number, data?.otp);
+        await verifyOtp(data?.email, data?.otp);
       } catch (error) {
         setAPIError(error?.message);
         toast.error(error?.message);
@@ -90,7 +91,7 @@ const SignUpForm = () => {
 
         if (response.ok) {
           toast.success(responseData?.message);
-          setNumber(data?.phone);
+          setEmail(data?.email);
           setPassword(data?.password);
           setOtpSent(true);
         } else {
@@ -153,7 +154,7 @@ const SignUpForm = () => {
     setIsLoading(true);
 
     try {
-      await login(number, password);
+      await login(email, password);
     } catch (error) {
       toast.error(error?.message || "Failed to resend OTP. Please try again.");
     } finally {
