@@ -11,10 +11,20 @@ import { useForm } from "react-hook-form";
 import { baseURL } from "@/Config";
 import { useAuthContext } from "@/Context/AuthContext";
 import toast from "react-hot-toast";
+import { LoaderCircle } from "lucide-react";
 
 const SignUpForm = () => {
-  const { login, verifyOtp, otpSent, setOtpSent, user } = useAuthContext();
+  const {
+    login,
+    verifyOtp,
+    otpSent,
+    setOtpSent,
+    user,
+    error,
+    setError: setAuthError,
+  } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,12 +41,7 @@ const SignUpForm = () => {
     formState: { errors },
   } = methods;
 
-  const handleTogglePassword = () => {
-    setShowPassword((prev) => !prev);
-  };
-
   const onSubmit = async (data) => {
-    console.log(data);
     if (otpSent) {
       if (data?.otp?.length !== 6) {
         setError("otp", {
@@ -47,10 +52,14 @@ const SignUpForm = () => {
         return;
       }
       try {
+        setIsLoading(true);
         await verifyOtp(data?.email, data?.otp);
       } catch (error) {
         setAPIError(error?.message);
+        setAuthError(error?.message);
         toast.error(error?.message);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       if (data?.password !== data?.confirmPassword) {
@@ -94,11 +103,14 @@ const SignUpForm = () => {
           setEmail(data?.email);
           setPassword(data?.password);
           setOtpSent(true);
+          setAPIError("");
+          setAuthError("");
         } else {
           throw new Error(responseData?.message);
         }
       } catch (error) {
         setAPIError(error?.message);
+        setAuthError(error?.message);
         toast.error(error?.message);
       } finally {
         setIsLoading(false);
@@ -176,7 +188,7 @@ const SignUpForm = () => {
 
   return (
     <form
-      className="  rounded-3xl px-8 pt-8 pb-5 gradient-border p-10 bg-white max-w-xl mx-auto border"
+      className="rounded-3xl px-8 pt-8 pb-5 gradient-border p-10 bg-white max-w-xl mx-auto border"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="w-fit mx-auto pb-8 font-font-pop">
@@ -184,7 +196,7 @@ const SignUpForm = () => {
           className="text-black text-center"
           variant="semibold"
         >
-          Create an account
+          {otpSent ? "Verify your account" : "Create an account"}
         </Typography.Heading3>
       </div>
 
@@ -205,6 +217,7 @@ const SignUpForm = () => {
             </div>
             {showError("fullName")}
           </div>
+
           <div>
             <label className="text-black mb-2 block text-lg">
               Email address
@@ -259,19 +272,21 @@ const SignUpForm = () => {
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
                 <CiLock className="text-secondaryText/60 text-2xl" />
               </div>
-              <div
+              <button
+                type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                onClick={handleTogglePassword}
+                onClick={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? (
                   <IoEyeOffOutline className="text-secondaryText/60 text-2xl" />
                 ) : (
                   <IoEyeOutline className="text-secondaryText/60 text-2xl" />
                 )}
-              </div>
+              </button>
             </div>
             {showError("password")}
           </div>
+
           <div>
             <label className="text-black mb-2 block text-lg">
               {" "}
@@ -283,62 +298,95 @@ const SignUpForm = () => {
                   required: "Confirm Password is required",
                 })}
                 className="w-full  bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
-                type={showPassword ? "text" : "password"}
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="Re-enter your password"
               />
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
                 <CiLock className="text-secondaryText/60 text-2xl" />
               </div>
-              <div
+              <button
+                type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                onClick={handleTogglePassword}
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
               >
-                {showPassword ? (
+                {showConfirmPassword ? (
                   <IoEyeOffOutline className="text-secondaryText/60 text-2xl" />
                 ) : (
                   <IoEyeOutline className="text-secondaryText/60 text-2xl" />
                 )}
-              </div>
+              </button>
             </div>
             {showError("confirmPassword")}
           </div>
         </div>
       ) : (
         <>
-          <div className="relative">
-            <input
-              {...register("otp", {
-                required: otpSent && "OTP is required",
-              })}
-              className="w-full  bg-primary/5 outline-none border border-gray-300 px-5 py-3.5  sm:text-[16px] rounded-full pl-10 text-black"
-              id="otp"
-              type="text"
-              maxLength={6}
-              placeholder="Enter OTP"
-            />
-            <div className="absolute left-3 top-1/2 -translate-y-1/2">
-              <CiKeyboard className="text-secondaryText/60 text-2xl" />
+          <div>
+            <label className="text-black mb-2 block text-lg">Enter OTP</label>
+            <span className="text-[#666] mb-4 mt-2  block text-sm">
+              The 6 Digit OTP code send on your email
+            </span>
+            <div className="relative">
+              <input
+                {...register("otp", {
+                  required: otpSent && "OTP is required",
+                })}
+                className="w-full  bg-primary/5 outline-none border border-gray-300 px-5 py-3.5  sm:text-[16px] rounded-full pl-10 text-black"
+                id="otp"
+                type="text"
+                maxLength={6}
+                placeholder="Enter OTP"
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                <CiKeyboard className="text-secondaryText/60 text-2xl" />
+              </div>
             </div>
           </div>
+
           <div className="ms-4">{showError("otp")}</div>
+
+          <span className="text-[#666] my-4 block text-sm text-right">
+            Wrong email?{" "}
+            <button
+              onClick={() => {
+                setOtpSent(false);
+                setAPIError("");
+                setAuthError("");
+              }}
+              className="appearance-none text-secondary hover:underline"
+              type="button"
+            >
+              Change your email
+            </button>
+          </span>
         </>
       )}
       <div className="mt-6 mb-6">
         <button
-          className="flex items-center gap-2 mt-10 mb-3  group w-full"
+          className="flex items-center justify-center gap-2 mt-4 mb-3 group w-full"
           type="submit"
         >
           <span
             className={`bg-secondary text-white  ${
-              isLoading ? "cursor-not-allowed" : "hover:bg-secondary/90"
-            } px-10 py-3 rounded-full  font-medium w-full`}
+              isLoading
+                ? "cursor-not-allowed bg-secondary/70"
+                : "hover:bg-secondary/70"
+            } px-10 py-3 rounded-full font-medium w-full flex items-center justify-center transition-all duration-300`}
           >
-            {isLoading && <div>Loading........</div>}
+            {isLoading && (
+              <LoaderCircle size={24} className="animate-spin text-white" />
+            )}
             {!isLoading && otpSent && "Verify OTP"}
             {!isLoading && !otpSent && "Sign Up"}
           </span>
           {/* group-hover:top-0 group-hover:-right-9 */}
         </button>
+
+        {(apiError || error) && (
+          <p className="text-red-500 text-center mt-4 font-semibold">
+            {apiError || error}
+          </p>
+        )}
 
         {otpSent && (
           <div className="text-center">
@@ -349,7 +397,7 @@ const SignUpForm = () => {
             {showResendOtp && (
               <button
                 type="button"
-                className="text-primary hover:text-secondary mt-4 font-semibold"
+                className="text-primary hover:text-secondary mt-4 font-semibold transition-all duration-300"
                 onClick={handleResendOtp}
                 disabled={isLoading}
               >
@@ -372,10 +420,6 @@ const SignUpForm = () => {
           Login here
         </Link>
       </div>
-
-      {!otpSent && apiError && (
-        <p className="text-red-500 text-center mt-4">{apiError}</p>
-      )}
     </form>
   );
 };

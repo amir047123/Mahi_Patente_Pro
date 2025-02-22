@@ -25,7 +25,6 @@ const UserDashboardSubjectDetails = () => {
 
   useEffect(() => {
     if (isSuccess && response?.success) {
-      console.log(response?.data);
       setBreadCrumbData([
         { name: "Theory", path: "theory" },
         {

@@ -10,8 +10,30 @@ import ProtectedRoute from "./Routes/ProtectedRoute";
 import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import AdminDashboardIndex from "./Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardRoutes from "./Routes/AdminDashboardRoutes";
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 400);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <LoaderCircle size={60} className="animate-spin text-green-600" />
+      </div>
+    );
+  }
+
   return (
     <>
       <Toaster position="bottom-right flex" />
@@ -24,24 +46,24 @@ function App() {
         ))}
 
         {/* user routes */}
-        {/* <Route element={<ProtectedRoute roles={["user"]} />}> */}
-        <Route path="/user-dashboard" element={<UserDashboard />}>
-          <Route index element={<UserDashboardIndex />} />
-          {UserDashboardRoutes.map(({ path, Component }, index) => (
-            <Route key={index} path={path} element={<Component />} />
-          ))}
+        <Route element={<ProtectedRoute roles={["user"]} />}>
+          <Route path="/user-dashboard" element={<UserDashboard />}>
+            <Route index element={<UserDashboardIndex />} />
+            {UserDashboardRoutes.map(({ path, Component }, index) => (
+              <Route key={index} path={path} element={<Component />} />
+            ))}
+          </Route>
         </Route>
-        {/* </Route> */}
 
         {/* admin routes */}
-        {/* <Route element={<ProtectedRoute roles={["admin"]} />}> */}
-        <Route path="/admin-dashboard" element={<AdminDashboard />}>
-          <Route index element={<AdminDashboardIndex />} />
-          {AdminDashboardRoutes.map(({ path, Component }, index) => (
-            <Route key={index} path={path} element={<Component />} />
-          ))}
+        <Route element={<ProtectedRoute roles={["admin"]} />}>
+          <Route path="/admin-dashboard" element={<AdminDashboard />}>
+            <Route index element={<AdminDashboardIndex />} />
+            {AdminDashboardRoutes.map(({ path, Component }, index) => (
+              <Route key={index} path={path} element={<Component />} />
+            ))}
+          </Route>
         </Route>
-        {/* </Route> */}
       </Routes>
     </>
   );

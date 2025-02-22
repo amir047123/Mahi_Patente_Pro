@@ -196,6 +196,13 @@ const AdminDashboardQuizQuestions = () => {
             ? undefined
             : formData?.media?.image,
       },
+      inherit: {
+        ...formData?.inherit,
+        chapter:
+          quizCategory === "theory" ? formData?.inherit?.chapter : undefined,
+        subject:
+          quizCategory === "theory" ? formData?.inherit?.subject : undefined,
+      },
     };
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
@@ -262,7 +269,7 @@ const AdminDashboardQuizQuestions = () => {
       const category = categoryOptions?.find(
         (item) => item?.key === quizCategoryId
       );
-      setQuizCategory(category?.label);
+      setQuizCategory(category?.label?.toLocaleLowerCase());
     }
   }, [quizCategoryId, categoryOptions]);
 
@@ -318,20 +325,20 @@ const AdminDashboardQuizQuestions = () => {
               />
 
               <CustomSelect
-                required={quizCategory === "Theory"}
+                required={quizCategory === "theory"}
                 name="inherit.chapter"
                 label="Select Chapter"
                 options={chapterOptions}
                 placeholder="Select Chapter"
-                isEditable={quizCategory === "Theory"}
+                isEditable={quizCategory === "theory"}
               />
               <CustomSelect
-                required={quizCategory === "Theory"}
+                required={quizCategory === "theory"}
                 name="inherit.subject"
                 label="Select Subject"
                 options={subjectOptions}
                 placeholder="Select Subject"
-                isEditable={quizCategory === "Theory"}
+                isEditable={quizCategory === "theory"}
               />
             </div>
 

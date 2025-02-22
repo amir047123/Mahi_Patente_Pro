@@ -21,15 +21,15 @@ const ProtectedRoute = ({ roles }) => {
       setIsChecking(false);
     };
 
-    checkAuth();
+    // checkAuth();
   }, [user, fetchAuthenticatedUser]);
 
   if (loading || isChecking) {
     // return <LinearLoader />;
   }
 
-  if (!user || (roles && !roles.includes(user?.profile?.role))) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!user || (roles && !roles.includes(user?.role))) {
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   return <Outlet />;

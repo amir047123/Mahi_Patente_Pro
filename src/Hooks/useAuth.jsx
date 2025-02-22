@@ -13,8 +13,22 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const { setGlobalContents } = useState();
 
+  const setUserFromToken = () => {
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
+      const parsedUser = JSON.parse(localUser);
+      if (Date.now() > parsedUser?.expiresAt) {
+        localStorage.clear();
+      } else {
+        setUser(parsedUser);
+      }
+    }
+  };
+
   useEffect(() => {
-    fetchAuthenticatedUser();
+    setUserFromToken();
+
+    // fetchAuthenticatedUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,8 +65,7 @@ export const useAuth = () => {
 
     try {
       const response = await fetchuserData(token);
-      const userData = response.data;
-      setUser(userData);
+      setUser(response.data?.data?.user);
       fetchGlobalContents();
     } catch (err) {
       setError(
@@ -103,14 +116,19 @@ export const useAuth = () => {
         { withCredentials: true }
       );
 
-      const { token, user: userData } = response.data;
-
-      localStorage.setItem("token", token);
-      fetchGlobalContents();
-      setUser(userData);
+      localStorage.setItem("token", response?.data?.data?.token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...response?.data?.data?.user,
+          expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
+        })
+      );
+      setUser(response?.data?.data?.user);
       toast.success("Login successful!");
+      fetchGlobalContents();
 
-      const userRole = userData?.profile?.role;
+      const userRole = response?.data?.data?.user?.role;
       if (userRole === "user") {
         navigate("/user-dashboard", { replace: true });
       } else if (userRole === "admin") {
@@ -166,6 +184,7 @@ export const useAuth = () => {
   return {
     user,
     loading,
+    setError,
     error,
     otpSent,
     setOtpSent,

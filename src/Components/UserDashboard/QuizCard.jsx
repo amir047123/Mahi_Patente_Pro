@@ -16,9 +16,13 @@ const QuizCard = ({ question }) => {
           <Typography.Body variant="medium" className="text-primaryText mt-2">
             {question?.question}
           </Typography.Body>
-          <button className="bg-[#2CD673] rounded-lg px-3.5 py-1.5 md:text-2xl text-xl w-fit h-fit text-white">
-            {question?.correctAnswer}
-          </button>
+          <span
+            className={`${
+              question?.correctAnswer == 0 ? "bg-[#2CD673]" : "bg-red-500"
+            } rounded-lg px-3.5 py-1.5 md:text-2xl text-xl w-fit h-fit text-white`}
+          >
+            {question?.correctAnswer == 0 ? "True" : "False"}
+          </span>
         </div>
 
         <div className="mt-4 flex gap-3 text-gray-600 ml-auto">
