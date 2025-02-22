@@ -118,7 +118,8 @@ const CustomInput = ({
           <input
             {...register(name, {
               required:
-                required && `${label || name || "This field"} is required`,
+                required &&
+                `${label || fieldName || name || "This field"} is required`,
               pattern:
                 type === "email"
                   ? {

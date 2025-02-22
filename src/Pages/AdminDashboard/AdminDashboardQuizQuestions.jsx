@@ -97,8 +97,8 @@ const AdminDashboardQuizQuestions = () => {
     handleSubmit,
     reset,
     control,
-    resetField,
     formState: { errors },
+    setError,
   } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
@@ -110,20 +110,85 @@ const AdminDashboardQuizQuestions = () => {
   const { createEntity } = useCrudOperations("quiz/create");
 
   const onSubmit = (formData) => {
+    console.log(formData);
+    if (formData?.meta?.quizType !== "true_false") {
+      const options = formData?.options ?? [];
+
+      if (options.length !== 4) {
+        toast.error("There must be exactly four options.");
+        return;
+      }
+
+      const values = options.map((item) => item?.value?.trim()).filter(Boolean);
+      const images = options.map((item) => item?.image?.trim()).filter(Boolean);
+      const indexArr = [0, 1, 2, 3];
+
+      if (values.length !== 4 && formData?.meta?.quizType === "text") {
+        toast.error("Please enter text for each option.");
+        indexArr.forEach((index) => {
+          setError(`options[${index}].value`, {
+            type: "manual",
+            message: "Please enter text.",
+          });
+        });
+
+        return;
+      }
+
+      if (
+        images.length !== 4 &&
+        formData?.meta?.quizType === "image_selector"
+      ) {
+        toast.error("Please upload image for each option.");
+        indexArr.forEach((index) => {
+          setError(`options[${index}].image`, {
+            type: "manual",
+            message: "Please upload image.",
+          });
+        });
+
+        return;
+      }
+
+      const uniqueValues = new Set(values);
+      const uniqueImages = new Set(images);
+
+      if (uniqueValues.size !== 4 && formData?.meta?.quizType === "text") {
+        toast.error("All options must be unique.");
+
+        indexArr.forEach((index) => {
+          setError(`options[${index}].value`, {
+            type: "manual",
+            message: "All options must be unique.",
+          });
+        });
+
+        return;
+      }
+
+      if (
+        uniqueImages.size !== 4 &&
+        formData?.meta?.quizType === "image_selector"
+      ) {
+        indexArr.forEach((index) => {
+          setError(`options[${index}].image`, {
+            type: "manual",
+            message: "All options must be unique.",
+          });
+        });
+
+        return;
+      }
+    }
+
     const updatedData = {
       ...formData,
-      correctAnswer:
-        formData?.meta?.quizType === "true_false"
-          ? formData?.correctAnswerTrueFalse
-          : formData?.correctAnswerTextImage,
       options:
         formData?.meta?.quizType === "true_false"
           ? ["True", "False"]
           : formData?.meta?.quizType === "text"
           ? formData?.options?.map((item) => item?.value)
           : formData?.options?.map((item) => item?.image),
-      correctAnswerTrueFalse: undefined,
-      correctAnswerTextImage: undefined,
     };
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
@@ -150,34 +215,72 @@ const AdminDashboardQuizQuestions = () => {
     { key: "Hard", label: "Hard" },
   ];
 
+  const quizTypeOptions = [
+    { key: "true_false", label: "True/False" },
+    { key: "image_selector", label: "Image" },
+    { key: "text", label: "Text" },
+  ];
+
+  const correctAnswerTrueFalseOptions = [
+    { key: "0", label: "True" },
+    { key: "1", label: "False" },
+  ];
+
+  const correctAnswerTextImageOptions = [
+    { key: "0", label: "A" },
+    { key: "1", label: "B" },
+    { key: "2", label: "C" },
+    { key: "3", label: "D" },
+  ];
+
+  const getOptionsLabel = (index) => {
+    switch (index) {
+      case 0:
+        return "A";
+      case 1:
+        return "B";
+      case 2:
+        return "C";
+      case 3:
+        return "D";
+    }
+  };
+
   const [quizType, setQuizType] = useState("");
+  const [quizCategoryId, setQuizCategoryId] = useState("");
+  const [quizCategory, setQuizCategory] = useState("");
+
+  useEffect(() => {
+    if (quizCategoryId) {
+      const category = categoryOptions?.find(
+        (item) => item?.key === quizCategoryId
+      );
+      setQuizCategory(category?.label);
+    }
+  }, [quizCategoryId, categoryOptions]);
 
   useEffect(() => {
     remove();
-    resetField("correctAnswerTrueFalse");
-    resetField("correctAnswerTextImage");
-
-    if (quizType === "image_selector") {
-      append({ image: "" });
-      append({ image: "" });
-      append({ image: "" });
-      append({ image: "" });
+    switch (quizType) {
+      case "text":
+        remove();
+        append({ value: "" });
+        append({ value: "" });
+        append({ value: "" });
+        append({ value: "" });
+        break;
+      case "image_selector":
+        remove();
+        append({ image: "" });
+        append({ image: "" });
+        append({ image: "" });
+        append({ image: "" });
+        break;
+      default:
+        remove();
+        break;
     }
-    //  else if (quizType === "true_false") {
-    // append({ type: "true_false", value: "" });
-    // append({ type: "true_false", value: "" });
-    // resetField("options");
-    // resetField("correctAnswer");
-    // }
-    else if (quizType === "text") {
-      append({ value: "" });
-      append({ value: "" });
-      append({ value: "" });
-      append({ value: "" });
-    } else {
-      remove();
-    }
-  }, [quizType]);
+  }, [quizType, append, remove]);
 
   return (
     <>
@@ -204,24 +307,28 @@ const AdminDashboardQuizQuestions = () => {
                 label="Select Category"
                 options={categoryOptions}
                 placeholder="Select Category"
+                setValue={setQuizCategoryId}
               />
 
               <CustomSelect
+                required={quizCategory === "Theory"}
                 name="inherit.chapter"
                 label="Select Chapter"
                 options={chapterOptions}
                 placeholder="Select Chapter"
+                isHidden={quizCategory !== "Theory"}
               />
               <CustomSelect
+                required={quizCategory === "Theory"}
                 name="inherit.subject"
                 label="Select Subject"
                 options={subjectOptions}
                 placeholder="Select Subject"
+                isHidden={quizCategory !== "Theory"}
               />
             </div>
 
             <CustomSelect
-              required={false}
               name="meta.status"
               label="Select Status"
               options={statusOptions}
@@ -234,14 +341,13 @@ const AdminDashboardQuizQuestions = () => {
               placeholder="Select Difficulty"
             />
 
-            <div className={`${quizType !== "image_selector" ? "" : "hidden"}`}>
-              <CustomImageUpload
-                required={quizType !== "image_selector"}
-                name="media.image"
-                placeholder="Upload Image"
-                label="Upload Image"
-              />
-            </div>
+            <CustomImageUpload
+              required={quizType !== "image_selector"}
+              name="media.image"
+              placeholder="Upload Image"
+              label="Upload Image"
+              isHiden={quizType === "image_selector"}
+            />
 
             <div
               className={`${quizType !== "image_selector" ? "" : "col-span-2"}`}
@@ -250,6 +356,7 @@ const AdminDashboardQuizQuestions = () => {
                 name="media.sound"
                 placeholder="Sound"
                 label="Sound"
+                isHidden={quizType === "image_selector"}
               />
             </div>
 
@@ -258,64 +365,41 @@ const AdminDashboardQuizQuestions = () => {
             <CustomSelect
               name="meta.quizType"
               label="Select Quiz Type"
-              options={[
-                { key: "text", label: "Text" },
-                { key: "true_false", label: "True/False" },
-                { key: "image_selector", label: "Image" },
-              ]}
+              options={quizTypeOptions}
               placeholder="Select Quiz Type"
               setValue={setQuizType}
             />
 
-            <div className={`${quizType === "true_false" ? "" : "hidden"} `}>
-              <CustomSelect
-                required={quizType === "true_false"}
-                name={`correctAnswerTrueFalse`}
-                label={`Correct Answer`}
-                placeholder="Select Answer Value"
-                options={[
-                  { key: "true", label: "True" },
-                  { key: "false", label: "False" },
-                ]}
-              />
-            </div>
+            <CustomSelect
+              name={`correctAnswer`}
+              label={`Correct Answer`}
+              placeholder="Select Answer Value"
+              options={
+                quizType === "true_false"
+                  ? correctAnswerTrueFalseOptions
+                  : correctAnswerTextImageOptions
+              }
+            />
 
-            <div className={`${quizType !== "true_false" ? "" : "hidden"} `}>
-              <CustomInput
-                required={quizType !== "true_false"}
-                name="correctAnswerTextImage"
-                placeholder="Correct Answer Number"
-                label="Correct Answer Number"
-                type="number"
-                max={4}
-              />
-            </div>
+            {fields.map((field, index) => (
+              <div key={field.id} className="gap-6">
+                <CustomInput
+                  required={quizType === "text"}
+                  name={`options[${index}].value`}
+                  placeholder="Options Value"
+                  label={`Option ${getOptionsLabel(index)}`}
+                  index={index}
+                  isHidden={quizType === "text" ? false : true}
+                />
 
-            {fields.map((_, index) => (
-              <div key={index} className="gap-6">
-                <div className={`${quizType === "text" ? "" : "hidden"} `}>
-                  <CustomInput
-                    required={quizType === "text"}
-                    name={`options[${index}].value`}
-                    placeholder="Options Value"
-                    label={`Select Options Value ${index + 1}`}
-                    index={index}
-                  />
-                </div>
-
-                <div
-                  className={`${
-                    quizType === "image_selector" ? "" : "hidden"
-                  } `}
-                >
-                  <CustomImageUpload
-                    required={quizType === "image_selector"}
-                    name={`options[${index}].image`}
-                    placeholder="Options Value"
-                    label={`Select Options Value ${index + 1}`}
-                    index={index}
-                  />
-                </div>
+                <CustomImageUpload
+                  required={quizType === "image_selector"}
+                  name={`options[${index}].image`}
+                  placeholder="Options Value"
+                  label={`Option ${getOptionsLabel(index)}`}
+                  index={index}
+                  isHidden={quizType === "image_selector" ? false : true}
+                />
               </div>
             ))}
           </div>

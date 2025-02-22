@@ -15,6 +15,7 @@ const CustomImageUpload = ({
   resetUploadedFile,
   index = -1,
   labelShown = true,
+  isHidden = false,
 }) => {
   const [selectedFile, setSelectedFile] = useState(value || null);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -25,8 +26,38 @@ const CustomImageUpload = ({
     formState: { errors },
   } = useFormContext();
 
+  let errorMessage;
+  let fieldName;
+  let arrayName;
+
+  if (index < 0) {
+    const nameType = name.split(".");
+
+    if (nameType.length > 1) {
+      const keys = name.split(".");
+
+      errorMessage = keys.reduce((acc, key) => {
+        if (acc && typeof acc === "object" && key in acc) {
+          return acc[key];
+        }
+        return undefined;
+      }, errors)?.message;
+    } else {
+      errorMessage = errors?.[name]?.message;
+    }
+  } else {
+    fieldName = name.split(".").pop();
+    arrayName = name.split("[")[0];
+
+    errorMessage = errors?.[arrayName]?.[index]?.[fieldName]?.message;
+  }
+
   useEffect(() => {
-    register(name, { required: required ? `${label} is required` : false });
+    register(name, {
+      required: required
+        ? `${label || fieldName || name || "This field"} is required`
+        : false,
+    });
   }, [register, name, required, label]);
 
   useEffect(() => {
@@ -92,34 +123,12 @@ const CustomImageUpload = ({
     }
   }, [resetUploadedFile]);
 
-  let errorMessage;
-  let fieldName;
-  let arrayName;
-
-  if (index < 0) {
-    const nameType = name.split(".");
-
-    if (nameType.length > 1) {
-      const keys = name.split(".");
-
-      errorMessage = keys.reduce((acc, key) => {
-        if (acc && typeof acc === "object" && key in acc) {
-          return acc[key];
-        }
-        return undefined;
-      }, errors)?.message;
-    } else {
-      errorMessage = errors?.[name]?.message;
-    }
-  } else {
-    fieldName = name.split(".").pop();
-    arrayName = name.split("[")[0];
-
-    errorMessage = errors?.[arrayName]?.[index]?.[fieldName]?.message;
-  }
-
   return (
-    <div className={`${!isEditable && "pointer-events-none"} min-w-36`}>
+    <div
+      className={`${!isEditable && "pointer-events-none"} min-w-36 ${
+        isHidden ? "hidden" : ""
+      }`}
+    >
       {label && labelShown && (
         <label
           className="block text-primary_text text-base font-semibold mb-2"

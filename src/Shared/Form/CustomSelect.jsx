@@ -15,6 +15,7 @@ const CustomSelect = ({
   isEditable = true,
   allOptions = true,
   labelShown = true,
+  isHidden = false,
 }) => {
   const {
     register,
@@ -60,7 +61,7 @@ const CustomSelect = ({
   }
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${isHidden ? "hidden" : ""}`}>
       {label && labelShown && (
         <label
           className="block text-primary_text text-base font-semibold mb-2"
