@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import CustomIcon from "../../../Components/Ui/CustomIcon";
 import Typography from "@/Components/Typography";
 import { CiKeyboard, CiLock } from "react-icons/ci";
@@ -21,6 +21,7 @@ const SignInForm = () => {
     user,
     error,
     setError: setAuthError,
+    loading,
   } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ const SignInForm = () => {
   const [countdown, setCountdown] = useState(300);
   const [showResendOtp, setShowResendOtp] = useState(false);
   const [apiError, setAPIError] = useState(null);
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const methods = useForm();
 
@@ -37,6 +39,7 @@ const SignInForm = () => {
     handleSubmit,
     setError,
     formState: { errors },
+    setValue,
   } = methods;
 
   const handleTogglePassword = () => {
@@ -106,16 +109,16 @@ const SignInForm = () => {
   };
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
-    if (user) {
-      navigate(from, { replace: true });
+    if (user && user?.profile?.role === "admin") {
+      navigate("/admin-dashboard", { replace: true });
+    } else if (user && user?.profile?.role === "user") {
+      navigate("/user-dashboard", { replace: true });
+    } else {
+      navigate("/login", { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, loading, navigate]);
 
   useEffect(() => {
     let timer;
@@ -142,10 +145,12 @@ const SignInForm = () => {
     return () => {
       clearInterval(timer);
     };
-  }, [otpSent, isLoading]);
+  }, [otpSent, otpLoading]);
 
   const handleResendOtp = async () => {
     setIsLoading(true);
+    setOtpLoading(true);
+    setValue("otp", "");
 
     try {
       await login(email, password);
@@ -153,6 +158,7 @@ const SignInForm = () => {
       toast.error(error?.message || "Failed to resend OTP. Please try again.");
     } finally {
       setIsLoading(false);
+      setOtpLoading(false);
     }
   };
 
@@ -278,6 +284,7 @@ const SignInForm = () => {
                 setOtpSent(false);
                 setAPIError("");
                 setAuthError("");
+                setValue("otp", "");
               }}
               className="appearance-none text-secondary hover:underline"
               type="button"

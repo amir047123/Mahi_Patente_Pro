@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import axios from "axios";
 import { baseURL } from "@/Config";
 
@@ -12,11 +11,7 @@ const fetchuserData = async (token) => {
     });
     return response;
   } else {
-    if (!process?.env?.NODE_ENV) {
-      toast.error("No token found");
-    } else {
-      console.error("No token");
-    }
+    console.error("No token");
   }
 };
 export default fetchuserData;

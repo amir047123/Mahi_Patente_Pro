@@ -57,7 +57,7 @@ const Navbar = () => {
             {/* Login/Sign Up Button */}
             <div className="hidden md:block">
               <Link
-                to={user ? `/${user?.role}-dashboard` : "/login"}
+                to={user ? `/${user?.profile?.role}-dashboard` : "/login"}
                 className="relative inline-flex items-center justify-center p-4 px-5 py-2.5 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out rounded-full shadow-xl group hover:ring-1 hover:ring-purple-500"
               >
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-600 via-purple-600 to-pink-700"></span>
@@ -100,7 +100,7 @@ const Navbar = () => {
                 </a>
               ))}
               <Link
-                to="/login"
+                to={user ? `/${user?.profile?.role}-dashboard` : "/login"}
                 className="w-full relative inline-flex items-center justify-center  bg-white rounded-full group mt-4 p-[2px]"
               >
                 <span className="absolute inset-0 rounded-full bg-gradient"></span>

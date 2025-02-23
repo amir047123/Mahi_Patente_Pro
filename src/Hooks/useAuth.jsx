@@ -13,23 +13,8 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const { setGlobalContents } = useState();
 
-  const setUserFromToken = () => {
-    const localUser = localStorage.getItem("user");
-    if (localUser) {
-      const parsedUser = JSON.parse(localUser);
-      if (Date.now() > parsedUser?.expiresAt) {
-        localStorage.clear();
-      } else {
-        setUser(parsedUser);
-      }
-    }
-  };
-
   useEffect(() => {
-    setUserFromToken();
-
-    // fetchAuthenticatedUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchAuthenticatedUser();
   }, []);
 
   const fetchGlobalContents = async () => {
@@ -66,7 +51,7 @@ export const useAuth = () => {
     try {
       const response = await fetchuserData(token);
       setUser(response.data?.data?.user);
-      fetchGlobalContents();
+      // fetchGlobalContents();
     } catch (err) {
       setError(
         err?.response?.data?.message || "Error fetching authenticated user"
@@ -87,7 +72,7 @@ export const useAuth = () => {
         { email, password },
         { withCredentials: true }
       );
-      if (response.data.email) {
+      if (response.data.success) {
         setOtpSent(true);
         toast.success("OTP sent to your email.");
       }
@@ -117,25 +102,9 @@ export const useAuth = () => {
       );
 
       localStorage.setItem("token", response?.data?.data?.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...response?.data?.data?.user,
-          expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
-        })
-      );
       setUser(response?.data?.data?.user);
       toast.success("Login successful!");
-      fetchGlobalContents();
-
-      const userRole = response?.data?.data?.user?.role;
-      if (userRole === "user") {
-        navigate("/user-dashboard", { replace: true });
-      } else if (userRole === "admin") {
-        navigate("/admin-dashboard", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
+      // fetchGlobalContents();
     } catch (err) {
       setError(err?.response?.data?.message || "Invalid or expired OTP.");
       toast.error(err?.response?.data?.message || "Invalid or expired OTP.");
@@ -160,16 +129,12 @@ export const useAuth = () => {
   const logout = async () => {
     setLoading(true);
     try {
-      await axios.post(
-        `${baseURL}/user/logout`,
-        { userId: user?._id },
-        { withCredentials: true }
-      );
-      localStorage.removeItem("token");
+      await axios.get(`${baseURL}/user/logout`, { withCredentials: true });
       // for user dashboard popup
-      localStorage.removeItem("popupShown");
       setUser(null);
       toast.success("Logged out successfully.");
+      localStorage.removeItem("token");
+      localStorage.removeItem("popupShown");
       navigate("/", { replace: true });
     } catch (err) {
       console.error("Logout error:", err);
@@ -178,6 +143,7 @@ export const useAuth = () => {
       setLoading(false);
       setError(null);
       setOtpSent(false);
+      localStorage.removeItem("token");
     }
   };
 

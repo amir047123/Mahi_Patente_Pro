@@ -12,6 +12,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
+import { useAuthContext } from "@/Context/AuthContext";
 
 // Menu items.
 const items = [
@@ -35,6 +36,7 @@ const items = [
 export function UserDashboardSidebar() {
   const { pathname } = useLocation();
   const currentPath = pathname.split("/")[2];
+  const { logout } = useAuthContext();
 
   return (
     <Sidebar>
@@ -93,10 +95,14 @@ export function UserDashboardSidebar() {
           className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary"
           key="Logout"
         >
-          <Link className="flex items-center gap-2" to="logout">
+          <button
+            onClick={logout}
+            className="flex items-center gap-2"
+            to="logout"
+          >
             <MdOutlineLogout />
             <span className="text-[16px] ml-1.5 font-medium ">Logout</span>
-          </Link>
+          </button>
         </SidebarMenuItem>
       </div>
     </Sidebar>
