@@ -158,12 +158,12 @@ const AdminDashboardQuizQuestions = () => {
       const uniqueImages = new Set(images);
 
       if (uniqueValues.size !== 4 && formData?.meta?.quizType === "text") {
-        toast.error("All options must be unique.");
+        toast.error("Quizzes must have unique options.");
 
         indexArr.forEach((index) => {
           setError(`options[${index}].value`, {
             type: "manual",
-            message: "All options must be unique.",
+            message: "Quizzes must have unique options.",
           });
         });
 
@@ -174,10 +174,12 @@ const AdminDashboardQuizQuestions = () => {
         uniqueImages.size !== 4 &&
         formData?.meta?.quizType === "image_selector"
       ) {
+        toast.error("Quizzes must have unique options.");
+
         indexArr.forEach((index) => {
           setError(`options[${index}].image`, {
             type: "manual",
-            message: "All options must be unique.",
+            message: "Quizzes must have unique options.",
           });
         });
 
