@@ -291,6 +291,9 @@ const AdminDashboardQuizQuestions = () => {
   useEffect(() => {
     setValue("inherit.chapter", "");
     setValue("inherit.subject", "");
+    if (quizCategory === "theory") {
+      setValue("meta.quizType", "true_false");
+    }
   }, [quizCategory, setValue]);
 
   useEffect(() => {
@@ -375,6 +378,7 @@ const AdminDashboardQuizQuestions = () => {
               options={quizTypeOptions}
               placeholder="Select Quiz Type"
               setValue={setQuizType}
+              isEditable={quizCategory === "theory" ? false : true}
             />
 
             <CustomSelect
