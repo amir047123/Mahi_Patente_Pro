@@ -47,6 +47,9 @@ const AdminDashboardSubjects = () => {
         query.invalidateQueries({
           queryKey: ["subject/all"],
         });
+        query.invalidateQueries({
+          queryKey: ["subject", formData?.chapter],
+        });
         // reset();
       },
       onError: (error) => {

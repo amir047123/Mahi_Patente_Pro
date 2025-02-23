@@ -13,6 +13,9 @@ const AdminDashboardChapters = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const { useFetchEntities } = useCrudOperations("quiz-category/all");
 
+  const methods = useForm();
+  const { handleSubmit, reset, setValue } = methods;
+
   const {
     data: response,
     isSuccess,
@@ -29,14 +32,20 @@ const AdminDashboardChapters = () => {
       }));
       setCategoryOptions(category);
     }
-  }, [isSuccess, response]);
+  }, [isSuccess, response, setValue]);
+
+  useEffect(() => {
+    if (categoryOptions.length > 0) {
+      const theoryCategory = categoryOptions?.find(
+        (item) => item?.label?.toLowerCase() === "theory"
+      );
+      setValue("category", theoryCategory?.key);
+    }
+  }, [categoryOptions, setValue]);
 
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
-
-  const methods = useForm();
-  const { handleSubmit, reset } = methods;
 
   const { createEntity } = useCrudOperations("quiz-chapter/create");
 
@@ -87,6 +96,7 @@ const AdminDashboardChapters = () => {
                 label="Select Category"
                 options={categoryOptions}
                 placeholder="Select Category"
+                isEditable={false}
               />
 
               <CustomImageUpload

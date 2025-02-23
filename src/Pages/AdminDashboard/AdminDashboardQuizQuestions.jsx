@@ -12,6 +12,10 @@ const AdminDashboardQuizQuestions = () => {
   const query = useQueryClient();
 
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [quizType, setQuizType] = useState("");
+  const [quizCategoryId, setQuizCategoryId] = useState("");
+  const [quizCategory, setQuizCategory] = useState("");
+  const [chapterId, setChapterId] = useState("");
   const { useFetchEntities } = useCrudOperations("quiz-category/all");
 
   const {
@@ -63,8 +67,7 @@ const AdminDashboardQuizQuestions = () => {
   }
 
   const [subjectOptions, setSubjectOptions] = useState([]);
-  const { useFetchEntities: useFetchSubjects } =
-    useCrudOperations("subject/all");
+  const { useEntityById: useFetchSubjects } = useCrudOperations("subject");
 
   const {
     data: subjectsResponse,
@@ -72,11 +75,11 @@ const AdminDashboardQuizQuestions = () => {
     error: subjectError,
     isError: subjectIsError,
     isLoading: subjectIsLoading,
-  } = useFetchSubjects();
+  } = useFetchSubjects(chapterId);
 
   useEffect(() => {
     if (subjectSuccess && subjectsResponse?.success) {
-      const subjects = subjectsResponse?.data?.map((item) => ({
+      const subjects = subjectsResponse?.data?.subjects?.map((item) => ({
         key: item?._id,
         label: item?.name,
       }));
@@ -99,6 +102,7 @@ const AdminDashboardQuizQuestions = () => {
     control,
     formState: { errors },
     setError,
+    setValue,
   } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
@@ -260,10 +264,6 @@ const AdminDashboardQuizQuestions = () => {
     }
   };
 
-  const [quizType, setQuizType] = useState("");
-  const [quizCategoryId, setQuizCategoryId] = useState("");
-  const [quizCategory, setQuizCategory] = useState("");
-
   useEffect(() => {
     if (quizCategoryId) {
       const category = categoryOptions?.find(
@@ -295,6 +295,15 @@ const AdminDashboardQuizQuestions = () => {
         break;
     }
   }, [quizType, append, remove]);
+
+  useEffect(() => {
+    setValue("inherit.chapter", "");
+    setValue("inherit.subject", "");
+  }, [quizCategory, setValue]);
+
+  useEffect(() => {
+    setValue("inherit.subject", "");
+  }, [chapterId, setValue]);
 
   return (
     <>
@@ -331,6 +340,7 @@ const AdminDashboardQuizQuestions = () => {
                 options={chapterOptions}
                 placeholder="Select Chapter"
                 isEditable={quizCategory === "theory"}
+                setValue={setChapterId}
               />
               <CustomSelect
                 required={quizCategory === "theory"}
