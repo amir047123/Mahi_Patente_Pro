@@ -5,9 +5,9 @@ const ChapterCard = ({ item }) => {
   const progressWidth = `${(item?.progress * 100) / item?.total}%`;
 
   return (
-    <div className="bg-white flex  gap-4 rounded-lg sm:max-w-sm">
+    <div className="bg-white flex gap-4 rounded-lg sm:max-w-sm h-full">
       <img
-        className="max-h-[162px] max-w-[30%] rounded-xl"
+        className="max-w-[30%] rounded-xl object-cover"
         src={item?.image || demoImg}
         alt="image"
       />
@@ -17,7 +17,7 @@ const ChapterCard = ({ item }) => {
             Chapter {item?.order}
           </Typography.Body>
           <Typography.Heading5
-            className="text-primaryText leading-7  mt-1"
+            className="text-primaryText leading-7 mt-1 line-clamp-2"
             variant="semibold"
           >
             {item?.name}

@@ -8,11 +8,16 @@ import { LuMessageCircleMore } from "react-icons/lu";
 const QuizCard = ({ question }) => {
   return (
     <div className="md:grid grid-cols-3 flex items-center gap-4 bg-white rounded-lg p-5">
-      <div className="col-span-1">
-        <img className="" src={question?.media?.image || quizDemo} alt="img" />
+      <div className="col-span-1 min-w-[150px]">
+        <img
+          className="rounded-md"
+          src={question?.media?.image || quizDemo}
+          alt="img"
+        />
       </div>
-      <div className="flex flex-col justify-between col-span-2">
-        <div className="flex justify-between">
+
+      <div className="flex flex-col justify-between col-span-2 w-full">
+        <div className="flex justify-between gap-4">
           <Typography.Body variant="medium" className="text-primaryText mt-2">
             {question?.question}
           </Typography.Body>

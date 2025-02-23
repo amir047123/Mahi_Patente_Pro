@@ -55,7 +55,7 @@ const UserDashboardChapterDetails = () => {
             Chapter {response?.data?.chapter?.order}
           </Typography.Body>
           <Typography.Heading3
-            className="text-primaryText leading-7  mt-2"
+            className="text-primaryText leading-7 mt-2 line-clamp-1"
             variant="semibold"
           >
             {response?.data?.chapter?.name}
@@ -65,11 +65,7 @@ const UserDashboardChapterDetails = () => {
 
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5">
         {response?.data?.subjects?.map((subject, index) => (
-          <Link
-            key={index}
-            to={`/user-dashboard/theory/${id}/${subject._id}`}
-            className="bg-white p-4 flex  gap-4 rounded-lg sm:max-w-sm"
-          >
+          <Link key={index} to={`/user-dashboard/theory/${id}/${subject._id}`}>
             <SubjectCard subject={subject} />
           </Link>
         ))}

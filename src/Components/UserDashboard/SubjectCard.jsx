@@ -2,16 +2,16 @@ import chapterImg from "@/assets/UserDashboard/subject-demo-img.svg";
 import Typography from "@/Components/Typography";
 const SubjectCard = ({ subject }) => {
   return (
-    <>
+    <div className="bg-white flex gap-4 rounded-lg sm:max-w-sm h-full">
       <img
-        className="max-h-[162px] max-w-[30%] rounded-xl"
+        className=" max-w-[30%] rounded-xl object-cover"
         src={subject?.image || chapterImg}
         alt="image"
       />
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col justify-between p-4 ">
         <div>
           <Typography.Heading5
-            className="text-primaryText leading-7  mt-1"
+            className="text-primaryText leading-7 mt-1 line-clamp-2"
             variant="semibold"
           >
             {subject?.name}
@@ -27,7 +27,7 @@ const SubjectCard = ({ subject }) => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

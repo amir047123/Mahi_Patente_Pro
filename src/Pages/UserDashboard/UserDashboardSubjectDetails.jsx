@@ -56,7 +56,7 @@ const UserDashboardSubjectDetails = () => {
 
           <div>
             <Typography.Heading3
-              className="text-primaryText leading-7  mt-2"
+              className="text-primaryText leading-7 mt-2 line-clamp-1"
               variant="semibold"
             >
               {response?.data?.subject?.name}
