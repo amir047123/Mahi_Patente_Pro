@@ -3,47 +3,53 @@ export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
-  	extend: {
-  		screens: {
-  			max_screen: '1140px'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		colors: {
-  			primary: '#433CEB',
-  			secondary: '#CB2A8A',
-  			primaryText: '#333333',
-  			secondaryText: '#666666',
-  			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
-  		},
-  		backgroundImage: {
-  			gradient: 'linear-gradient(94deg, #FF1493 -24.05%, #1746FF 127.9%)',
-  			headerGradient: 'linear-gradient(90deg, rgba(255, 146, 173, 0.50) -8.03%, rgba(125, 236, 255, 0.50) 112.85%)'
-  		},
-  		fontFamily: {
-  			'font-primary': [
-  				'Space Grotesk',
-  				'serif'
-  			],
-  			'font-secondary': [
-  				'Space Grotesk',
-  				'serif'
-  			]
-  		}
-  	}
+    extend: {
+      screens: {
+        max_screen: "1140px",
+
+        // Mobile-first approach (min-width)
+        // xs: "320px", // Extra small devices (phones)
+        // sm: "480px", // Small devices (larger phones)
+        // md: "640px", // Medium devices (tablets)
+        // lg: "768px", // Large devices (small laptops)
+        // xl: "1024px", // Extra large devices (desktops)
+        // "2xl": "1280px", // 2x extra large (large desktops)
+        // "3xl": "1440px", // 3x extra large (designer screens)
+        // "4xl": "1600px", // 4x extra large
+        // "5xl": "1920px", // 5x extra large (Full HD screens)
+        // "6xl": "2560px", // 6x extra large (QHD/4K screens)
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      colors: {
+        primary: "#433CEB",
+        secondary: "#CB2A8A",
+        primaryText: "#333333",
+        secondaryText: "#666666",
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
+      },
+      backgroundImage: {
+        gradient: "linear-gradient(94deg, #FF1493 -24.05%, #1746FF 127.9%)",
+        headerGradient:
+          "linear-gradient(90deg, rgba(255, 146, 173, 0.50) -8.03%, rgba(125, 236, 255, 0.50) 112.85%)",
+      },
+      fontFamily: {
+        "font-primary": ["Space Grotesk", "serif"],
+        "font-secondary": ["Space Grotesk", "serif"],
+      },
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };
-
