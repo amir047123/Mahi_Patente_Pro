@@ -113,6 +113,26 @@ export const useAuth = () => {
     }
   };
 
+  const createUser = async (formData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post(`${baseURL}/user/create`, formData, {
+        withCredentials: true,
+      });
+
+      localStorage.setItem("token", response?.data?.data?.token);
+      setUser(response?.data?.data?.user);
+      toast.success("Login successful!");
+      // fetchGlobalContents();
+    } catch (err) {
+      setError(err?.response?.data?.message || "Invalid or expired OTP.");
+      toast.error(err?.response?.data?.message || "Invalid or expired OTP.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const refreshToken = async () => {
     try {
       await axios.post(
@@ -159,5 +179,6 @@ export const useAuth = () => {
     refreshToken,
     logout,
     fetchAuthenticatedUser,
+    createUser,
   };
 };

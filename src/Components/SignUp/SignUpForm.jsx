@@ -16,7 +16,7 @@ import { LoaderCircle } from "lucide-react";
 const SignUpForm = () => {
   const {
     login,
-    verifyOtp,
+    createUser,
     otpSent,
     setOtpSent,
     user,
@@ -54,9 +54,23 @@ const SignUpForm = () => {
 
         return;
       }
+
+      const formData = {
+        userData: {
+          auth: {
+            email: data?.email,
+            phone: data?.phone,
+            password: data?.password,
+          },
+          profile: {
+            name: data?.fullName,
+          },
+        },
+        otp: data?.otp,
+      };
       try {
         setIsLoading(true);
-        await verifyOtp(data?.email, data?.otp);
+        await createUser(formData);
       } catch (error) {
         setAPIError(error?.message);
         setAuthError(error?.message);
@@ -77,26 +91,18 @@ const SignUpForm = () => {
         return;
       }
 
-      const formData = {
-        auth: {
-          email: data?.email,
-          phone: data?.phone,
-          password: data?.password,
-        },
-        profile: {
-          name: data?.fullName,
-        },
-      };
-
       try {
         setIsLoading(true);
 
-        const response = await fetch(`${baseURL}/user/create`, {
+        const response = await fetch(`${baseURL}/user/send-otp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            email: data?.email,
+            phone: data?.phone,
+          }),
         });
 
         const responseData = await response.json();

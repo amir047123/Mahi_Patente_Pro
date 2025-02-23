@@ -96,25 +96,15 @@ const AdminDashboardQuizQuestions = () => {
       options: [{}],
     },
   });
-  const {
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-    setError,
-    setValue,
-  } = methods;
+  const { handleSubmit, reset, control, setError, setValue } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "options",
   });
 
-  console.log(errors);
-
   const { createEntity } = useCrudOperations("quiz/create");
 
   const onSubmit = (formData) => {
-    console.log(formData);
     if (formData?.meta?.quizType !== "true_false") {
       const options = formData?.options ?? [];
 
