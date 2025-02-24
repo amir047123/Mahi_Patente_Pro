@@ -1,4 +1,9 @@
-import { LayoutDashboard, List, MessageCircleQuestion } from "lucide-react";
+import {
+  History,
+  LayoutDashboard,
+  List,
+  MessageCircleQuestion,
+} from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
   Sidebar,
@@ -30,6 +35,11 @@ const items = [
     title: "Quiz",
     url: "/user-dashboard/quiz",
     icon: MessageCircleQuestion,
+  },
+  {
+    title: "History",
+    url: "/user-dashboard/history",
+    icon: History,
   },
 ];
 
