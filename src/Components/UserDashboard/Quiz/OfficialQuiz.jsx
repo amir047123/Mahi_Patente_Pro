@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import quizImg from "@/assets/UserDashboard/quiz-img.svg";
 import { baseURL } from "@/Config";
+// import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
   const [isSummary, setIsSummary] = useState(false);
@@ -30,6 +31,11 @@ const OfficialQuiz = () => {
   const [currentQuiz, setCurerntQuiz] = useState({});
   const [quizzes, setQuizzes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // useEffect(() => {
+  //   AntiCheating.init();
+  //   AntiCheating.startTimer(1, () => console.log("Auto-submitting quiz..."));
+  // }, []);
 
   const getQuizzes = async () => {
     try {
@@ -188,7 +194,7 @@ const OfficialQuiz = () => {
                   className={`rounded-lg bg-white py-2 font-semibold text-2xl shadow-sm text-center 
                 ${num === position ? " text-[#CB2A8A]" : " text-[#9CA3AF]"}`}
                 >
-                  {num}
+                  {10 * range + num}
                 </button>
               ))}
             </div>

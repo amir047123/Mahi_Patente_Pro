@@ -10,8 +10,10 @@ import ProtectedRoute from "./Routes/ProtectedRoute";
 import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import AdminDashboardIndex from "./Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardRoutes from "./Routes/AdminDashboardRoutes";
+import useSocket from "./Hooks/useSocket";
 
 function App() {
+  useSocket();
   return (
     <>
       <Toaster position="bottom-right flex" />
