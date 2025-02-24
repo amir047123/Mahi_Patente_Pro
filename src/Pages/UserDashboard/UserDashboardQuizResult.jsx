@@ -33,7 +33,7 @@ export default function UserDashboardQuizResult({
             again!
           </Typography.Base>
 
-          <div className="px-6 py-4 grid grid-cols-2 gap-16 bg-white rounded-md mt-12">
+          <div className="px-6 py-4 grid grid-cols-2 gap-16 bg-white rounded-2xl mt-12 border">
             <div>
               <div className="flex items-center justify-between">
                 <Typography.Base variant="regular">Wrong</Typography.Base>
@@ -50,7 +50,7 @@ export default function UserDashboardQuizResult({
             </div>
           </div>
 
-          <div className="p-6 bg-white rounded-md mt-4">
+          <div className="p-6 bg-white rounded-2xl mt-4 border">
             <Typography.Base variant="bold" className="text-left">
               Your daily goal
             </Typography.Base>
