@@ -4,6 +4,7 @@ import { MdGTranslate, MdOutlineBook } from "react-icons/md";
 import { AiOutlineSound } from "react-icons/ai";
 import { CiBookmarkCheck } from "react-icons/ci";
 import { LuMessageCircleMore } from "react-icons/lu";
+import textToSpeech from "@/lib/textToSpeech";
 
 const QuizCard = ({ question }) => {
   return (
@@ -34,7 +35,10 @@ const QuizCard = ({ question }) => {
           <button className="bg-[#E3FAFF] p-2 border rounded-md">
             <MdGTranslate className="text-lg" />
           </button>
-          <button className="bg-[#E3FAFF] p-2 border rounded-md">
+          <button
+            onClick={() => textToSpeech(question?.question)}
+            className="bg-[#E3FAFF] p-2 border rounded-md"
+          >
             <AiOutlineSound className="text-lg" />
           </button>
           <button className="bg-[#E3FAFF] p-2 border rounded-md">
