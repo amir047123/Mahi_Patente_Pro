@@ -156,7 +156,7 @@ const UserDashboardQuizLayout = () => {
 
   return (
     <>
-      <Tabs.Root defaultValue="fastMania">
+      <Tabs.Root value={tab} onValueChange={setTab}>
         <Tabs.List
           aria-label="quiz tabs"
           className="flex items-center gap-10 mb-4 border-b border-slate-300"
@@ -215,7 +215,7 @@ const UserDashboardQuizLayout = () => {
             </div>
 
             <div className="col-span-2">
-              <Classification/>
+              <Classification />
             </div>
           </div>
         </Tabs.Content>

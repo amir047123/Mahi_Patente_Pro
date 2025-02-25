@@ -3,11 +3,14 @@ import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrum
 import quizResult from "@/assets/UserDashboard/quiz-result.svg";
 import coin from "@/assets/UserDashboard/coin.svg";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { useState } from "react";
+import QuizReviewModal from "@/Components/UserDashboard/Quiz/QuizReviewModal";
 
 export default function UserDashboardQuizResult({
   data = { progress: 120, total: 150 },
 }) {
   const progressWidth = `${(data?.progress * 100) / data?.total}%`;
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
   return (
     <div>
       <DashboardBreadcrumb
@@ -36,17 +39,31 @@ export default function UserDashboardQuizResult({
           <div className="px-6 py-4 grid grid-cols-2 gap-16 bg-white rounded-2xl mt-12 border">
             <div>
               <div className="flex items-center justify-between">
-                <Typography.Base variant="regular">Wrong</Typography.Base>
+                <Typography.Base
+                  variant="regular"
+                  className="text-secondaryText"
+                >
+                  Wrong
+                </Typography.Base>
                 <ThumbsDown className="text-red-500" />
               </div>
-              <Typography.Heading3 className="text-left">3</Typography.Heading3>
+              <Typography.Heading3 className="text-left mt-3">
+                3
+              </Typography.Heading3>
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <Typography.Base variant="regular">Right</Typography.Base>
+                <Typography.Base
+                  variant="regular"
+                  className="text-secondaryText"
+                >
+                  Right
+                </Typography.Base>
                 <ThumbsUp className="text-green-500" />
               </div>
-              <Typography.Heading3 className="text-left">4</Typography.Heading3>
+              <Typography.Heading3 className="text-left mt-3">
+                4
+              </Typography.Heading3>
             </div>
           </div>
 
@@ -78,9 +95,14 @@ export default function UserDashboardQuizResult({
           <button className="w-full rounded-full bg-secondary px-4 py-3 text-white mt-12">
             Try new quiz
           </button>
-          <button className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary">
+          <button
+            onClick={() => setIsReviewOpen(true)}
+            className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
+          >
             Review the answers
           </button>
+
+          <QuizReviewModal isOpen={isReviewOpen} setIsOpen={setIsReviewOpen} />
         </div>
       </div>
     </div>

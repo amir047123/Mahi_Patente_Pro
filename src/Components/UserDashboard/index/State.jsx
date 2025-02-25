@@ -1,11 +1,11 @@
 import Typography from "@/Components/Typography";
-
 import grow from "@/assets/UserDashboard/grow.svg";
 import SmallPieChart from "./SmallPieChart";
+import { Link } from "react-router-dom";
 
 function State() {
   return (
-    <div className=" ">
+    <Link to="/user-dashboard/preparation-statistics">
       <Typography.Heading5 className="text-primaryText">
         Your State
       </Typography.Heading5>
@@ -63,7 +63,7 @@ function State() {
           Last Update: 22 Jan 2025, 12:28 PM
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

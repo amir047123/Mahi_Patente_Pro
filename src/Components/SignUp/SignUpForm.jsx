@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { baseURL } from "@/Config";
 import { useAuthContext } from "@/Context/AuthContext";
 import toast from "react-hot-toast";
-import { LoaderCircle } from "lucide-react";
+import Spinner from "../ui/Spinner";
 
 const SignUpForm = () => {
   const {
@@ -386,9 +386,7 @@ const SignUpForm = () => {
                 : "hover:bg-secondary/70"
             } px-10 py-3 rounded-full font-medium w-full flex items-center justify-center transition-all duration-300`}
           >
-            {isLoading && (
-              <LoaderCircle size={24} className="animate-spin text-white" />
-            )}
+            {isLoading && <Spinner size={24} className="text-white" />}
             {!isLoading && otpSent && "Verify OTP"}
             {!isLoading && !otpSent && "Sign Up"}
           </span>

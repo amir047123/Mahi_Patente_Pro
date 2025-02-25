@@ -294,6 +294,13 @@ const AdminDashboardQuizQuestions = () => {
     if (quizCategory === "theory") {
       setValue("meta.quizType", "true_false");
     }
+
+    if (quizCategory === "guess the signal") {
+      setValue("meta.quizType", "text");
+    }
+    if (quizCategory === "choose 4 to 1 signal") {
+      setValue("meta.quizType", "image_selector");
+    }
   }, [quizCategory, setValue]);
 
   useEffect(() => {
@@ -378,7 +385,13 @@ const AdminDashboardQuizQuestions = () => {
               options={quizTypeOptions}
               placeholder="Select Quiz Type"
               setValue={setQuizType}
-              isEditable={quizCategory === "theory" ? false : true}
+              isEditable={
+                quizCategory === "theory" ||
+                quizCategory === "choose 4 to 1 signal" ||
+                quizCategory === "guess the signal"
+                  ? false
+                  : true
+              }
             />
 
             <CustomSelect

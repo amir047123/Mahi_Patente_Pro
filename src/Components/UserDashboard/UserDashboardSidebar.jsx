@@ -72,20 +72,21 @@ export function UserDashboardSidebar() {
           <SidebarGroupContent className="mt-3 ">
             <SidebarMenu className="space-y-1">
               {items.map((item) => (
-                <SidebarMenuItem
-                  className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
-                    currentPath === item.url.split("/")[2] &&
-                    "text-secondary bg-[#EBF2FB] "
-                  }`}
-                  key={item.title}
-                >
-                  <Link className="flex items-center gap-2" to={item.url}>
-                    <item.icon className="size-4" />
-                    <span className="text-[16px] ml-1.5 font-medium ">
-                      {item.title}
-                    </span>
-                  </Link>
-                </SidebarMenuItem>
+                <Link key={item.title} to={item.url}>
+                  <SidebarMenuItem
+                    className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
+                      currentPath === item.url.split("/")[2] &&
+                      "text-secondary bg-[#EBF2FB] "
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <item.icon className="size-4" />
+                      <span className="text-[16px] ml-1.5 font-medium ">
+                        {item.title}
+                      </span>
+                    </div>
+                  </SidebarMenuItem>
+                </Link>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

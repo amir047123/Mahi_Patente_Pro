@@ -1,26 +1,14 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import {
-  Clock,
-  ChevronLeft,
-  ChevronRight,
-  AlignJustify,
-  Check,
-  CircleHelp,
-  X,
-  CircleChevronDown,
-  CircleChevronUp,
-  LoaderCircle,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Clock, ChevronLeft, ChevronRight, AlignJustify } from "lucide-react";
+import { useEffect, useState } from "react";
 import demoImg from "@/assets/UserDashboard/quiz-img.svg";
 import Typography from "@/Components/Typography";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { IoCloseCircleOutline } from "react-icons/io5";
-import quizImg from "@/assets/UserDashboard/quiz-img.svg";
 import { baseURL } from "@/Config";
+import Spinner from "@/Components/ui/Spinner";
+import UserDashboardQuizSummary from "@/Pages/UserDashboard/UserDashboardQuizSummary";
 // import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
@@ -104,34 +92,6 @@ const OfficialQuiz = () => {
 
   console.log(quizzes);
 
-  const summaryTableRef = useRef(null);
-
-  const scrollAmount = 200;
-
-  const handleScrollUp = () => {
-    if (summaryTableRef.current) {
-      summaryTableRef.current.scrollBy({
-        top: -scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleScrollDown = () => {
-    if (summaryTableRef.current) {
-      summaryTableRef.current.scrollBy({
-        top: scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (isSummary) {
-      summaryTableRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [isSummary]);
-
   return (
     <>
       <DashboardBreadcrumb
@@ -144,12 +104,12 @@ const OfficialQuiz = () => {
 
       {isLoading ? (
         <div className="py-40 flex items-center justify-center">
-          <LoaderCircle size={60} className="animate-spin text-green-600" />
+          <Spinner size={60} />
         </div>
       ) : (
         <>
           <div className={`${isSummary ? "hidden" : ""}`}>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 mt-5">
               <button
                 onClick={() => setRange(0)}
                 className={`text-secondaryText p-3 rounded-t-lg ${
@@ -329,140 +289,11 @@ const OfficialQuiz = () => {
             </div>
           </div>
 
-          <div className={`${isSummary ? "" : "hidden"}`}>
-            <div className="bg-white  lg:p-8 p-5 rounded-2xl mt-5">
-              <div className="flex items-center justify-between">
-                <Typography.Heading4 className="text-secondaryText ">
-                  Summary
-                </Typography.Heading4>
-                <button onClick={() => setIsSummary(false)}>
-                  <IoCloseCircleOutline className="text-red-600 text-2xl" />
-                </button>
-              </div>
-              <div className="w-full flex gap-4 items-center">
-                <div
-                  className="w-full overflow-x-auto my-5 max-h-[65vh]"
-                  ref={summaryTableRef}
-                >
-                  <table className="w-full border-collapse">
-                    <thead className="sticky top-0">
-                      <tr className="bg-gray-100">
-                        <th className="p-4 border border-gray-300 text-left">
-                          No.
-                        </th>
-                        <th className="p-4 border border-gray-300 text-left">
-                          <Typography.Body>Image</Typography.Body>
-                        </th>
-                        <th className="p-4 border border-gray-300 text-left">
-                          <Typography.Body className="whitespace-nowrap">
-                            Question Text
-                          </Typography.Body>
-                        </th>
-                        <th className="p-4 border border-gray-300 text-center text-green-500">
-                          <Typography.Body>True</Typography.Body>
-                        </th>
-                        <th className="p-4 border border-gray-300 text-center text-red-500">
-                          <Typography.Body>False</Typography.Body>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="max-h-screen">
-                      {quizzes &&
-                        quizzes?.length > 0 &&
-                        quizzes?.map((quiz, index) => (
-                          <tr
-                            key={index}
-                            className={`${
-                              typeof quiz?.answer === "number"
-                                ? `${quiz?.answer}` === quiz?.correctAnswer
-                                  ? "bg-green-100"
-                                  : "bg-red-100"
-                                : "bg-white"
-                            } `}
-                          >
-                            <td className="p-4 border border-gray-300">
-                              {index + 1}
-                            </td>
-                            <td className="p-4 border border-gray-300">
-                              <img
-                                className="rounded-md w-24"
-                                src={quiz?.media?.image || quizImg}
-                                alt="img"
-                              />
-                            </td>
-                            <td className="p-4 border border-gray-300">
-                              {quiz?.question}
-                            </td>
-                            <td className="p-4 border border-gray-300 text-center">
-                              <Check
-                                className={`${
-                                  quiz?.answer === 0
-                                    ? "inline-block text-green-600"
-                                    : "hidden"
-                                } `}
-                                size={24}
-                              />
-                            </td>
-                            <td className="p-4 border border-gray-300">
-                              <X
-                                className={`${
-                                  quiz?.answer === 1
-                                    ? "inline-block text-red-600"
-                                    : "hidden"
-                                } `}
-                                size={24}
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="flex flex-col gap-2 justify-center text-[#666666]">
-                  <button
-                    className="bg-[#E3FAFF] p-2 border rounded-md"
-                    onClick={handleScrollUp}
-                  >
-                    <CircleChevronUp />
-                  </button>
-                  <button
-                    className="bg-[#E3FAFF] p-2 border rounded-md"
-                    onClick={handleScrollDown}
-                  >
-                    <CircleChevronDown />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-between mt-5">
-              <div className="flex gap-5 text-primaryText">
-                <Link
-                  to="/user-dashboard/quiz"
-                  className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2"
-                >
-                  <IoIosCloseCircleOutline className="text-xl" />
-                  Close Quiz
-                </Link>
-                <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center  gap-2 text-sm">
-                  <CircleHelp size={18} className="text-sm" />
-                  Start New Quiz
-                </button>
-              </div>
-
-              <div className="flex items-center gap-5">
-                <Typography.Body
-                  variant="medium"
-                  className="text-secondaryText"
-                >
-                  Remaining Time:
-                </Typography.Body>
-                <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
-                  <Clock size={20} /> 32 : 31
-                </button>
-              </div>
-            </div>
-          </div>
+          <UserDashboardQuizSummary
+            isSummary={isSummary}
+            setIsSummary={setIsSummary}
+            quizzes={quizzes}
+          />
         </>
       )}
     </>

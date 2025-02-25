@@ -1,114 +1,149 @@
 import Typography from "@/Components/Typography";
-import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import { Check, CircleHelp, Clock } from "lucide-react";
+import {
+  Check,
+  CircleChevronDown,
+  CircleChevronUp,
+  CircleHelp,
+  Clock,
+  X,
+} from "lucide-react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import quizImg from "@/assets/UserDashboard/quiz-img.svg";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
-const UserDashboardQuizSummary = () => {
+const UserDashboardQuizSummary = ({ isSummary, setIsSummary, quizzes }) => {
+  const summaryTableRef = useRef(null);
+
+  const scrollAmount = 200;
+
+  const handleScrollUp = () => {
+    if (summaryTableRef.current) {
+      summaryTableRef.current.scrollBy({
+        top: -scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleScrollDown = () => {
+    if (summaryTableRef.current) {
+      summaryTableRef.current.scrollBy({
+        top: scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isSummary) {
+      summaryTableRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [isSummary]);
   return (
-    <div>
-      <DashboardBreadcrumb
-        role="user"
-        items={[
-          { name: "Quiz", path: "quiz" },
-          { name: "Official Quiz", path: "quiz/official-quiz" },
-        ]}
-      />
-
+    <div className={`${isSummary ? "" : "hidden"}`}>
       <div className="bg-white  lg:p-8 p-5 rounded-2xl mt-5">
         <div className="flex items-center justify-between">
           <Typography.Heading4 className="text-secondaryText ">
             Summary
           </Typography.Heading4>
-          <Link to="/user-dashboard/quiz">
+          <button onClick={() => setIsSummary(false)}>
             <IoCloseCircleOutline className="text-red-600 text-2xl" />
-          </Link>
+          </button>
         </div>
+        <div className="w-full flex gap-4 items-center">
+          <div
+            className="w-full overflow-x-auto my-5 max-h-[65vh]"
+            ref={summaryTableRef}
+          >
+            <table className="w-full border-collapse">
+              <thead className="sticky top-0">
+                <tr className="bg-gray-100">
+                  <th className="p-4 border border-gray-300 text-left">No.</th>
+                  <th className="p-4 border border-gray-300 text-left">
+                    <Typography.Body>Image</Typography.Body>
+                  </th>
+                  <th className="p-4 border border-gray-300 text-left">
+                    <Typography.Body className="whitespace-nowrap">
+                      Question Text
+                    </Typography.Body>
+                  </th>
+                  <th className="p-4 border border-gray-300 text-center text-green-500">
+                    <Typography.Body>True</Typography.Body>
+                  </th>
+                  <th className="p-4 border border-gray-300 text-center text-red-500">
+                    <Typography.Body>False</Typography.Body>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="max-h-screen">
+                {quizzes &&
+                  quizzes?.length > 0 &&
+                  quizzes?.map((quiz, index) => (
+                    <tr
+                      key={index}
+                      className={`${
+                        typeof quiz?.answer === "number"
+                          ? `${quiz?.answer}` === quiz?.correctAnswer
+                            ? "bg-green-100"
+                            : "bg-red-100"
+                          : "bg-white"
+                      } `}
+                    >
+                      <td className="p-4 border border-gray-300">
+                        {index + 1}
+                      </td>
+                      <td className="p-4 border border-gray-300">
+                        <img
+                          className="rounded-md w-24"
+                          src={quiz?.media?.image || quizImg}
+                          alt="img"
+                        />
+                      </td>
+                      <td className="p-4 border border-gray-300">
+                        {quiz?.question}
+                      </td>
+                      <td className="p-4 border border-gray-300 text-center">
+                        <Check
+                          className={`${
+                            quiz?.answer === 0
+                              ? "inline-block text-green-600"
+                              : "hidden"
+                          } `}
+                          size={24}
+                        />
+                      </td>
+                      <td className="p-4 border border-gray-300">
+                        <X
+                          className={`${
+                            quiz?.answer === 1
+                              ? "inline-block text-red-600"
+                              : "hidden"
+                          } `}
+                          size={24}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
 
-        <div className="w-full overflow-x-auto my-5 ">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-4 border border-gray-300 text-left">No.</th>
-                <th className="p-4 border border-gray-300 text-left">
-                  <Typography.Body>Image</Typography.Body>
-                </th>
-                <th className="p-4 border border-gray-300 text-left">
-                  <Typography.Body className="whitespace-nowrap">
-                    Question Text
-                  </Typography.Body>
-                </th>
-                <th className="p-4 border border-gray-300 text-center">
-                  <Typography.Body>True</Typography.Body>
-                </th>
-                <th className="p-4 border border-gray-300 text-center">
-                  <Typography.Body>False</Typography.Body>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="bg-red-100">
-                <td className="p-4 border border-gray-300">01</td>
-                <td className="p-4 border border-gray-300">
-                  <img className="rounded-full w-24" src={quizImg} alt="img" />
-                </td>
-                <td className="p-4 border border-gray-300">
-                  Following a road accident, the vehicles involved must not be
-                  moved until any injured parties have been assisted and the
-                  police have collected all the elements useful for
-                  reconstructing the accident.
-                </td>
-                <td className="p-4 border border-gray-300 text-center">
-                  <Check className="inline-block text-green-600" size={24} />
-                </td>
-                <td className="p-4 border border-gray-300"></td>
-              </tr>
-              <tr className="bg-green-50">
-                <td className="p-4 border border-gray-300">02</td>
-                <td className="p-4 border border-gray-300"></td>
-                <td className="p-4 border border-gray-300">
-                  On the digital tachograph display, the symbol in the figure
-                  indicates the ferry or train mode
-                </td>
-                <td className="p-4 border border-gray-300 text-center"></td>
-                <td className="p-4 border border-gray-300">
-                  {" "}
-                  <Check className="inline-block text-green-600" size={24} />
-                </td>
-              </tr>
-              <tr className="bg-green-50">
-                <td className="p-4 border border-gray-300">03</td>
-                <td className="p-4 border border-gray-300">
-                  <div className="w-12 h-8">
-                    <svg viewBox="0 0 48 32" className="w-full h-full">
-                      <path
-                        d="M8 8 L40 8 L40 24 L8 24 Z"
-                        fill="none"
-                        stroke="black"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M16 16 L32 16 M32 16 L28 12 M32 16 L28 20"
-                        fill="none"
-                        stroke="black"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
-                </td>
-                <td className="p-4 border border-gray-300">
-                  The warning light shown in the figure may come on if the oil
-                  has not been replaced at the scheduled time.
-                </td>
-                <td className="p-4 border border-gray-300 text-center">
-                  <Check className="inline-block text-green-600" size={24} />
-                </td>
-                <td className="p-4 border border-gray-300"></td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="flex flex-col gap-2 justify-center text-[#666666]">
+            <button
+              className="bg-[#E3FAFF] p-2 border rounded-md"
+              onClick={handleScrollUp}
+            >
+              <CircleChevronUp />
+            </button>
+            <button
+              className="bg-[#E3FAFF] p-2 border rounded-md"
+              onClick={handleScrollDown}
+            >
+              <CircleChevronDown />
+            </button>
+          </div>
         </div>
       </div>
       <div className="flex items-center justify-between mt-5">
