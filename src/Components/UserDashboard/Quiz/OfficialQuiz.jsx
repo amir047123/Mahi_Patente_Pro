@@ -28,7 +28,7 @@ const OfficialQuiz = () => {
   const getQuizzes = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${baseURL}/quiz/get-30-questions`, {
+      const response = await fetch(`${baseURL}/quiz/get-questions`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
