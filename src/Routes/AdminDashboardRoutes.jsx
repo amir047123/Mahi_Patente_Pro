@@ -9,8 +9,8 @@ const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
   { path: "practice", Component: Practice },
   { path: "categories", Component: AdminDashboardCategories },
-  { path: "chapter", Component: AdminDashboardChapters },
-  { path: "subject", Component: AdminDashboardSubjects },
+  { path: "quiz-manage/chapters", Component: AdminDashboardChapters },
+  { path: "quiz-manage/subjects", Component: AdminDashboardSubjects },
   { path: "question", Component: AdminDashboardQuizQuestions },
 ];
 

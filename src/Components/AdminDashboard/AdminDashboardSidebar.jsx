@@ -1,5 +1,7 @@
 import {
   BookOpenCheck,
+  Captions,
+  CircleHelp,
   LayoutDashboard,
   List,
   ListTodo,
@@ -13,12 +15,16 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
 } from "@/Components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useAuthContext } from "@/Context/AuthContext";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 
 // Menu items.
 const items = [
@@ -32,26 +38,45 @@ const items = [
     url: "/admin-dashboard/categories",
     icon: ListTodo,
   },
-  {
-    title: "Chapters",
-    url: "/admin-dashboard/chapter",
-    icon: List,
-  },
-  {
-    title: "Subjects",
-    url: "/admin-dashboard/subject",
-    icon: BookOpenCheck,
-  },
+  // {
+  //   title: "Chapters",
+  //   url: "/admin-dashboard/chapter",
+  //   icon: List,
+  // },
+  // {
+  //   title: "Subjects",
+  //   url: "/admin-dashboard/subject",
+  //   icon: BookOpenCheck,
+  // },
   {
     title: "Questions",
     url: "/admin-dashboard/question",
     icon: MessageCircleQuestion,
+  },
+  {
+    title: "Quiz Manage",
+    url: "/admin-dashboard/quiz-manage",
+    dropdown: true,
+    icon: CircleHelp,
+    dropdownItem: [
+      {
+        title: "Chapters",
+        url: "/admin-dashboard/quiz-manage/chapters",
+        icon: List,
+      },
+      {
+        title: "Subjects",
+        url: "/admin-dashboard/quiz-manage/subjects",
+        icon: Captions,
+      },
+    ],
   },
 ];
 
 export function AdminDashboardSidebar() {
   const { pathname } = useLocation();
   const currentPath = pathname.split("/")[2];
+  const dropdownPath = pathname.split("/")[3];
   const { logout } = useAuthContext();
 
   return (
@@ -77,24 +102,69 @@ export function AdminDashboardSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent className="mt-3 ">
             <SidebarMenu className="space-y-1">
-              {items.map((item) => (
-                <Link key={item.title} to={item.url}>
-                  <SidebarMenuItem
-                    className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
-                      currentPath === item.url.split("/")[2] &&
-                      "text-secondary bg-[#EBF2FB] "
-                    }`}
-                    key={item.title}
-                  >
-                    <div className="flex items-center gap-2">
-                      <item.icon className="size-4" />
-                      <span className="text-[16px] ml-1.5 font-medium ">
-                        {item.title}
-                      </span>
-                    </div>
-                  </SidebarMenuItem>
-                </Link>
-              ))}
+              {items.map((item) =>
+                item?.dropdown ? (
+                  <Collapsible key={item?.title} className="group/collapsible">
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          className={`hover:bg-[#EBF2FB] py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary h-10 ${
+                            currentPath === item.url.split("/")[2] &&
+                            "text-secondary bg-[#EBF2FB]"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 ">
+                            <item.icon className="size-4" />
+                            <span className="text-[16px] ml-1.5 font-medium ">
+                              {item?.title}
+                            </span>
+                          </div>
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub className="mt-2">
+                          {item?.dropdownItem?.map((i, index) => (
+                            <Link key={index + 1} to={`${i?.url}`}>
+                              <SidebarMenuSubItem
+                                as={Link}
+                                className={`hover:bg-[#EBF2FB] py-1.5 px-1.5 rounded-sm text-secondaryText hover:text-secondary ${
+                                  dropdownPath === i?.url.split("/")[3] &&
+                                  "text-secondary bg-[#EBF2FB]"
+                                }`}
+                              >
+                                <div className="flex items-center gap-1 ">
+                                  <i.icon className="size-3.5" />
+                                  <span className="text-[14px] ml-1.5 font-medium ">
+                                    {i?.title}
+                                  </span>
+                                </div>
+                              
+                              </SidebarMenuSubItem>
+                            </Link>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ) : (
+                  <Link key={item.title} to={item.url}>
+                    <SidebarMenuItem
+                      className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
+                        currentPath === item.url.split("/")[2] &&
+                        "text-secondary bg-[#EBF2FB] "
+                      }`}
+                      key={item.title}
+                    >
+                      <div className="flex items-center gap-2">
+                        <item.icon className="size-4" />
+                        <span className="text-[16px] ml-1.5 font-medium ">
+                          {item.title}
+                        </span>
+                      </div>
+                    </SidebarMenuItem>
+                  </Link>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
