@@ -8,21 +8,21 @@ import { ListFilter, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/Components/ui/calendar";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/Components/ui/popover";
 import AdminAddChapterModal from "./AdminAddChapterModal";
 
 const AdminDashboardChapters = () => {
-    const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("");
   const query = useQueryClient();
   const [categoryOptions, setCategoryOptions] = useState([]);
   const { useFetchEntities } = useCrudOperations("quiz-category/all");
@@ -83,11 +83,10 @@ const AdminDashboardChapters = () => {
     { key: "Inactive", label: "Inactive" },
   ];
 
-   const [date, setDate] = useState({
-     from: new Date(2022, 0, 20),
-     to: addDays(new Date(2022, 0, 20), 20),
-   });
-
+  const [date, setDate] = useState({
+    from: new Date(2022, 0, 20),
+    to: addDays(new Date(2022, 0, 20), 20),
+  });
 
   return (
     <>
@@ -160,7 +159,7 @@ const AdminDashboardChapters = () => {
         </div>
 
         {/* Add Chapter Button */}
-        <AdminAddChapterModal/>
+        <AdminAddChapterModal />
       </div>
 
       <FormProvider {...methods}>

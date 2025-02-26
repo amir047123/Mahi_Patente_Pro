@@ -24,7 +24,11 @@ import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useAuthContext } from "@/Context/AuthContext";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
 
 // Menu items.
 const items = [
@@ -138,7 +142,6 @@ export function AdminDashboardSidebar() {
                                     {i?.title}
                                   </span>
                                 </div>
-                              
                               </SidebarMenuSubItem>
                             </Link>
                           ))}
