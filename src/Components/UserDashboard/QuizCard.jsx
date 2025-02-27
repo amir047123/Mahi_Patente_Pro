@@ -7,7 +7,7 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import textToSpeech from "@/lib/textToSpeech";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const QuizCard = ({ question }) => {
   const [translatedText, setTranslatedText] = useState();
@@ -29,11 +29,6 @@ const QuizCard = ({ question }) => {
     );
   };
 
-  useEffect(() => {
-    translateText();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [question]);
-
   return (
     <div className="md:grid grid-cols-3 flex items-center gap-4 bg-white rounded-lg p-5">
       <div className="col-span-1 min-w-[150px]">
@@ -46,12 +41,18 @@ const QuizCard = ({ question }) => {
 
       <div className="flex flex-col justify-between col-span-2 w-full">
         <div className="flex justify-between gap-4">
-          <Typography.Body variant="medium" className="text-primaryText mt-2">
-            {question?.question}
-          </Typography.Body>
-          <Typography.Body variant="medium" className="text-primaryText mt-2">
-            {translatedText}
-          </Typography.Body>
+          <div>
+            <Typography.Body variant="medium" className="text-primaryText mt-2">
+              {question?.question}
+            </Typography.Body>
+            <Typography.Body variant="medium" className="text-primaryText mt-2">
+              {question?.questionBn}
+            </Typography.Body>
+            <Typography.Body variant="medium" className="text-primaryText mt-2">
+              {translatedText}
+            </Typography.Body>
+          </div>
+
           <span
             className={`${
               question?.correctAnswer == 0 ? "bg-[#2CD673]" : "bg-red-500"

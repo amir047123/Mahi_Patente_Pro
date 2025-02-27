@@ -4,6 +4,7 @@ import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useQueryClient } from "@tanstack/react-query";
+import { Languages } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -96,7 +97,15 @@ const AdminDashboardQuizQuestions = () => {
       options: [{}],
     },
   });
-  const { handleSubmit, reset, control, setError, setValue } = methods;
+  const {
+    handleSubmit,
+    reset,
+    control,
+    setError,
+    setValue,
+    watch,
+    clearErrors,
+  } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "options",
@@ -307,6 +316,35 @@ const AdminDashboardQuizQuestions = () => {
     setValue("inherit.subject", "");
   }, [chapterId, setValue]);
 
+  const { createEntity: translate } = useCrudOperations("translate");
+
+  const translateText = () => {
+    const question = watch("question");
+    if (!question) {
+      toast.error("Please enter a question");
+      setError("question", {
+        type: "manual",
+        message: "Please enter a question",
+      });
+      return;
+    } else {
+      clearErrors("question");
+    }
+    translate.mutate(
+      { sourceText: question },
+      {
+        onSuccess: (data) => {
+          toast.success(data?.message);
+          setValue("questionBn", data?.data?.translatedText);
+          console.log(data?.data);
+        },
+        onError: (error) => {
+          toast.error(error?.message);
+        },
+      }
+    );
+  };
+
   return (
     <>
       <DashboardBreadcrumb
@@ -324,6 +362,25 @@ const AdminDashboardQuizQuestions = () => {
                 label="Quiz Question"
                 rows={3}
               />
+            </div>
+
+            <div className="col-span-2 relative">
+              <CustomInput
+                type="textarea"
+                name="questionBn"
+                placeholder="Quiz Question (Bangla)"
+                label="Quiz Question (Bangla)"
+                rows={3}
+              />
+
+              <button
+                onClick={translateText}
+                className="absolute top-0 right-0 mr-4 flex items-center gap-2"
+                type="button"
+              >
+                <Languages size={20} />
+                Translate To Bangla (BN)
+              </button>
             </div>
 
             <div className="col-span-2 grid grid-cols-3 gap-4">
