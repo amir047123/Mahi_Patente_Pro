@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-const AdminAddChapterModal = () => {
+const AdminAddChapterModal = ({children}) => {
   const query = useQueryClient();
   const [categoryOptions, setCategoryOptions] = useState([]);
   const { useFetchEntities } = useCrudOperations("quiz-category/all");
@@ -81,9 +81,8 @@ const AdminAddChapterModal = () => {
   return (
     <Dialog className="">
       <DialogTrigger>
-        <button className="px-6 py-2 text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
-          Add a Chapter
-        </button>
+        {children}
+       
       </DialogTrigger>
 
       <DialogContent className="max-w-4xl bg-[#ECF2F8] ">
@@ -91,7 +90,7 @@ const AdminAddChapterModal = () => {
           <DialogClose asChild>
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
               {" "}
-              <ArrowLeft /> Add a Chapter
+              <ArrowLeft /> <span className="whitespace-nowrap">Add a Chapter</span>
             </DialogTitle>
           </DialogClose>
         </DialogHeader>
