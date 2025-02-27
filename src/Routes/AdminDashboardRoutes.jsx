@@ -1,4 +1,5 @@
 import AdminDashboardCategories from "@/Pages/AdminDashboard/AdminDashboardCategories";
+import AdminDashboardChapterDetails from "@/Pages/AdminDashboard/AdminDashboardChapterDetails";
 import AdminDashboardChapters from "@/Pages/AdminDashboard/AdminDashboardChapters";
 import AdminDashboardIndex from "@/Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardQuizQuestions from "@/Pages/AdminDashboard/AdminDashboardQuizQuestions";
@@ -10,6 +11,7 @@ const AdminDashboardRoutes = [
   { path: "practice", Component: Practice },
   { path: "categories", Component: AdminDashboardCategories },
   { path: "quiz-manage/chapters", Component: AdminDashboardChapters },
+  { path: "quiz-manage/chapters/:id", Component: AdminDashboardChapterDetails },
   { path: "quiz-manage/subjects", Component: AdminDashboardSubjects },
   { path: "question", Component: AdminDashboardQuizQuestions },
 ];

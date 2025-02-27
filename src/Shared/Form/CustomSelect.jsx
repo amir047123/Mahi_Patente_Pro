@@ -80,7 +80,7 @@ const CustomSelect = ({
           })}
           className={`appearance-none ${
             isEditable
-              ? "shadow border bg-white focus:outline-none focus:shadow-outline"
+              ? " border bg-white focus:outline-none focus:shadow-outline"
               : "bg-white/70 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
           } ${
             errorMessage

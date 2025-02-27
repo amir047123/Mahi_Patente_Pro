@@ -17,13 +17,10 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-const AdminAddChapterModal = ({ children }) => {
+const AdminAddSubjectModal = ({ children }) => {
   const query = useQueryClient();
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const { useFetchEntities } = useCrudOperations("quiz-category/all");
-
-  const methods = useForm();
-  const { handleSubmit, reset, setValue } = methods;
+  const [chapterOptions, setChapterOptions] = useState([]);
+  const { useFetchEntities } = useCrudOperations("quiz-chapter/all");
 
   const {
     data: response,
@@ -35,35 +32,32 @@ const AdminAddChapterModal = ({ children }) => {
 
   useEffect(() => {
     if (isSuccess && response?.success) {
-      const category = response?.data?.map((item) => ({
+      const chapters = response?.data?.map((item) => ({
         key: item?._id,
         label: item?.name,
       }));
-      setCategoryOptions(category);
+      setChapterOptions(chapters);
     }
-  }, [isSuccess, response, setValue]);
-
-  useEffect(() => {
-    if (categoryOptions.length > 0) {
-      const theoryCategory = categoryOptions?.find(
-        (item) => item?.label?.toLowerCase() === "theory"
-      );
-      setValue("category", theoryCategory?.key);
-    }
-  }, [categoryOptions, setValue]);
+  }, [isSuccess, response]);
 
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
 
-  const { createEntity } = useCrudOperations("quiz-chapter/create");
+  const methods = useForm();
+  const { handleSubmit, reset } = methods;
+
+  const { createEntity } = useCrudOperations("subject/create");
 
   const onSubmit = (formData) => {
     createEntity.mutate(formData, {
       onSuccess: (data) => {
         toast.success(data?.message);
         query.invalidateQueries({
-          queryKey: ["quiz-chapter/all"],
+          queryKey: ["subject/all"],
+        });
+        query.invalidateQueries({
+          queryKey: ["subject", formData?.chapter],
         });
         // reset();
       },
@@ -77,7 +71,6 @@ const AdminAddChapterModal = ({ children }) => {
     { key: "Active", label: "Active" },
     { key: "Inactive", label: "Inactive" },
   ];
-
   return (
     <Dialog className="">
       <DialogTrigger>{children}</DialogTrigger>
@@ -98,47 +91,41 @@ const AdminAddChapterModal = ({ children }) => {
             <div className="grid grid-cols-2 gap-4 mt-4">
               <CustomInput
                 name="name"
-                placeholder="Chapter Title"
-                label="Chapter Title"
+                placeholder="Subject Title"
+                label="Subject Title"
               />
               <CustomInput
                 type="number"
                 name="order"
-                placeholder="Chapter Number"
-                label="Chapter Number"
+                placeholder="Subject Number"
+                label="Subject Number"
+              />
+              <CustomSelect
+                name="status"
+                label="Select Status"
+                options={statusOptions}
+                placeholder="Select Status"
+              />
+              <CustomSelect
+                isHidden={true}
+                name="chapter"
+                label="Select Chapter"
+                options={chapterOptions}
+                placeholder="Select Chapter"
               />
 
-              <div className="col-span-2 grid grid-cols-2 gap-6">
-                <CustomSelect
-                  isHidden={true}
-                  name="category"
-                  label="Select Category"
-                  options={categoryOptions}
-                  placeholder="Select Category"
-                  isEditable={false}
-                />
-
-                <CustomImageUpload
-                  name="image"
-                  label="Upload Image"
-                  placeholder="Upload Image"
-                />
-
-                <CustomSelect
-                  name="status"
-                  label="Select Status"
-                  options={statusOptions}
-                  placeholder="Select Status"
-                />
-              </div>
-
+              <CustomImageUpload
+                name="image"
+                label="Upload Image"
+                placeholder="Upload Image"
+              />
               <div className="col-span-2">
                 <CustomInput
                   type="textarea"
                   rows={3}
                   name="description"
-                  placeholder="Chapter Description"
-                  label="Chapter Description"
+                  placeholder="Subject Description"
+                  label="Subject Description"
                 />
               </div>
             </div>
@@ -163,4 +150,4 @@ const AdminAddChapterModal = ({ children }) => {
   );
 };
 
-export default AdminAddChapterModal;
+export default AdminAddSubjectModal;
