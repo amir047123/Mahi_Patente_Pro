@@ -8,19 +8,30 @@ import textToSpeech from "@/lib/textToSpeech";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import languageCodes from "@/lib/languageCodes";
 
 const QuizCard = ({ question }) => {
   const [translatedText, setTranslatedText] = useState();
   const { createEntity: translate } = useCrudOperations("translate");
+  const [translatedLang, setTranslatedLang] = useState("bn");
 
   const translateText = () => {
+    if (!translatedLang) {
+      toast.error("Please select a language");
+      return;
+    }
     translate.mutate(
-      { sourceText: question?.question },
+      { sourceText: question?.question, translatedLang },
       {
         onSuccess: (data) => {
           toast.success(data?.message);
           setTranslatedText(data?.data?.translatedText);
-          console.log(data?.data);
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -63,12 +74,39 @@ const QuizCard = ({ question }) => {
         </div>
 
         <div className="mt-4 flex gap-3 text-gray-600 ml-auto">
-          <button
-            onClick={translateText}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <MdGTranslate className="text-lg" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="bg-[#E3FAFF] p-2 border rounded-md">
+                <MdGTranslate className="text-lg" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40 p-4">
+              {/* <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
+                <PencilIcon className="h-5 w-5 text-gray-700" />
+                <span className="text-gray-700 font-medium">Edit</span>
+              </DropdownMenuItem> */}
+
+              <select
+                value={translatedLang}
+                onChange={(e) => setTranslatedLang(e.target.value)}
+                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 mb-2 cursor-pointer"
+              >
+                {languageCodes.map((option, index) => (
+                  <option key={index} value={option.key}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+
+              <DropdownMenuItem
+                className="flex gap-2 py-2 cursor-pointer justify-center"
+                onClick={translateText}
+              >
+                <MdGTranslate className="text-lg" />
+                <span className="font-medium">Translate</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <button
             onClick={() => textToSpeech(question?.question)}
             className="bg-[#E3FAFF] p-2 border rounded-md"
