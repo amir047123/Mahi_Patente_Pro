@@ -1,19 +1,23 @@
 import { EyeIcon, MoreVertical, PencilIcon, TrashIcon } from "lucide-react";
 import img from "@/assets/UserDashboard/demo-chapeter-img.svg";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
 
-const AdminChapterCard = () => {
+const AdminSubjectCard = () => {
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
       <img src={img} alt="img" />
 
       {/* Right section with text */}
-      <div className="flex-1 p-6 h-full">
+      <div className="flex-1 flex flex-col justify-between h-full   p-6 ">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-secondaryText text-sm mb-1">Chapter 1</p>
             <h2 className="font-bold text-primaryText text-lg mb-1">
               Road, vehicles, driver duties
             </h2>
@@ -43,12 +47,10 @@ const AdminChapterCard = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <p className="text-secondaryText text-sm mt-2">
-          5 Subject · 18 Questions added
-        </p>
+        <p className="text-secondaryText text-sm mt-2">500 Questions</p>
       </div>
     </div>
   );
 };
 
-export default AdminChapterCard;
+export default AdminSubjectCard;
