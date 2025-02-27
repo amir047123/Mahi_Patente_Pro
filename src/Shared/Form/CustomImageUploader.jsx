@@ -154,7 +154,7 @@ const CustomImageUpload = ({
                 htmlFor={name}
                 className={`flex items-center justify-between px-4 text-gray-600 rounded-3xl py-2 ${
                   isEditable
-                    ? "cursor-pointer bg-white border-2 shadow-sm dark:border dark:border-gray-700 dark:bg-[#1A2B3C] hover:bg-white/70"
+                    ? "cursor-pointer bg-white border  dark:border dark:border-gray-700 dark:bg-[#1A2B3C] hover:bg-white/70"
                     : "cursor-not-allowed bg-white/70"
                 }`}
               >

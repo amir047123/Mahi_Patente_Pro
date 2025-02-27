@@ -1,6 +1,7 @@
 import {
-  BookOpenCheck,
   Captions,
+  ChevronDown,
+  ChevronUp,
   CircleHelp,
   LayoutDashboard,
   List,
@@ -25,6 +26,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useAuthContext } from "@/Context/AuthContext";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { useState } from "react";
 
 // Menu items.
 const items = [
@@ -78,6 +80,7 @@ export function AdminDashboardSidebar() {
   const currentPath = pathname.split("/")[2];
   const dropdownPath = pathname.split("/")[3];
   const { logout } = useAuthContext();
+  const [quizManageDropdown, setQuizManageDropdown] = useState(false);
 
   return (
     <Sidebar>
@@ -104,20 +107,23 @@ export function AdminDashboardSidebar() {
             <SidebarMenu className="space-y-1">
               {items.map((item) =>
                 item?.dropdown ? (
-                  <Collapsible key={item?.title} className="group/collapsible">
+                  <Collapsible  key={item?.title} className="group/collapsible">
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
-                        <SidebarMenuButton
+                        <SidebarMenuButton onClick={() => setQuizManageDropdown(!quizManageDropdown)}
                           className={`hover:bg-[#EBF2FB] py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary h-10 ${
                             currentPath === item.url.split("/")[2] &&
                             "text-secondary bg-[#EBF2FB]"
                           }`}
                         >
-                          <div className="flex items-center gap-2 ">
-                            <item.icon className="size-4" />
-                            <span className="text-[16px] ml-1.5 font-medium ">
-                              {item?.title}
-                            </span>
+                          <div className="flex items-center gap-2 justify-between w-full">
+                            <div className="flex items-center gap-2">
+                              <item.icon className="size-4" />
+                              <span className="text-[16px] ml-1.5 font-medium ">
+                                {item?.title}
+                              </span>
+                            </div>
+                            <ChevronDown className={`size-5 ${quizManageDropdown && "rotate-180" }`} />
                           </div>
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
@@ -138,7 +144,6 @@ export function AdminDashboardSidebar() {
                                     {i?.title}
                                   </span>
                                 </div>
-                              
                               </SidebarMenuSubItem>
                             </Link>
                           ))}

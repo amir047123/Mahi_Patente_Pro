@@ -99,7 +99,7 @@ const CustomInput = ({
             className={`appearance-none resize-none
             ${
               isEditable
-                ? "border shadow bg-white focus:outline-none focus:shadow-outline"
+                ? "border  bg-white focus:outline-none focus:shadow-outline"
                 : "bg-white/70 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
             } ${
               errorMessage
@@ -107,7 +107,7 @@ const CustomInput = ({
                 : `${
                     className ? className : isEditable ? "border-slate-300" : ""
                   }`
-            } rounded-full w-full py-2.5 px-6 text-gray-700 leading-tight ${
+            } rounded-3xl w-full py-2.5 px-6 text-gray-700 leading-tight ${
               iconType && "!pr-11"
             } ${inputClassName}`}
             id={name}
@@ -168,7 +168,7 @@ const CustomInput = ({
             className={`appearance-none
             ${
               isEditable
-                ? "border shadow bg-white focus:outline-none focus:shadow-outline"
+                ? "border bg-white focus:outline-none focus:shadow-outline"
                 : "bg-gray-100 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
             } ${
               errorMessage
