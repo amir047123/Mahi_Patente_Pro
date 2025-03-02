@@ -41,8 +41,8 @@ const AdminDashboardCategories = () => {
         items={[{ name: "Categories", path: "categories" }]}
       />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-4 mt-4">
+        <form className="bg-white px-6 pt-3 pb-6 rounded-2xl" onSubmit={handleSubmit(onSubmit)}>
+          <div className="sm:grid sm:grid-cols-2 space-y-4 sm:space-y-0 gap-4 mt-4 ">
             <CustomInput
               name="name"
               placeholder="Category Title"
@@ -79,10 +79,10 @@ const AdminDashboardCategories = () => {
             </div>
           </div>
 
-          <div className="text-center mt-4">
+          <div className="text-center mt-7">
             <button
               type="submit"
-              className="px-4 py-2 bg-red-500 rounded-full text-white font-semibold text-center"
+              className="px-7 py-2.5 w-full bg-secondary rounded-full text-white font-semibold text-center hover:scale-105 duration-500 "
             >
               Submit
             </button>
