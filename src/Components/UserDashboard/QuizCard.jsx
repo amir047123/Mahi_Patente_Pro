@@ -80,12 +80,7 @@ const QuizCard = ({ question }) => {
                 <MdGTranslate className="text-lg" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40 p-4">
-              {/* <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
-                <PencilIcon className="h-5 w-5 text-gray-700" />
-                <span className="text-gray-700 font-medium">Edit</span>
-              </DropdownMenuItem> */}
-
+            <DropdownMenuContent className="w-44 p-4">
               <select
                 value={translatedLang}
                 onChange={(e) => setTranslatedLang(e.target.value)}

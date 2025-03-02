@@ -17,7 +17,7 @@ const OfficialQuiz = () => {
   const [position, setPosition] = useState(1);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [currentQuiz, setCurerntQuiz] = useState({});
-  const [quizzes, setQuizzes] = useState([]);
+  const [quizSession, setQuizSession] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   // useEffect(() => {
@@ -28,16 +28,18 @@ const OfficialQuiz = () => {
   const getQuizzes = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${baseURL}/quiz/get-questions`, {
-        method: "GET",
+      const response = await fetch(`${baseURL}/quiz-session/create`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
+        body: JSON.stringify({ difficulty: "Easy", category: "Theory" }),
       });
       const data = await response.json();
 
       if (response.ok) {
-        setQuizzes(data?.data);
+        setQuizSession(data?.data);
       } else {
         throw new Error(data?.message);
       }
@@ -64,8 +66,8 @@ const OfficialQuiz = () => {
       setPosition(currentPosition - 20);
     }
 
-    setCurerntQuiz(quizzes[currentPosition - 1]);
-  }, [currentPosition, quizzes]);
+    setCurerntQuiz(quizSession?.quizzes?.[currentPosition - 1]);
+  }, [currentPosition, quizSession]);
 
   const handleNext = () => {
     if (currentPosition >= 30) return;
@@ -82,15 +84,13 @@ const OfficialQuiz = () => {
   };
 
   const handleAnswer = (answer, _id) => {
-    setQuizzes((prev) =>
-      prev.map((item) =>
+    setQuizSession((prev) => ({
+      ...prev,
+      quizzes: prev?.quizzes?.map((item) =>
         item._id === _id ? { ...item, answer: answer } : item
-      )
-    );
-    return;
+      ),
+    }));
   };
-
-  console.log(quizzes);
 
   return (
     <>
@@ -172,9 +172,11 @@ const OfficialQuiz = () => {
                         ? "border-2 border-red-500 text-black"
                         : ""
                     } ${
-                      currentPosition !== num && quizzes[i]?.answer === 0
+                      currentPosition !== num &&
+                      quizSession?.quizzes?.[i]?.answer === 0
                         ? "bg-green-500 text-white"
-                        : currentPosition !== num && quizzes[i]?.answer === 1
+                        : currentPosition !== num &&
+                          quizSession?.quizzes?.[i]?.answer === 1
                         ? "bg-red-500 text-white"
                         : "bg-white"
                     }`}
@@ -185,7 +187,7 @@ const OfficialQuiz = () => {
               })}
             </div>
 
-            {quizzes && quizzes?.length > 0 && (
+            {quizSession?.quizzes && quizSession?.quizzes?.length > 0 && (
               <div className="grid grid-cols-3 gap-5 mt-5">
                 <div className="col-span-1 bg-white rounded-lg overflow-hidden flex items-center justify-center">
                   <img
@@ -292,7 +294,7 @@ const OfficialQuiz = () => {
           <UserDashboardQuizSummary
             isSummary={isSummary}
             setIsSummary={setIsSummary}
-            quizzes={quizzes}
+            quizzes={quizSession?.quizzes}
           />
         </>
       )}
