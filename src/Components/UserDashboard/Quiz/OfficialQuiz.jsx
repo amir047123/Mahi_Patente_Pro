@@ -98,14 +98,13 @@ const OfficialQuiz = () => {
     try {
       setIsSubmitting(true);
       const updatedQuizSession = {
-        ...quizSession,
         quizzes: quizSession?.quizzes?.map((item) => ({
           _id: item?._id,
           answer: item?.answer,
         })),
       };
       const response = await fetch(
-        `${baseURL}/quiz-session/${quizSession._id}`,
+        `${baseURL}/quiz-session/submit/${quizSession._id}`,
         {
           method: "POST",
           headers: {
