@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { baseURL } from "@/Config";
 import Spinner from "@/Components/ui/Spinner";
 import UserDashboardQuizSummary from "@/Pages/UserDashboard/UserDashboardQuizSummary";
+import { MdDone } from "react-icons/md";
 // import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
@@ -19,6 +20,7 @@ const OfficialQuiz = () => {
   const [currentQuiz, setCurerntQuiz] = useState({});
   const [quizSession, setQuizSession] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // useEffect(() => {
   //   AntiCheating.init();
@@ -90,6 +92,43 @@ const OfficialQuiz = () => {
         item._id === _id ? { ...item, answer: answer } : item
       ),
     }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      const updatedQuizSession = {
+        ...quizSession,
+        quizzes: quizSession?.quizzes?.map((item) => ({
+          _id: item?._id,
+          answer: item?.answer,
+        })),
+      };
+      const response = await fetch(
+        `${baseURL}/quiz-session/${quizSession._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updatedQuizSession),
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setQuizSession(data?.data);
+      } else {
+        throw new Error(data?.message);
+      }
+    } catch (error) {
+      toast.error(
+        error?.message || "Failed to submit quizzes. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -286,6 +325,21 @@ const OfficialQuiz = () => {
                 >
                   Next
                   <ChevronRight className="w-4 h-4 ml-1" />
+                </button>
+
+                <button
+                  onClick={handleSubmit}
+                  className="bg-green-500 text-white rounded-lg px-4 py-2 shadow-sm flex items-center font-medium w-28 justify-center disabled:bg-green-500/70 disabled:cursor-not-allowed"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Spinner size={20} className="text-white" />
+                  ) : (
+                    <>
+                      Submit
+                      <MdDone className="w-4 h-4 ml-1" />
+                    </>
+                  )}
                 </button>
               </div>
             </div>
