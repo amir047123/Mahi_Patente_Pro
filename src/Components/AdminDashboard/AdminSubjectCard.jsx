@@ -30,7 +30,7 @@ const AdminSubjectCard = () => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-36">
-              <Link to="/admin-dashboard/quiz-manage/chapters/id">
+              <Link to="/admin-dashboard/quiz-manage/chapters/subject/quizQuestion">
                 <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
                   <EyeIcon className="h-5 w-5 text-gray-700" />
                   <span className="text-gray-700 font-medium">Open</span>

@@ -352,7 +352,10 @@ const AdminDashboardQuizQuestions = () => {
         items={[{ name: "Questions", path: "question" }]}
       />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="bg-white p-6 mt-5 rounded-2xl mb-10"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="grid grid-cols-2 gap-6 mt-6">
             <div className="col-span-2">
               <CustomInput
@@ -379,11 +382,11 @@ const AdminDashboardQuizQuestions = () => {
                 type="button"
               >
                 <Languages size={20} />
-                Translate To Bangla (BN)
+                <span className="hidden md:block">Translate To Bangla (BN)</span>
               </button>
             </div>
 
-            <div className="col-span-2 grid grid-cols-3 gap-4">
+            <div className="col-span-2 grid md:grid-cols-3 gap-4">
               <CustomSelect
                 name="inherit.category"
                 label="Select Category"
@@ -434,7 +437,7 @@ const AdminDashboardQuizQuestions = () => {
 
             <CustomInput name="media.sound" placeholder="Sound" label="Sound" />
 
-            <div className="col-span-2 border border-slate-300"></div>
+            <div className="col-span-2 h-[1px] bg-gray-200 my-2"></div>
 
             <CustomSelect
               name="meta.quizType"
@@ -485,10 +488,10 @@ const AdminDashboardQuizQuestions = () => {
             ))}
           </div>
 
-          <div className="text-center mt-4">
+          <div className="text-center mt-7">
             <button
               type="submit"
-              className="px-4 py-2 bg-red-500 rounded-full text-white font-semibold text-center"
+              className="px-4 py-3 bg-secondary hover:bg-secondary/90 w-full rounded-full text-white font-semibold text-center"
             >
               Submit
             </button>
