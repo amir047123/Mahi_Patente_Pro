@@ -101,20 +101,22 @@ const AdminDashboardQuizQuestions = () => {
         chapter: formData?.chapter,
         subject: formData?.subject,
       },
-      category: "Theory",
     };
 
-    const updatedData = formData?.quizs?.map((item) => {
-      return {
-        ...item,
-        meta: {
-          difficulty: item?.difficulty,
-          quizType: "true_false",
-        },
-        ...staticData,
-        difficulty: undefined,
-      };
-    });
+    const updatedData = {
+      category: "Theory",
+      bodyData: formData?.quizs?.map((item) => {
+        return {
+          ...item,
+          meta: {
+            difficulty: item?.difficulty,
+            quizType: "true_false",
+          },
+          ...staticData,
+          difficulty: undefined,
+        };
+      }),
+    };
 
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
