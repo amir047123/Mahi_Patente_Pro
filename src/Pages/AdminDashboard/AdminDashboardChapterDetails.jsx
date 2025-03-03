@@ -13,7 +13,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/Components/ui/popover";
-import AdminChapterCard from "@/Components/AdminDashboard/AdminChapterCard";
 import HorizontalScroll from "@/Shared/HorizontalScroll";
 import AdminAddChapterCard from "@/Components/AdminDashboard/AdminAddChapterCard";
 import { useParams } from "react-router-dom";
@@ -23,7 +22,7 @@ import AdminSubjectCard from "@/Components/AdminDashboard/AdminSubjectCard";
 import AdminAddSubjectModal from "./AdminAddSubjectModal";
 
 const AdminDashboardChapterDetails = () => {
-  const { id } = useParams();
+  const { subject } = useParams();
   const [searchText, setSearchText] = useState("");
 
   const [date, setDate] = useState({
@@ -37,7 +36,7 @@ const AdminDashboardChapterDetails = () => {
         role="admin"
         items={[
           { name: "Chapters", path: "quiz-manage/chapters" },
-          { name: "Details", path: id },
+          { name: "Subjects", path: subject },
         ]}
       />
 
