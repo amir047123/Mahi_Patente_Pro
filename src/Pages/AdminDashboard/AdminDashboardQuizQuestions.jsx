@@ -1,45 +1,24 @@
+import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
+import WarningModal from "@/Shared/WarningModal";
 import { useQueryClient } from "@tanstack/react-query";
-import { Languages } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CirclePlus, CircleX, Languages } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const AdminDashboardQuizQuestions = () => {
   const query = useQueryClient();
 
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const [quizType, setQuizType] = useState("");
-  const [quizCategoryId, setQuizCategoryId] = useState("");
-  const [quizCategory, setQuizCategory] = useState("");
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
+  const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [quizIndex, setQuizIndex] = useState("");
   const [chapterId, setChapterId] = useState("");
-  const { useFetchEntities } = useCrudOperations("quiz-category/all");
-
-  const {
-    data: response,
-    isSuccess,
-    error,
-    isError,
-    isLoading,
-  } = useFetchEntities();
-
-  useEffect(() => {
-    if (isSuccess && response?.success) {
-      const category = response?.data?.map((item) => ({
-        key: item?._id,
-        label: item?.name,
-      }));
-      setCategoryOptions(category);
-    }
-  }, [isSuccess, response]);
-
-  if (isError && !isLoading) {
-    toast.error(error?.message);
-  }
 
   const [chapterOptions, setChapterOptions] = useState([]);
   const { useFetchEntities: useFetchChapters } =
@@ -94,9 +73,10 @@ const AdminDashboardQuizQuestions = () => {
 
   const methods = useForm({
     defaultValues: {
-      options: [{}],
+      quizs: [{}],
     },
   });
+
   const {
     handleSubmit,
     reset,
@@ -105,110 +85,37 @@ const AdminDashboardQuizQuestions = () => {
     setValue,
     watch,
     clearErrors,
+    getValues,
   } = methods;
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
-    name: "options",
+    name: "quizs",
   });
 
   const { createEntity } = useCrudOperations("quiz/create");
 
   const onSubmit = (formData) => {
-    if (formData?.meta?.quizType !== "true_false") {
-      const options = formData?.options ?? [];
-
-      if (options.length !== 4) {
-        toast.error("There must be exactly four options.");
-        return;
-      }
-
-      const values = options.map((item) => item?.value?.trim()).filter(Boolean);
-      const images = options.map((item) => item?.image?.trim()).filter(Boolean);
-      const indexArr = [0, 1, 2, 3];
-
-      if (values.length !== 4 && formData?.meta?.quizType === "text") {
-        toast.error("Please enter text for each option.");
-        indexArr.forEach((index) => {
-          setError(`options[${index}].value`, {
-            type: "manual",
-            message: "Please enter text.",
-          });
-        });
-
-        return;
-      }
-
-      if (
-        images.length !== 4 &&
-        formData?.meta?.quizType === "image_selector"
-      ) {
-        toast.error("Please upload image for each option.");
-        indexArr.forEach((index) => {
-          setError(`options[${index}].image`, {
-            type: "manual",
-            message: "Please upload image.",
-          });
-        });
-
-        return;
-      }
-
-      const uniqueValues = new Set(values);
-      const uniqueImages = new Set(images);
-
-      if (uniqueValues.size !== 4 && formData?.meta?.quizType === "text") {
-        toast.error("Quizzes must have unique options.");
-
-        indexArr.forEach((index) => {
-          setError(`options[${index}].value`, {
-            type: "manual",
-            message: "Quizzes must have unique options.",
-          });
-        });
-
-        return;
-      }
-
-      if (
-        uniqueImages.size !== 4 &&
-        formData?.meta?.quizType === "image_selector"
-      ) {
-        toast.error("Quizzes must have unique options.");
-
-        indexArr.forEach((index) => {
-          setError(`options[${index}].image`, {
-            type: "manual",
-            message: "Quizzes must have unique options.",
-          });
-        });
-
-        return;
-      }
-    }
-
-    const updatedData = {
-      ...formData,
-      options:
-        formData?.meta?.quizType === "true_false"
-          ? ["True", "False"]
-          : formData?.meta?.quizType === "text"
-          ? formData?.options?.map((item) => item?.value)
-          : formData?.options?.map((item) => item?.image),
-      media: {
-        ...formData?.media,
-        image:
-          formData?.meta?.quizType === "image_selector"
-            ? undefined
-            : formData?.media?.image,
-      },
+    const staticData = {
+      options: ["True", "False"],
       inherit: {
-        ...formData?.inherit,
-        chapter:
-          quizCategory === "theory" ? formData?.inherit?.chapter : undefined,
-        subject:
-          quizCategory === "theory" ? formData?.inherit?.subject : undefined,
+        chapter: formData?.chapter,
+        subject: formData?.subject,
       },
+      category: "Theory",
     };
+
+    const updatedData = formData?.quizs?.map((item) => {
+      return {
+        ...item,
+        meta: {
+          difficulty: item?.difficulty,
+          quizType: "true_false",
+        },
+        ...staticData,
+        difficulty: undefined,
+      };
+    });
+
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
         toast.success(data?.message);
@@ -252,91 +159,30 @@ const AdminDashboardQuizQuestions = () => {
     { key: "3", label: "D" },
   ];
 
-  const getOptionsLabel = (index) => {
-    switch (index) {
-      case 0:
-        return "A";
-      case 1:
-        return "B";
-      case 2:
-        return "C";
-      case 3:
-        return "D";
-    }
-  };
-
   useEffect(() => {
-    if (quizCategoryId) {
-      const category = categoryOptions?.find(
-        (item) => item?.key === quizCategoryId
-      );
-      setQuizCategory(category?.label?.toLocaleLowerCase());
-    }
-  }, [quizCategoryId, categoryOptions]);
-
-  useEffect(() => {
-    remove();
-    switch (quizType) {
-      case "text":
-        remove();
-        append({ value: "" });
-        append({ value: "" });
-        append({ value: "" });
-        append({ value: "" });
-        break;
-      case "image_selector":
-        remove();
-        append({ image: "" });
-        append({ image: "" });
-        append({ image: "" });
-        append({ image: "" });
-        break;
-      default:
-        remove();
-        break;
-    }
-  }, [quizType, append, remove]);
-
-  useEffect(() => {
-    setValue("inherit.chapter", "");
-    setValue("inherit.subject", "");
-    if (quizCategory === "theory") {
-      setValue("meta.quizType", "true_false");
-    }
-
-    if (quizCategory === "guess the signal") {
-      setValue("meta.quizType", "text");
-    }
-    if (quizCategory === "choose 4 to 1 signal") {
-      setValue("meta.quizType", "image_selector");
-    }
-  }, [quizCategory, setValue]);
-
-  useEffect(() => {
-    setValue("inherit.subject", "");
+    setValue("subject", "");
   }, [chapterId, setValue]);
 
   const { createEntity: translate } = useCrudOperations("translate");
 
-  const translateText = () => {
-    const question = watch("question");
+  const translateText = (index) => {
+    const question = watch(`quizs[${index}].question`);
     if (!question) {
-      toast.error("Please enter a question");
-      setError("question", {
+      toast.error("Please enter a question to translate");
+      setError(`quizs[${index}].question`, {
         type: "manual",
-        message: "Please enter a question",
+        message: "Please enter a question to translate",
       });
       return;
     } else {
-      clearErrors("question");
+      clearErrors(`quizs[${index}].question`);
     }
     translate.mutate(
       { sourceText: question },
       {
         onSuccess: (data) => {
           toast.success(data?.message);
-          setValue("questionBn", data?.data?.translatedText);
-          console.log(data?.data);
+          setValue(`quizs[${index}].questionBn`, data?.data?.translatedText);
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -345,150 +191,227 @@ const AdminDashboardQuizQuestions = () => {
     );
   };
 
+  const removeQuiz = (index) => {
+    if (getValues("quizs").length > 1) {
+      setQuizIndex(index);
+      setIsWarningModalOpen(true);
+    }
+  };
+
+  const removeQuizConfirmed = () => {
+    getValues("quizs").length > 1 && remove(quizIndex);
+    setQuizIndex(null);
+    setIsDeletingSuccess(true);
+    setIsDeleting(false);
+  };
+
+  const dragItem = useRef();
+  const dragOverItem = useRef();
+
+  const handleDragStart = (index) => {
+    dragItem.current = index;
+  };
+
+  const handleDragEnter = (index) => {
+    dragOverItem.current = index;
+  };
+
+  const handleDragEnd = () => {
+    const draggedIndex = dragItem.current;
+    const overIndex = dragOverItem.current;
+
+    if (draggedIndex !== overIndex) {
+      move(draggedIndex, overIndex);
+    }
+
+    dragItem.current = null;
+    dragOverItem.current = null;
+  };
+
   return (
     <>
       <DashboardBreadcrumb
         role="admin"
         items={[{ name: "Questions", path: "question" }]}
       />
+
+      <WarningModal
+        onConfirm={removeQuizConfirmed}
+        isOpen={isWarningModalOpen}
+        setIsOpen={() => {
+          setQuizIndex(null);
+          setIsWarningModalOpen(false);
+        }}
+        isDeleting={isDeleting}
+        success={isDeletingSuccess}
+        closeSuccess={() => setIsDeletingSuccess(false)}
+        msg="SUC200 - Item Removed"
+        refetchData={() => {}}
+      />
+
       <FormProvider {...methods}>
-        <form
-          className="bg-white p-6 mt-5 rounded-2xl mb-10"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="grid grid-cols-2 gap-6 mt-6">
-            <div className="col-span-2">
-              <CustomInput
-                type="textarea"
-                name="question"
-                placeholder="Quiz Question"
-                label="Quiz Question"
-                rows={3}
-              />
-            </div>
-
-            <div className="col-span-2 relative">
-              <CustomInput
-                type="textarea"
-                name="questionBn"
-                placeholder="Quiz Question (Bangla)"
-                label="Quiz Question (Bangla)"
-                rows={3}
-              />
-
-              <button
-                onClick={translateText}
-                className="absolute top-0 right-0 mr-4 flex items-center gap-2"
-                type="button"
-              >
-                <Languages size={20} />
-                <span className="hidden md:block">Translate To Bangla (BN)</span>
-              </button>
-            </div>
-
-            <div className="col-span-2 grid md:grid-cols-3 gap-4">
-              <CustomSelect
-                name="inherit.category"
-                label="Select Category"
-                options={categoryOptions}
-                placeholder="Select Category"
-                setValue={setQuizCategoryId}
-              />
-
-              <CustomSelect
-                required={quizCategory === "theory"}
-                name="inherit.chapter"
-                label="Select Chapter"
-                options={chapterOptions}
-                placeholder="Select Chapter"
-                isEditable={quizCategory === "theory"}
-                setValue={setChapterId}
-              />
-              <CustomSelect
-                required={quizCategory === "theory"}
-                name="inherit.subject"
-                label="Select Subject"
-                options={subjectOptions}
-                placeholder="Select Subject"
-                isEditable={quizCategory === "theory"}
-              />
-            </div>
-
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-2 gap-6 bg-white p-6 mt-5 rounded-[32px] mb-4">
             <CustomSelect
-              name="meta.status"
-              label="Select Status"
-              options={statusOptions}
-              placeholder="Select Status"
+              name="chapter"
+              label="Select Chapter"
+              options={chapterOptions}
+              placeholder="Select Chapter"
+              setValue={setChapterId}
             />
             <CustomSelect
-              name="meta.difficulty"
-              label="Select Difficulty"
-              options={dificultyOptions}
-              placeholder="Select Difficulty"
+              name="subject"
+              label="Select Subject"
+              options={subjectOptions}
+              placeholder="Select Subject"
             />
-
-            <CustomImageUpload
-              required={quizType !== "image_selector"}
-              name="media.image"
-              placeholder="Upload Image"
-              label="Upload Image"
-              isEditable={quizType !== "image_selector"}
-            />
-
-            <CustomInput name="media.sound" placeholder="Sound" label="Sound" />
-
-            <div className="col-span-2 h-[1px] bg-gray-200 my-2"></div>
-
-            <CustomSelect
-              name="meta.quizType"
-              label="Select Quiz Type"
-              options={quizTypeOptions}
-              placeholder="Select Quiz Type"
-              setValue={setQuizType}
-              isEditable={
-                quizCategory === "theory" ||
-                quizCategory === "choose 4 to 1 signal" ||
-                quizCategory === "guess the signal"
-                  ? false
-                  : true
-              }
-            />
-
-            <CustomSelect
-              name={`correctAnswer`}
-              label={`Correct Answer`}
-              placeholder="Select Answer Value"
-              options={
-                quizType === "true_false"
-                  ? correctAnswerTrueFalseOptions
-                  : correctAnswerTextImageOptions
-              }
-            />
-
-            {fields.map((field, index) => (
-              <div key={field.id} className="gap-6">
-                <CustomInput
-                  required={quizType === "text"}
-                  name={`options[${index}].value`}
-                  placeholder="Options Value"
-                  label={`Option ${getOptionsLabel(index)}`}
-                  index={index}
-                  isHidden={quizType === "text" ? false : true}
-                />
-
-                <CustomImageUpload
-                  required={quizType === "image_selector"}
-                  name={`options[${index}].image`}
-                  placeholder="Options Value"
-                  label={`Option ${getOptionsLabel(index)}`}
-                  index={index}
-                  isHidden={quizType === "image_selector" ? false : true}
-                />
-              </div>
-            ))}
           </div>
 
-          <div className="text-center mt-7">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-white p-6 rounded-[32px] flex justify-between items-center flex-col">
+              <div className="grid grid-cols-1 gap-2 w-full">
+                {fields?.map((field, index) => (
+                  <div
+                    key={field.id}
+                    draggable
+                    onDragStart={() => handleDragStart(index)}
+                    onDragEnter={() => handleDragEnter(index)}
+                    onDragEnd={handleDragEnd}
+                    className="!bg-[#F3F4F6] h-9 px-4 rounded-full flex items-center gap-1 pr-10 relative cursor-move"
+                  >
+                    <span className="text-primary">{index + 1}.</span>
+                    <span className="line-clamp-1">
+                      {watch(`quizs[${index}].question`)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeQuiz(index)}
+                      className="absolute right-4 top-2.5 text-red-500"
+                    >
+                      <CircleX size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => append({ question: "", questionBn: "" })}
+                className="flex items-center justify-center w-fit gap-1 text-green-500 font-semibold text-sm"
+              >
+                <span>Add Question</span>
+                <CirclePlus size={16} />
+              </button>
+            </div>
+            <div className="col-span-2 bg-white p-6 rounded-[32px]">
+              {fields?.map((field, index) => (
+                <div key={field.id} className="grid grid-cols-2 gap-4">
+                  <div
+                    className={`${
+                      index > 0
+                        ? "border-b-[2px] border-secondary col-span-2 mt-4"
+                        : "hidden"
+                    }`}
+                  ></div>
+                  <div className="col-span-2 relative">
+                    <CustomInput
+                      type="textarea"
+                      name={`quizs[${index}].question`}
+                      placeholder="Quiz Question"
+                      label="Quiz Question"
+                      rows={3}
+                      index={index}
+                      iconType="question"
+                    />
+
+                    <button
+                      onClick={() => translateText(index)}
+                      className="absolute top-[60px] right-2 mr-4 flex items-center gap-2"
+                      type="button"
+                      disabled={translate?.isPending}
+                    >
+                      {translate?.isPending ? (
+                        <Spinner />
+                      ) : (
+                        <Languages size={20} style={{ color: "gray" }} />
+                      )}
+                    </button>
+
+                    <div className="flex items-center gap-2 absolute top-0.5 right-4 text-sm z-10">
+                      <span className="text-secondary">
+                        Quiz No. {index + 1}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => append({ question: "", questionBn: "" })}
+                        className="w-fit text-green-500"
+                      >
+                        <CirclePlus size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeQuiz(index)}
+                        className="w-fit text-red-500"
+                      >
+                        <CircleX size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 relative">
+                    <CustomInput
+                      type="textarea"
+                      name={`quizs[${index}].questionBn`}
+                      placeholder="Quiz Question (Bangla)"
+                      label="Quiz Question (Bangla)"
+                      rows={3}
+                      index={index}
+                    />
+                  </div>
+
+                  <div className="col-span-2 grid grid-cols-4 gap-4">
+                    <div className="col-span-2">
+                      <CustomImageUpload
+                        required={false}
+                        name={`quizs[${index}].media.image`}
+                        placeholder="Upload Image"
+                        label="Upload Image (Optional)"
+                        index={index}
+                      />
+                    </div>
+                    <CustomSelect
+                      name={`quizs[${index}].difficulty`}
+                      label="Difficulty"
+                      options={dificultyOptions}
+                      placeholder="Select Difficulty"
+                      index={index}
+                    />
+
+                    <CustomSelect
+                      name={`quizs[${index}].correctAnswer`}
+                      label="Correct Value"
+                      placeholder="Select Value"
+                      options={correctAnswerTrueFalseOptions}
+                      index={index}
+                    />
+                  </div>
+
+                  <div className="col-span-2">
+                    <CustomInput
+                      type="textarea"
+                      name={`quizs[${index}].explaination`}
+                      placeholder="Quiz Question"
+                      label="Write Explanation Here"
+                      rows={3}
+                      index={index}
+                      required={false}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center mt-8 col-span-3">
             <button
               type="submit"
               className="px-4 py-3 bg-secondary hover:bg-secondary/90 w-full rounded-full text-white font-semibold text-center"

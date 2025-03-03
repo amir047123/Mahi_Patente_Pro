@@ -64,7 +64,7 @@ const CustomSelect = ({
     <div className={`w-full ${isHidden ? "hidden" : ""}`}>
       {label && labelShown && (
         <label
-          className="block text-primary_text text-base font-semibold mb-2"
+          className="block text-primary_text text-base mb-2"
           htmlFor={name}
         >
           {label} {required && <span className="text-red-500">*</span>}
@@ -88,7 +88,7 @@ const CustomSelect = ({
               : isEditable
               ? ""
               : "border-slate-300"
-          } rounded-full w-full py-2.5 px-3 pr-10 text-gray-700 leading-tight`}
+          } rounded-full w-full py-3 px-3 pr-10 text-gray-700 leading-tight`}
           id={name}
         >
           {allOptions && <option value="">{placeholder}</option>}

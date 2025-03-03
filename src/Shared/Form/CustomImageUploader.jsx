@@ -136,7 +136,7 @@ const CustomImageUpload = ({
     >
       {label && labelShown && (
         <label
-          className="block text-primary_text text-base font-semibold mb-2"
+          className="block text-primary_text text-base mb-2"
           htmlFor={name}
         >
           {label} {required && <span className="text-red-500">*</span>}
@@ -152,7 +152,7 @@ const CustomImageUpload = ({
             <div className="relative inline-block w-full">
               <label
                 htmlFor={name}
-                className={`flex items-center justify-between px-4 text-gray-600 rounded-3xl py-2 ${
+                className={`flex items-center justify-between px-4 text-gray-600 rounded-3xl py-2.5 ${
                   isEditable
                     ? "cursor-pointer bg-white border  dark:border dark:border-gray-700 dark:bg-[#1A2B3C] hover:bg-white/70"
                     : "cursor-not-allowed bg-white/70"

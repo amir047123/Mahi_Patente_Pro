@@ -82,7 +82,7 @@ const CustomInput = ({
     <div className={`${isHidden ? "hidden" : ""}`}>
       {label && labelShown && (
         <label
-          className="block text-primary_text text-base font-semibold mb-2"
+          className="block text-primary_text text-base mb-2"
           htmlFor={name}
         >
           {label} {required && <span className="text-red-500">*</span>}
@@ -99,7 +99,7 @@ const CustomInput = ({
             className={`appearance-none resize-none
             ${
               isEditable
-                ? "border  bg-white focus:outline-none focus:shadow-outline"
+                ? "border bg-white focus:outline-none focus:shadow-outline"
                 : "bg-white/70 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
             } ${
               errorMessage
