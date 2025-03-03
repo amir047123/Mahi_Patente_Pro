@@ -251,7 +251,7 @@ const AdminDashboardQuizQuestions = () => {
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-6 bg-white p-6 mt-5 rounded-[32px] mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-white p-6 mt-5 rounded-[32px] mb-4">
             <CustomSelect
               name="chapter"
               label="Select Chapter"
@@ -267,7 +267,7 @@ const AdminDashboardQuizQuestions = () => {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white p-6 rounded-[32px] flex justify-between items-center flex-col">
               <div className="grid grid-cols-1 gap-2 w-full">
                 {fields?.map((field, index) => (
@@ -296,13 +296,13 @@ const AdminDashboardQuizQuestions = () => {
               <button
                 type="button"
                 onClick={() => append({ question: "", questionBn: "" })}
-                className="flex items-center justify-center w-fit gap-1 text-green-500 font-semibold text-sm"
+                className="flex items-center justify-center w-fit gap-1 text-green-500 font-semibold text-sm mt-4"
               >
                 <span>Add Question</span>
                 <CirclePlus size={16} />
               </button>
             </div>
-            <div className="col-span-2 bg-white p-6 rounded-[32px]">
+            <div className="sm:col-span-2 bg-white p-6 rounded-[32px]">
               {fields?.map((field, index) => (
                 <div key={field.id} className="grid grid-cols-2 gap-4">
                   <div
@@ -368,8 +368,8 @@ const AdminDashboardQuizQuestions = () => {
                     />
                   </div>
 
-                  <div className="col-span-2 grid grid-cols-4 gap-4">
-                    <div className="col-span-2">
+                  <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div className="sm:col-span-2 md:col-span-1 lg:col-span-2">
                       <CustomImageUpload
                         required={false}
                         name={`quizs[${index}].media.image`}
@@ -388,7 +388,7 @@ const AdminDashboardQuizQuestions = () => {
 
                     <CustomSelect
                       name={`quizs[${index}].correctAnswer`}
-                      label="Correct Value"
+                      label="Answer"
                       placeholder="Select Value"
                       options={correctAnswerTrueFalseOptions}
                       index={index}
@@ -411,7 +411,7 @@ const AdminDashboardQuizQuestions = () => {
             </div>
           </div>
 
-          <div className="text-center mt-8 col-span-3">
+          <div className="text-center mt-8 sm:col-span-3">
             <button
               type="submit"
               className="px-4 py-3 bg-secondary hover:bg-secondary/90 w-full rounded-full text-white font-semibold text-center"
