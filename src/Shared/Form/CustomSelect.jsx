@@ -81,7 +81,7 @@ const CustomSelect = ({
           className={`appearance-none ${
             isEditable
               ? " border bg-white focus:outline-none focus:shadow-outline"
-              : "bg-white/70 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
+              : "bg-slate-100 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
           } ${
             errorMessage
               ? "border-red-500"

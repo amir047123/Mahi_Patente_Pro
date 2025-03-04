@@ -12,7 +12,7 @@ import HorizontalScroll from "@/Shared/HorizontalScroll";
 import { addDays, format } from "date-fns";
 import { CalendarIcon, ListFilter, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import img from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
@@ -90,9 +90,12 @@ const AdminDashboardQuizQuestion = () => {
           </div>
         </div>
 
-        <button className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
+        <Link
+          to={`/admin-dashboard/quiz-manage/chapters/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/add-quiz`}
+          className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90"
+        >
           Add Quiz Question
-        </button>
+        </Link>
       </div>
 
       <HorizontalScroll className="flex gap-5 items-center justify-between w-full my-5 bg-white p-5 rounded-2xl border">

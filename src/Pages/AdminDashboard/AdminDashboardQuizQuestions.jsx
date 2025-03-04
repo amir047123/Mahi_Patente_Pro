@@ -14,9 +14,20 @@ import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 
 const AdminDashboardQuizQuestions = () => {
+  const query = useQueryClient();
   const { pathname } = useLocation();
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
+  const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [quizIndex, setQuizIndex] = useState("");
+  const [chapterId, setChapterId] = useState("");
+  const [chapterOptions, setChapterOptions] = useState([]);
+  const [subjectOptions, setSubjectOptions] = useState([]);
+  const [breadCrumbData, setBreadCrumbData] = useState([
+    { name: "Questions", path: "quiz-manage/add-quiz" },
+  ]);
 
   const methods = useForm({
     defaultValues: {
@@ -39,6 +50,17 @@ const AdminDashboardQuizQuestions = () => {
     name: "quizs",
   });
 
+  const dificultyOptions = [
+    { key: "Easy", label: "Easy" },
+    { key: "Medium", label: "Medium" },
+    { key: "Hard", label: "Hard" },
+  ];
+
+  const correctAnswerTrueFalseOptions = [
+    { key: "0", label: "True" },
+    { key: "1", label: "False" },
+  ];
+
   useEffect(() => {
     const chapter = pathname?.split("/")[4];
     const subject = pathname?.split("/")[5];
@@ -55,15 +77,6 @@ const AdminDashboardQuizQuestions = () => {
     }
   }, [pathname]);
 
-  const query = useQueryClient();
-
-  const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
-  const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [quizIndex, setQuizIndex] = useState("");
-  const [chapterId, setChapterId] = useState("");
-
-  const [chapterOptions, setChapterOptions] = useState([]);
   const { useFetchEntities: useFetchChapters } =
     useCrudOperations("quiz-chapter/all");
 
@@ -100,7 +113,6 @@ const AdminDashboardQuizQuestions = () => {
     }
   }, [chapterOptions, selectedChapter, setValue]);
 
-  const [subjectOptions, setSubjectOptions] = useState([]);
   const { useEntityById: useFetchSubjects } = useCrudOperations("subject");
 
   const {
@@ -175,20 +187,41 @@ const AdminDashboardQuizQuestions = () => {
     });
   };
 
-  const dificultyOptions = [
-    { key: "Easy", label: "Easy" },
-    { key: "Medium", label: "Medium" },
-    { key: "Hard", label: "Hard" },
-  ];
-
-  const correctAnswerTrueFalseOptions = [
-    { key: "0", label: "True" },
-    { key: "1", label: "False" },
-  ];
-
   useEffect(() => {
     setValue("subject", "");
   }, [chapterId, setValue]);
+
+  useEffect(() => {
+    if (
+      selectedChapter &&
+      selectedSubject &&
+      chaptersResponse &&
+      subjectsResponse
+    ) {
+      const selectedSubjectOption = subjectsResponse?.data?.subjects?.find(
+        (item) => item?._id === selectedSubject
+      );
+      const selectedChapterOption = chaptersResponse?.data?.find(
+        (item) => item?._id === selectedChapter
+      );
+
+      setBreadCrumbData([
+        { name: "Chapters", path: "quiz-manage/chapters" },
+        {
+          name: `${selectedChapterOption?.name}`,
+          path: `quiz-manage/chapters/${selectedChapterOption?._id}`,
+        },
+        {
+          name: `${selectedSubjectOption?.name}`,
+          path: `quiz-manage/chapters/${selectedChapterOption?._id}/${selectedSubjectOption?._id}`,
+        },
+        {
+          name: `Add Quiz`,
+          path: `quiz-manage/chapters/${selectedChapterOption?._id}/${selectedSubjectOption?._id}/add-quiz`,
+        },
+      ]);
+    }
+  }, [selectedChapter, selectedSubject, chaptersResponse, subjectsResponse]);
 
   const { createEntity: translate } = useCrudOperations("translate");
 
@@ -257,10 +290,7 @@ const AdminDashboardQuizQuestions = () => {
 
   return (
     <>
-      <DashboardBreadcrumb
-        role="admin"
-        items={[{ name: "Questions", path: "question" }]}
-      />
+      <DashboardBreadcrumb role="admin" items={breadCrumbData} />
 
       <WarningModal
         onConfirm={removeQuizConfirmed}
