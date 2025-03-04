@@ -81,7 +81,7 @@ const AdminAddSubjectModal = ({ children }) => {
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
               {" "}
               <ArrowLeft />{" "}
-              <span className="whitespace-nowrap">Add a Chapter</span>
+              <span className="whitespace-nowrap">Add a Subject</span>
             </DialogTitle>
           </DialogClose>
         </DialogHeader>

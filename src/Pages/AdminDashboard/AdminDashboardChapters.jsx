@@ -122,9 +122,9 @@ const AdminDashboardChapters = () => {
 
         {/* Add Chapter Button */}
         <AdminAddChapterModal>
-          <button className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
+          <span className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
             Add a Chapter
-          </button>
+          </span>
         </AdminAddChapterModal>
       </HorizontalScroll>
 

@@ -61,7 +61,7 @@ const CustomImageUpload = ({
         ? `${label || fieldName || name || "This field"} is required`
         : false,
     });
-  }, [register, name, required, label]);
+  }, [register, name, required, label, resetUploadedFile]);
 
   useEffect(() => {
     setIsUploading(uploading);
@@ -123,11 +123,18 @@ const CustomImageUpload = ({
   }, []);
 
   useEffect(() => {
-    if (resetUploadedFile) {
+    if (resetUploadedFile !== 1) {
       setSelectedFile(null);
+      setValue(name, null, { shouldValidate: true });
       setUploadedFile(null);
     }
   }, [resetUploadedFile]);
+
+  useEffect(() => {
+    if (error) {
+      fileInputRef.current.value = "";
+    }
+  }, [error]);
 
   return (
     <div

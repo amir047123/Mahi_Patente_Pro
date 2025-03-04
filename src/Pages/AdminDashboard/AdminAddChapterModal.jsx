@@ -1,3 +1,4 @@
+import Typography from "@/Components/Typography";
 import {
   Dialog,
   DialogClose,
@@ -7,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/Components/ui/dialog";
+import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
@@ -18,54 +20,31 @@ import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const AdminAddChapterModal = ({ children }) => {
+  const [resetUploadedFile, setResetUploadedFile] = useState(1);
   const query = useQueryClient();
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const { useFetchEntities } = useCrudOperations("quiz-category/all");
 
   const methods = useForm();
-  const { handleSubmit, reset, setValue } = methods;
-
   const {
-    data: response,
-    isSuccess,
-    error,
-    isError,
-    isLoading,
-  } = useFetchEntities();
-
-  useEffect(() => {
-    if (isSuccess && response?.success) {
-      const category = response?.data?.map((item) => ({
-        key: item?._id,
-        label: item?.name,
-      }));
-      setCategoryOptions(category);
-    }
-  }, [isSuccess, response, setValue]);
-
-  useEffect(() => {
-    if (categoryOptions.length > 0) {
-      const theoryCategory = categoryOptions?.find(
-        (item) => item?.label?.toLowerCase() === "theory"
-      );
-      setValue("category", theoryCategory?.key);
-    }
-  }, [categoryOptions, setValue]);
-
-  if (isError && !isLoading) {
-    toast.error(error?.message);
-  }
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = methods;
 
   const { createEntity } = useCrudOperations("quiz-chapter/create");
 
   const onSubmit = (formData) => {
-    createEntity.mutate(formData, {
+    const updatedData = { bodyData: formData, category: "Theory" };
+
+    createEntity.mutate(updatedData, {
       onSuccess: (data) => {
         toast.success(data?.message);
         query.invalidateQueries({
           queryKey: ["quiz-chapter/all"],
         });
-        // reset();
+        setResetUploadedFile(Math.random());
+        setValue("image", "");
+        reset();
       },
       onError: (error) => {
         toast.error(error?.message);
@@ -77,6 +56,8 @@ const AdminAddChapterModal = ({ children }) => {
     { key: "Active", label: "Active" },
     { key: "Inactive", label: "Inactive" },
   ];
+
+  console.log(errors);
 
   return (
     <Dialog className="">
@@ -95,50 +76,51 @@ const AdminAddChapterModal = ({ children }) => {
 
         <FormProvider {...methods}>
           <form className="bg-white p-5 rounded-2xl pb-8 my-1">
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              <CustomInput
-                name="name"
-                placeholder="Chapter Title"
-                label="Chapter Title"
-              />
-              <CustomInput
-                type="number"
-                name="order"
-                placeholder="Chapter Number"
-                label="Chapter Number"
-              />
-
-              <div className="col-span-2 grid grid-cols-2 gap-6">
-                <CustomSelect
-                  isHidden={true}
-                  name="category"
-                  label="Select Category"
-                  options={categoryOptions}
-                  placeholder="Select Category"
-                  isEditable={false}
-                />
-
-                <CustomImageUpload
-                  name="image"
-                  label="Upload Image"
-                  placeholder="Upload Image"
-                />
-
-                <CustomSelect
-                  name="status"
-                  label="Select Status"
-                  options={statusOptions}
-                  placeholder="Select Status"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="sm:col-span-2">
+                <CustomInput
+                  name="name"
+                  placeholder="Road, vehicles, driver duties"
+                  label="Chapter Title"
                 />
               </div>
 
-              <div className="col-span-2">
+              <CustomInput
+                type="number"
+                name="order"
+                placeholder="Enter Chapter Number"
+                label="Chapter No."
+              />
+              <CustomSelect
+                name="status"
+                label="Select Status"
+                options={statusOptions}
+                placeholder="Select Status"
+              />
+              <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="">
+                  <CustomImageUpload
+                    name="image"
+                    label="Chapter Thumbnail"
+                    placeholder="Upload Chapter Thumbnail"
+                    resetUploadedFile={resetUploadedFile}
+                  />
+                  <Typography.Body
+                    variant="regular"
+                    className="text-secondary mt-2 !text-sm"
+                  >
+                    <span className="text-secondaryText">Note</span>: Please
+                    make sure the logo dimensions are 113px in width and 162px
+                    in height.
+                  </Typography.Body>
+                </div>
+
                 <CustomInput
                   type="textarea"
                   rows={3}
                   name="description"
-                  placeholder="Chapter Description"
-                  label="Chapter Description"
+                  placeholder="Leave a description here..."
+                  label="Write about chapter"
                 />
               </div>
             </div>
@@ -148,9 +130,14 @@ const AdminAddChapterModal = ({ children }) => {
         <DialogFooter className="flex gap-5 items-center">
           <button
             onClick={handleSubmit(onSubmit)}
-            className="bg-secondary hover:bg-secondary/90 px-6 py-2.5 text-sm font-medium text-white rounded-full w-full"
+            className="text-sm px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+            disabled={createEntity?.isPending ? true : false}
           >
-            Add Chapter
+            {createEntity?.isPending ? (
+              <Spinner size={20} className="text-white" />
+            ) : (
+              "Add A Chapter"
+            )}
           </button>
           <DialogClose asChild>
             <button className="border border-secondary/50 px-6 py-2.5 text-sm font-medium text-secondary rounded-full w-full">
