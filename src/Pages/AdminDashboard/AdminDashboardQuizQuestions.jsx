@@ -402,13 +402,17 @@ const AdminDashboardQuizQuestions = () => {
               ))}
             </div>
           </div>
-
           <div className="text-center mt-8 sm:col-span-3">
             <button
               type="submit"
-              className="px-4 py-3 bg-secondary hover:bg-secondary/90 w-full rounded-full text-white font-semibold text-center"
+              className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+              disabled={createEntity?.isPending ? true : false}
             >
-              Add A Question
+              {createEntity?.isPending ? (
+                <Spinner size={24} className="text-white" />
+              ) : (
+                "Add A Question"
+              )}
             </button>
           </div>
         </form>

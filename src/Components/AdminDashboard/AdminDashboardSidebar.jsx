@@ -55,6 +55,11 @@ const items = [
     icon: BookOpenCheck,
   },
   {
+    title: "Choose",
+    url: "/admin-dashboard/choose",
+    icon: BookOpenCheck,
+  },
+  {
     title: "Questions",
     url: "/admin-dashboard/question",
     icon: MessageCircleQuestion,

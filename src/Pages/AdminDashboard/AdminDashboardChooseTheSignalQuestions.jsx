@@ -1,7 +1,6 @@
 import Typography from "@/Components/Typography";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import WarningModal from "@/Shared/WarningModal";
 import { CirclePlus, CircleX } from "lucide-react";
 import { useRef, useState } from "react";
@@ -10,8 +9,9 @@ import toast from "react-hot-toast";
 import guessEmpty from "@/assets/AdminDashboard/guess-empty.png";
 import CustomInput from "@/Shared/Form/CustomInput";
 import Spinner from "@/Components/ui/Spinner";
+import CustomImageUploaderSecond from "@/Shared/Form/CustomImageUploaderSecond";
 
-const AdminDashboardGuessTheSignalQuestions = () => {
+const AdminDashboardChooseTheSignalQuestions = () => {
   const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
   const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -33,17 +33,15 @@ const AdminDashboardGuessTheSignalQuestions = () => {
 
   const onSubmit = (formData) => {
     const updatedData = {
-      category: "Guess the Signal",
+      category: "Choose 4 to 1 Signal",
       bodyData: formData?.quizs?.map((item) => {
         return {
+          question: item?.question,
           correctAnswer: item?.correctAnswer,
           options: [item?.answerA, item?.answerB, item?.answerC, item?.answerD],
           meta: {
-            quizType: "text",
+            quizType: "image_selector",
             difficulty: "Easy",
-          },
-          media: {
-            image: item?.image,
           },
         };
       }),
@@ -151,17 +149,21 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                     onDragStart={() => handleDragStart(index)}
                     onDragEnter={() => handleDragEnter(index)}
                     onDragEnd={handleDragEnd}
-                    className="!bg-[#F3F4F6] h-14 px-4 rounded-full flex items-center gap-2 pr-10 relative cursor-move"
+                    className="!bg-[#F3F4F6] h-14 px-4 rounded-full flex items-center gap-1 pr-10 relative cursor-move"
                   >
                     <span className="text-primary">{index + 1}.</span>
-                    <img
-                      src={watch(`quizs[${index}].image`) || guessEmpty}
-                      alt="question"
-                      className="w-12 h-10 object-cover rounded"
-                    />
-                    <span className="line-clamp-1">
-                      {getCorrectAnswer(index)}
-                    </span>
+
+                    <div className="w-full flex items-center justify-between gap-2">
+                      <span className="line-clamp-1">
+                        {watch(`quizs[${index}].question`)}
+                      </span>
+                      <img
+                        src={getCorrectAnswer(index) || guessEmpty}
+                        alt="question"
+                        className="w-12 h-10 object-cover rounded"
+                      />
+                    </div>
+
                     <button
                       type="button"
                       onClick={() => removeQuiz(index)}
@@ -192,12 +194,14 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                     }`}
                   ></div>
                   <div className="col-span-3 relative">
-                    <label
-                      className="block text-primary_text text-base mb-2"
-                      htmlFor={`quizs[${index}].image`}
-                    >
-                      Image Preview
-                    </label>
+                    <CustomInput
+                      type="textarea"
+                      name={`quizs[${index}].question`}
+                      placeholder="Enter Question"
+                      label="Enter Question"
+                      rows={3}
+                      index={index}
+                    />
 
                     <div className="flex items-center gap-2 absolute top-0.5 right-4 text-sm z-10">
                       <span className="text-secondary">
@@ -220,55 +224,25 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 min-[475px]:grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 gap-4 border-b pb-4 mb-4">
-                    <div className="pt-4 lg:py-4 pr-4 min-[475px]:border-r sm:border-r-0 lg:!border-r w-full text-center flex items-center justify-center">
-                      <img
-                        src={watch(`quizs[${index}].image`) || guessEmpty}
-                        alt="question"
-                        className="lg:w-full h-full object-scale-down border rounded-2xl"
-                      />
-                    </div>
-
-                    <div className="min-[475px]:col-span-2 sm:col-span-1 lg:col-span-2 sm:flex sm:flex-col sm:justify-between">
-                      <div className="mt-3">
-                        <CustomImageUpload
-                          name={`quizs[${index}].image`}
-                          placeholder="Upload Question Image"
-                          label="Upload Question Image"
-                          index={index}
-                          previewShown={false}
-                        />
-                      </div>
-
-                      <Typography.Body
-                        variant="regular"
-                        className="text-secondary my-1 pb-2 !text-sm"
-                      >
-                        <span className="text-secondaryText">Note</span>: Please
-                        make sure the image dimensions are 280px in width and
-                        280px in height.
-                      </Typography.Body>
-                    </div>
-                  </div>
-
-                  <div>
+                  <div className="mt-4">
                     <label
                       className="block text-primary_text text-base mb-4"
                       htmlFor={`quizs[${index}].image`}
                     >
-                      Enter Options
+                      Upload Image Options{" "}
+                      <span className="text-red-500">*</span>
                     </label>
 
-                    <div className="grid min-[475px]:grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 gap-4">
-                      <div className="w-full relative">
-                        <div className="mr-10">
-                          <CustomInput
-                            type="text"
+                    <div className="grid min-[475px]:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="w-full flex flex-col justify-center items-center gap-4">
+                        <div className="w-full">
+                          <CustomImageUploaderSecond
                             name={`quizs[${index}].answerA`}
                             placeholder="Quiz Answer A"
                             label="Answer A"
-                            labelShown={false}
                             index={index}
+                            labelShown={false}
+                            previewShown={false}
                           />
                         </div>
 
@@ -276,20 +250,20 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                           {...register(`quizs[${index}].correctAnswer`)}
                           value="0"
                           type="radio"
-                          className="ml-2 size-5 absolute top-3 right-1 accent-pink-500 cursor-pointer"
+                          className="accent-pink-500 cursor-pointer size-5"
                           defaultChecked
                         />
                       </div>
 
-                      <div className="w-full relative">
-                        <div className="mr-10">
-                          <CustomInput
-                            type="text"
+                      <div className="w-full flex flex-col justify-center items-center gap-4">
+                        <div className="w-full">
+                          <CustomImageUploaderSecond
                             name={`quizs[${index}].answerB`}
                             placeholder="Quiz Answer B"
                             label="Answer B"
-                            labelShown={false}
                             index={index}
+                            labelShown={false}
+                            previewShown={false}
                           />
                         </div>
 
@@ -297,19 +271,19 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                           {...register(`quizs[${index}].correctAnswer`)}
                           value="1"
                           type="radio"
-                          className="ml-2 size-5 absolute top-3 right-1 accent-pink-500 cursor-pointer"
+                          className="accent-pink-500 cursor-pointer size-5"
                         />
                       </div>
 
-                      <div className="w-full relative">
-                        <div className="mr-10">
-                          <CustomInput
-                            type="text"
+                      <div className="w-full flex flex-col justify-center items-center gap-4">
+                        <div className="w-full">
+                          <CustomImageUploaderSecond
                             name={`quizs[${index}].answerC`}
                             placeholder="Quiz Answer C"
                             label="Answer C"
-                            labelShown={false}
                             index={index}
+                            labelShown={false}
+                            previewShown={false}
                           />
                         </div>
 
@@ -317,19 +291,19 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                           {...register(`quizs[${index}].correctAnswer`)}
                           value="2"
                           type="radio"
-                          className="ml-2 size-5 absolute top-3 right-1 accent-pink-500 cursor-pointer"
+                          className="accent-pink-500 cursor-pointer size-5"
                         />
                       </div>
 
-                      <div className="w-full relative">
-                        <div className="mr-10">
-                          <CustomInput
-                            type="text"
+                      <div className="w-full flex flex-col justify-center items-center gap-4">
+                        <div className="w-full">
+                          <CustomImageUploaderSecond
                             name={`quizs[${index}].answerD`}
                             placeholder="Quiz Answer D"
                             label="Answer D"
-                            labelShown={false}
                             index={index}
+                            labelShown={false}
+                            previewShown={false}
                           />
                         </div>
 
@@ -337,7 +311,7 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                           {...register(`quizs[${index}].correctAnswer`)}
                           value="3"
                           type="radio"
-                          className="ml-2 size-5 absolute top-3 right-1 accent-pink-500 cursor-pointer"
+                          className="accent-pink-500 cursor-pointer size-5"
                         />
                       </div>
                     </div>
@@ -366,4 +340,4 @@ const AdminDashboardGuessTheSignalQuestions = () => {
   );
 };
 
-export default AdminDashboardGuessTheSignalQuestions;
+export default AdminDashboardChooseTheSignalQuestions;

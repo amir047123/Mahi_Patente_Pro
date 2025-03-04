@@ -1,6 +1,7 @@
 import AdminDashboardCategories from "@/Pages/AdminDashboard/AdminDashboardCategories";
 import AdminDashboardChapterDetails from "@/Pages/AdminDashboard/AdminDashboardChapterDetails";
 import AdminDashboardChapters from "@/Pages/AdminDashboard/AdminDashboardChapters";
+import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardChooseTheSignalQuestions";
 import AdminDashboardGuessTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardGuessTheSignalQuestions";
 import AdminDashboardIndex from "@/Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardQuizQuestion from "@/Pages/AdminDashboard/AdminDashboardQuizQuestion";
@@ -24,6 +25,7 @@ const AdminDashboardRoutes = [
   { path: "quiz-manage/subjects", Component: AdminDashboardSubjects },
   { path: "question", Component: AdminDashboardQuizQuestions },
   { path: "guess", Component: AdminDashboardGuessTheSignalQuestions },
+  { path: "choose", Component: AdminDashboardChooseTheSignalQuestions },
 ];
 
 export default AdminDashboardRoutes;
