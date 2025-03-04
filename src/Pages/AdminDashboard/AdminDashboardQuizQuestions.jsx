@@ -11,8 +11,50 @@ import { CirclePlus, CircleX, Languages } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 const AdminDashboardQuizQuestions = () => {
+  const { pathname } = useLocation();
+  const [selectedChapter, setSelectedChapter] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+
+  const methods = useForm({
+    defaultValues: {
+      quizs: [{}],
+    },
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    control,
+    setError,
+    setValue,
+    watch,
+    clearErrors,
+    getValues,
+  } = methods;
+  const { fields, append, remove, move } = useFieldArray({
+    control,
+    name: "quizs",
+  });
+
+  useEffect(() => {
+    const chapter = pathname?.split("/")[4];
+    const subject = pathname?.split("/")[5];
+
+    if (chapter) {
+      setSelectedChapter(chapter);
+    } else {
+      setSelectedChapter(null);
+    }
+    if (subject) {
+      setSelectedSubject(subject);
+    } else {
+      setSelectedSubject(null);
+    }
+  }, [pathname]);
+
   const query = useQueryClient();
 
   const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
@@ -47,6 +89,17 @@ const AdminDashboardQuizQuestions = () => {
     toast.error(chapterError?.message);
   }
 
+  useEffect(() => {
+    if (selectedChapter) {
+      chapterOptions?.map((item) => {
+        if (item?.key === selectedChapter) {
+          setChapterId(item?.key);
+          setValue("chapter", item?.key);
+        }
+      });
+    }
+  }, [chapterOptions, selectedChapter, setValue]);
+
   const [subjectOptions, setSubjectOptions] = useState([]);
   const { useEntityById: useFetchSubjects } = useCrudOperations("subject");
 
@@ -72,26 +125,15 @@ const AdminDashboardQuizQuestions = () => {
     toast.error(subjectError?.message);
   }
 
-  const methods = useForm({
-    defaultValues: {
-      quizs: [{}],
-    },
-  });
-
-  const {
-    handleSubmit,
-    reset,
-    control,
-    setError,
-    setValue,
-    watch,
-    clearErrors,
-    getValues,
-  } = methods;
-  const { fields, append, remove, move } = useFieldArray({
-    control,
-    name: "quizs",
-  });
+  useEffect(() => {
+    if (selectedSubject) {
+      subjectOptions?.map((item) => {
+        if (item?.key === selectedSubject) {
+          setValue("subject", item?.key);
+        }
+      });
+    }
+  }, [subjectOptions, selectedSubject, setValue]);
 
   const { createEntity } = useCrudOperations("quiz/create");
 
@@ -243,12 +285,14 @@ const AdminDashboardQuizQuestions = () => {
               options={chapterOptions}
               placeholder="Select Chapter"
               setValue={setChapterId}
+              isEditable={selectedChapter ? false : true}
             />
             <CustomSelect
               name="subject"
               label="Select Subject"
               options={subjectOptions}
               placeholder="Select Subject"
+              isEditable={selectedSubject ? false : true}
             />
           </div>
 

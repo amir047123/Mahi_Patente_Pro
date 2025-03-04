@@ -22,10 +22,23 @@ const AdminDashboardRoutes = [
     path: "quiz-manage/chapters/:chapter/:subject",
     Component: AdminDashboardQuizQuestion,
   },
+  {
+    path: "quiz-manage/chapters/:chapter/:subject/add-quiz",
+    Component: AdminDashboardQuizQuestions,
+  },
   { path: "quiz-manage/subjects", Component: AdminDashboardSubjects },
-  { path: "question", Component: AdminDashboardQuizQuestions },
-  { path: "guess", Component: AdminDashboardGuessTheSignalQuestions },
-  { path: "choose", Component: AdminDashboardChooseTheSignalQuestions },
+  {
+    path: "quiz-manage/add-quiz",
+    Component: AdminDashboardQuizQuestions,
+  },
+  {
+    path: "quiz-manage/guess-the-signal",
+    Component: AdminDashboardGuessTheSignalQuestions,
+  },
+  {
+    path: "quiz-manage/choose-4-to-1",
+    Component: AdminDashboardChooseTheSignalQuestions,
+  },
 ];
 
 export default AdminDashboardRoutes;

@@ -1,12 +1,13 @@
 import {
-  BookOpenCheck,
   Captions,
   ChevronDown,
   CircleHelp,
+  Grid2x2Check,
   LayoutDashboard,
   List,
   ListTodo,
   MessageCircleQuestion,
+  Signpost,
 } from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
@@ -50,30 +51,30 @@ const items = [
   //   icon: List,
   // },
   {
-    title: "Guess",
-    url: "/admin-dashboard/guess",
-    icon: BookOpenCheck,
-  },
-  {
-    title: "Choose",
-    url: "/admin-dashboard/choose",
-    icon: BookOpenCheck,
-  },
-  {
-    title: "Questions",
-    url: "/admin-dashboard/question",
-    icon: MessageCircleQuestion,
-  },
-  {
     title: "Quiz Manage",
     url: "/admin-dashboard/quiz-manage",
     dropdown: true,
     icon: CircleHelp,
     dropdownItem: [
       {
+        title: "Add Quiz",
+        url: "/admin-dashboard/quiz-manage/add-quiz",
+        icon: MessageCircleQuestion,
+      },
+      {
         title: "Chapters",
         url: "/admin-dashboard/quiz-manage/chapters",
         icon: List,
+      },
+      {
+        title: "Guess the Signal",
+        url: "/admin-dashboard/quiz-manage/guess-the-signal",
+        icon: Signpost,
+      },
+      {
+        title: "Choose 4 to 1",
+        url: "/admin-dashboard/quiz-manage/choose-4-to-1",
+        icon: Grid2x2Check,
       },
       {
         title: "Subjects",
