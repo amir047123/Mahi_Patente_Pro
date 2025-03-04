@@ -16,6 +16,7 @@ const CustomImageUpload = ({
   index = -1,
   labelShown = true,
   isHidden = false,
+  previewShown = true,
 }) => {
   const [selectedFile, setSelectedFile] = useState(value || null);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -170,7 +171,7 @@ const CustomImageUpload = ({
                 ref={fileInputRef}
               />
             </div>
-            {selectedFile && (
+            {previewShown && selectedFile && (
               <div className="w-14 relative">
                 {selectedFile.endsWith("pdf") ? (
                   <embed

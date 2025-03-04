@@ -1,3 +1,4 @@
+import Typography from "@/Components/Typography";
 import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
@@ -132,33 +133,15 @@ const AdminDashboardQuizQuestions = () => {
     });
   };
 
-  const statusOptions = [
-    { key: "Active", label: "Active" },
-    { key: "Inactive", label: "Inactive" },
-  ];
-
   const dificultyOptions = [
     { key: "Easy", label: "Easy" },
     { key: "Medium", label: "Medium" },
     { key: "Hard", label: "Hard" },
   ];
 
-  const quizTypeOptions = [
-    { key: "true_false", label: "True/False" },
-    { key: "image_selector", label: "Image" },
-    { key: "text", label: "Text" },
-  ];
-
   const correctAnswerTrueFalseOptions = [
     { key: "0", label: "True" },
     { key: "1", label: "False" },
-  ];
-
-  const correctAnswerTextImageOptions = [
-    { key: "0", label: "A" },
-    { key: "1", label: "B" },
-    { key: "2", label: "C" },
-    { key: "3", label: "D" },
   ];
 
   useEffect(() => {
@@ -272,6 +255,13 @@ const AdminDashboardQuizQuestions = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white p-6 rounded-[32px] flex justify-between items-center flex-col">
               <div className="grid grid-cols-1 gap-2 w-full">
+                <Typography.Body
+                  variant="semibold"
+                  className="text-gray-600 border-b mb-1 pb-2"
+                >
+                  Quizes
+                </Typography.Body>
+
                 {fields?.map((field, index) => (
                   <div
                     key={field.id}
@@ -310,7 +300,7 @@ const AdminDashboardQuizQuestions = () => {
                   <div
                     className={`${
                       index > 0
-                        ? "border-b-[2px] border-secondary col-span-2 mt-4"
+                        ? "border-b-[1px] border-secondary col-span-2 mt-4"
                         : "hidden"
                     }`}
                   ></div>
@@ -418,7 +408,7 @@ const AdminDashboardQuizQuestions = () => {
               type="submit"
               className="px-4 py-3 bg-secondary hover:bg-secondary/90 w-full rounded-full text-white font-semibold text-center"
             >
-              Submit
+              Add A Question
             </button>
           </div>
         </form>

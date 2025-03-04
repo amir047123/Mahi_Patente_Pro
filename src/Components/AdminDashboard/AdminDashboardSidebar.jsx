@@ -1,4 +1,5 @@
 import {
+  BookOpenCheck,
   Captions,
   ChevronDown,
   CircleHelp,
@@ -48,11 +49,11 @@ const items = [
   //   url: "/admin-dashboard/chapter",
   //   icon: List,
   // },
-  // {
-  //   title: "Subjects",
-  //   url: "/admin-dashboard/subject",
-  //   icon: BookOpenCheck,
-  // },
+  {
+    title: "Guess",
+    url: "/admin-dashboard/guess",
+    icon: BookOpenCheck,
+  },
   {
     title: "Questions",
     url: "/admin-dashboard/question",
