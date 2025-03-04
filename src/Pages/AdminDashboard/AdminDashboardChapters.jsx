@@ -1,6 +1,6 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import { ListFilter, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Calendar } from "@/Components/ui/calendar";
 import { addDays, format } from "date-fns";
@@ -17,6 +17,8 @@ import AdminAddChapterModal from "./AdminAddChapterModal";
 import AdminChapterCard from "@/Components/AdminDashboard/AdminChapterCard";
 import HorizontalScroll from "@/Shared/HorizontalScroll";
 import AdminAddChapterCard from "@/Components/AdminDashboard/AdminAddChapterCard";
+import toast from "react-hot-toast";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 
 const AdminDashboardChapters = () => {
   const [searchText, setSearchText] = useState("");
@@ -25,6 +27,26 @@ const AdminDashboardChapters = () => {
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   });
+
+  const { useFetchEntities } = useCrudOperations("quiz-chapter/all");
+
+  const {
+    data: response,
+    isSuccess,
+    error,
+    isError,
+    isLoading,
+  } = useFetchEntities();
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      console.log(response?.data);
+    }
+  }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
 
   return (
     <>
@@ -107,10 +129,9 @@ const AdminDashboardChapters = () => {
       </HorizontalScroll>
 
       <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-3">
-        <AdminChapterCard />
-        <AdminChapterCard />
-        <AdminChapterCard />
-        <AdminChapterCard />
+        {response?.data?.map((item, index) => (
+          <AdminChapterCard key={index} item={item} />
+        ))}
         <AdminAddChapterCard />
       </div>
     </>

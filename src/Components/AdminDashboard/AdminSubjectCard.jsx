@@ -8,18 +8,18 @@ import {
 } from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
 
-const AdminSubjectCard = () => {
+const AdminSubjectCard = ({ subject, chapterId }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
-      <img src={img} alt="img" />
+      <img src={subject?.image || img} alt="img" />
 
       {/* Right section with text */}
       <div className="flex-1 flex flex-col justify-between h-full   p-6 ">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="font-bold text-primaryText text-lg mb-1">
-              Road, vehicles, driver duties
+              {subject?.name}
             </h2>
           </div>
 
@@ -30,7 +30,9 @@ const AdminSubjectCard = () => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-36">
-              <Link to="/admin-dashboard/quiz-manage/chapters/subject/quizQuestion">
+              <Link
+                to={`/admin-dashboard/quiz-manage/chapters/${chapterId}/${subject?._id}`}
+              >
                 <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
                   <EyeIcon className="h-5 w-5 text-gray-700" />
                   <span className="text-gray-700 font-medium">Open</span>

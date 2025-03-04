@@ -20,9 +20,11 @@ import Typography from "@/Components/Typography";
 import img from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import AdminSubjectCard from "@/Components/AdminDashboard/AdminSubjectCard";
 import AdminAddSubjectModal from "./AdminAddSubjectModal";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const AdminDashboardChapterDetails = () => {
-  const { subject } = useParams();
   const [searchText, setSearchText] = useState("");
 
   const [date, setDate] = useState({
@@ -30,33 +32,64 @@ const AdminDashboardChapterDetails = () => {
     to: addDays(new Date(2022, 0, 20), 20),
   });
 
+  const { chapter } = useParams();
+  const [breadCrumbData, setBreadCrumbData] = useState([
+    { name: "Chapters", path: "quiz-manage/chapters" },
+  ]);
+
+  const { useEntityById } = useCrudOperations("subject");
+
+  const {
+    data: response,
+    isSuccess,
+    error,
+    isError,
+    isLoading,
+  } = useEntityById(chapter);
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      console.log(response?.data);
+    }
+  }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      setBreadCrumbData([
+        { name: "Chapters", path: "quiz-manage/chapters" },
+        {
+          name: `${response?.data?.chapter?.name}`,
+          path: `quiz-manage/chapters/${response?.data?.chapter?._id}`,
+        },
+      ]);
+    }
+  }, [isSuccess, response]);
+
   return (
     <>
-      <DashboardBreadcrumb
-        role="admin"
-        items={[
-          { name: "Chapters", path: "quiz-manage/chapters" },
-          { name: "Subjects", path: subject },
-        ]}
-      />
+      <DashboardBreadcrumb role="admin" items={breadCrumbData} />
 
       <div className=" gap-4 flex items-center justify-between py-5 border-b mb-5">
         <div className="gap-4 flex items-center">
           <img
             className="h-[100px] object-cover rounded-xl"
-            src={img}
+            src={response?.data?.chapter?.image || img}
             alt="image"
           />
 
           <div>
             <Typography.Body variant="medium" className="text-secondaryText">
-              Chapter 1
+              Chapter {response?.data?.chapter?.order}
             </Typography.Body>
             <Typography.Heading4
               className="text-primaryText leading-7 mt-2 line-clamp-1"
               variant="semibold"
             >
-              Road, vehicles, driver duties
+              {response?.data?.chapter?.name}
             </Typography.Heading4>
             <p className="text-secondaryText text-sm mt-2">
               5 Subject - 18 Question
@@ -144,10 +177,9 @@ const AdminDashboardChapterDetails = () => {
       </HorizontalScroll>
 
       <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-3">
-        <AdminSubjectCard />
-        <AdminSubjectCard />
-        <AdminSubjectCard />
-        <AdminSubjectCard />
+        {response?.data?.subjects?.map((subject, index) => (
+          <AdminSubjectCard key={index} subject={subject} chapterId={chapter} />
+        ))}
 
         <AdminAddChapterCard />
       </div>

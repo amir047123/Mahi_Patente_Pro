@@ -15,11 +15,11 @@ const AdminDashboardRoutes = [
   { path: "categories", Component: AdminDashboardCategories },
   { path: "quiz-manage/chapters", Component: AdminDashboardChapters },
   {
-    path: "quiz-manage/chapters/:subject",
+    path: "quiz-manage/chapters/:chapter",
     Component: AdminDashboardChapterDetails,
   },
   {
-    path: "quiz-manage/chapters/:subject/:quizQuestion",
+    path: "quiz-manage/chapters/:chapter/:subject",
     Component: AdminDashboardQuizQuestion,
   },
   { path: "quiz-manage/subjects", Component: AdminDashboardSubjects },
