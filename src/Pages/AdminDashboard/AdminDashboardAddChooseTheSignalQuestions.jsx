@@ -113,7 +113,13 @@ const AdminDashboardAddChooseTheSignalQuestions = () => {
     <>
       <DashboardBreadcrumb
         role="admin"
-        items={[{ name: "Questions", path: "question" }]}
+        items={[
+          { name: "Choose 4 to 1", path: "quiz-manage/choose-4-to-1" },
+          {
+            name: "Add Choose 4 to 1",
+            path: "quiz-manage/choose-4-to-1/add-choose-4-to-1",
+          },
+        ]}
       />
 
       <WarningModal

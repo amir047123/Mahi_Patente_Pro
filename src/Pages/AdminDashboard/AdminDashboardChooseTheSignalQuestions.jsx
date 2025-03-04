@@ -28,10 +28,7 @@ const AdminDashboardChooseTheSignalQuestions = () => {
     {
       id: "#001",
       img: prevImg,
-      quizQuestion: "Guess the signal",
-      correctAnswer: "Supplementary Panel",
-      options:
-        "Supplementary Panel, Mandatory Sign, Indicator Sign, Danger Sign",
+      quizQuestion: "Choose 4 to 1",
       lastUpdate: "16 Feb 2025, 12:30 PM",
     },
   ];
@@ -39,9 +36,7 @@ const AdminDashboardChooseTheSignalQuestions = () => {
     <>
       <DashboardBreadcrumb
         role="admin"
-        items={[
-          { name: "Guess the Signal", path: "quiz-manage/guess-the-signal" },
-        ]}
+        items={[{ name: "Choose 4 to 1", path: "quiz-manage/choose-4-to-1" }]}
       />
 
       <HorizontalScroll className="flex gap-5 items-center justify-between w-full my-5 bg-white p-5 rounded-2xl border">

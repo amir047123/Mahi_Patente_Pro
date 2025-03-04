@@ -1,7 +1,6 @@
 import Typography from "@/Components/Typography";
 import Spinner from "@/Components/ui/Spinner";
-import { TicketCheck } from "lucide-react";
-import { CiWarning } from "react-icons/ci";
+import { CircleCheck, TriangleAlert } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 export default function WarningModal({
@@ -21,9 +20,11 @@ export default function WarningModal({
 
         <div className="fixed inset-0 flex items-center justify-center p-4 z-30">
           {!success ? (
-            <Dialog.Content className="m-0 p-0 bg-white rounded-xl border border-slate-300 border-dashed">
+            <Dialog.Content className="m-0 p-6 min-w-96 bg-white rounded-xl border border-slate-300 border-dashed">
               <div className="py-6 space-y-4 text-center">
-                <CiWarning />
+                <div className="flex items-center justify-center">
+                  <TriangleAlert size={60} className="text-red-400" />
+                </div>
 
                 <Typography.Heading4
                   variant="semibold"
@@ -38,20 +39,24 @@ export default function WarningModal({
                 </Typography.Base>
               </div>
 
-              <div className="justify-center p-0 mt-6 gap-6">
+              <div className="flex items-center justify-center p-0 mt-6 gap-4">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className={`w-[150px] ${
+                  className={`w-[150px] border py-2 rounded-xl ${
                     isDeleting ? "cursor-not-allowed" : "cursor-pointer "
                   }`}
                   disabled={isDeleting}
                 >
-                  <Typography.Body variant="medium">Cancel</Typography.Body>
+                  <Typography.Body
+                    variant="semibold"
+                    className="text-secondaryText"
+                  >
+                    Cancel
+                  </Typography.Body>
                 </button>
                 <button
-                  color="danger"
                   onClick={onConfirm}
-                  className={`w-[150px] ${
+                  className={`w-[150px] bg-red-500 py-2 rounded-xl text-white ${
                     isDeleting ? "cursor-wait" : "cursor-pointer"
                   }`}
                   disabled={isDeleting}
@@ -59,15 +64,17 @@ export default function WarningModal({
                   {isDeleting ? (
                     <Spinner size={20} sx={{ color: "white" }} />
                   ) : (
-                    <Typography.Body variant="medium">Delete</Typography.Body>
+                    <Typography.Body variant="semibold">Delete</Typography.Body>
                   )}
                 </button>
               </div>
             </Dialog.Content>
           ) : (
-            <Dialog.Content className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-lg focus:outline-none animate-scaleIn m-0  border border-slate-300 border-dashed">
-              <div className="p-6 space-y-4 text-center">
-                <TicketCheck />
+            <Dialog.Content className="relative min-w-96 overflow-y-auto rounded-2xl bg-white p-6 shadow-lg focus:outline-none animate-scaleIn m-0 border border-slate-300 border-dashed">
+              <div className="space-y-4 text-center">
+                <div className="flex items-center justify-center">
+                  <CircleCheck size={60} className="text-green-400" />
+                </div>
                 <div>
                   <Typography.Heading4
                     variant="semibold"
@@ -88,17 +95,16 @@ export default function WarningModal({
                 </Typography.Base>
               </div>
 
-              <div className="justify-center p-0 mt-6">
+              <div className="flex items-center justify-center p-0 mt-6">
                 <button
-                  color="primary"
                   onClick={() => {
                     refetchData();
                     closeSuccess();
                     setIsOpen(false);
                   }}
-                  className="w-[150px] bg-title_gradient"
+                  className="w-[150px] bg-green-500 py-2 rounded-xl text-white"
                 >
-                  <Typography.Body variant="medium">OK</Typography.Body>
+                  <Typography.Body variant="semibold">OK</Typography.Body>
                 </button>
               </div>
             </Dialog.Content>

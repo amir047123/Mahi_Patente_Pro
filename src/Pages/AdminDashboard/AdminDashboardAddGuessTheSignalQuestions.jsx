@@ -117,7 +117,10 @@ const AdminDashboardAddGuessTheSignalQuestions = () => {
         role="admin"
         items={[
           { name: "Guess the Signal", path: "quiz-manage/guess-the-signal" },
-          { name: "Add the Signal", path: "quiz-manage/guess-the-signal/add-guess-the-signal" },
+          {
+            name: "Add Guess the Signal",
+            path: "quiz-manage/guess-the-signal/add-guess-the-signal",
+          },
         ]}
       />
 
