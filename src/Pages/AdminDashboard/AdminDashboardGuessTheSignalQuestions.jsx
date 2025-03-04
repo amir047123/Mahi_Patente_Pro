@@ -151,7 +151,7 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                     onDragStart={() => handleDragStart(index)}
                     onDragEnter={() => handleDragEnter(index)}
                     onDragEnd={handleDragEnd}
-                    className="!bg-[#F3F4F6] h-14 px-4 rounded-full flex items-center gap-2 pr-10 relative cursor-move"
+                    className="!bg-[#F3F4F6] h-14 px-4 rounded-2xl border flex items-center gap-2 pr-10 relative cursor-move"
                   >
                     <span className="text-primary">{index + 1}.</span>
                     <img
