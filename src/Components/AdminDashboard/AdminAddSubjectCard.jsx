@@ -14,7 +14,7 @@ const AdminAddSubjectCard = () => {
           {/* Right-side add button */}
           <div className="flex flex-col items-center justify-center w-2/3">
             <PlusCircle className="text-gray-500" size={24} />
-            <span className="text-gray-500 font-medium mt-2">Add Chapter</span>
+            <span className="text-gray-500 font-medium mt-2">Add Subject</span>
           </div>
         </div>
       </AdminAddSubjectModal>

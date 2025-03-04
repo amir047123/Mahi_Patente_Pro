@@ -15,7 +15,7 @@ import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -24,12 +24,7 @@ const AdminAddChapterModal = ({ children }) => {
   const query = useQueryClient();
 
   const methods = useForm();
-  const {
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, reset, setValue } = methods;
 
   const { createEntity } = useCrudOperations("quiz-chapter/create");
 
@@ -56,8 +51,6 @@ const AdminAddChapterModal = ({ children }) => {
     { key: "Active", label: "Active" },
     { key: "Inactive", label: "Inactive" },
   ];
-
-  console.log(errors);
 
   return (
     <Dialog className="">
@@ -93,7 +86,7 @@ const AdminAddChapterModal = ({ children }) => {
               />
               <CustomSelect
                 name="status"
-                label="Select Status"
+                label="Status"
                 options={statusOptions}
                 placeholder="Select Status"
               />

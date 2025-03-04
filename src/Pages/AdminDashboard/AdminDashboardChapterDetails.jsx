@@ -14,7 +14,6 @@ import {
   PopoverTrigger,
 } from "@/Components/ui/popover";
 import HorizontalScroll from "@/Shared/HorizontalScroll";
-import AdminAddChapterCard from "@/Components/AdminDashboard/AdminAddChapterCard";
 import { useParams } from "react-router-dom";
 import Typography from "@/Components/Typography";
 import img from "@/assets/UserDashboard/demo-chapeter-img.svg";
@@ -23,6 +22,7 @@ import AdminAddSubjectModal from "./AdminAddSubjectModal";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import AdminAddSubjectCard from "@/Components/AdminDashboard/AdminAddSubjectCard";
 
 const AdminDashboardChapterDetails = () => {
   const [searchText, setSearchText] = useState("");
@@ -98,9 +98,9 @@ const AdminDashboardChapterDetails = () => {
         </div>
 
         <AdminAddSubjectModal>
-          <button className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
+          <span className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
             Add a Subject
-          </button>
+          </span>
         </AdminAddSubjectModal>
       </div>
 
@@ -181,7 +181,7 @@ const AdminDashboardChapterDetails = () => {
           <AdminSubjectCard key={index} subject={subject} chapterId={chapter} />
         ))}
 
-        <AdminAddChapterCard />
+        <AdminAddSubjectCard />
       </div>
     </>
   );

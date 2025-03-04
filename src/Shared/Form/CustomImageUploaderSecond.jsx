@@ -13,7 +13,7 @@ const CustomImageUploaderSecond = ({
   isEditable = true,
   setIsUploading = () => {},
   value,
-  resetUploadedFile,
+  resetUploadedFile = 1,
   index = -1,
   labelShown = true,
   isHidden = false,

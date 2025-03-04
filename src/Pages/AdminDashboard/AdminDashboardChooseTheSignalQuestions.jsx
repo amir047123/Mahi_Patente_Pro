@@ -1,341 +1,219 @@
-import Typography from "@/Components/Typography";
-import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { Button } from "@/Components/ui/button";
+import { Calendar } from "@/Components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/Components/ui/popover";
+import { cn } from "@/lib/utils";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import WarningModal from "@/Shared/WarningModal";
-import { CirclePlus, CircleX } from "lucide-react";
-import { useRef, useState } from "react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import guessEmpty from "@/assets/AdminDashboard/guess-empty.png";
-import CustomInput from "@/Shared/Form/CustomInput";
-import Spinner from "@/Components/ui/Spinner";
-import CustomImageUploaderSecond from "@/Shared/Form/CustomImageUploaderSecond";
+import HorizontalScroll from "@/Shared/HorizontalScroll";
+import { addDays, format } from "date-fns";
+import { CalendarIcon, ListFilter, Search } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import PaginationCompo from "@/Shared/PaginationCompo";
+import ItemPerPage from "@/Shared/ItemPerPage";
+import prevImg from "@/assets/AdminDashboard/demo-prev.svg";
 
 const AdminDashboardChooseTheSignalQuestions = () => {
-  const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
-  const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [quizIndex, setQuizIndex] = useState("");
+  const [searchText, setSearchText] = useState("");
 
-  const methods = useForm({
-    defaultValues: {
-      quizs: [{}],
+  const [date, setDate] = useState({
+    from: new Date(2022, 0, 20),
+    to: addDays(new Date(2022, 0, 20), 20),
+  });
+
+  const quizData = [
+    {
+      id: "#001",
+      img: prevImg,
+      quizQuestion: "Guess the signal",
+      correctAnswer: "Supplementary Panel",
+      options:
+        "Supplementary Panel, Mandatory Sign, Indicator Sign, Danger Sign",
+      lastUpdate: "16 Feb 2025, 12:30 PM",
     },
-  });
-
-  const { handleSubmit, reset, control, watch, getValues, register } = methods;
-  const { fields, append, remove, move } = useFieldArray({
-    control,
-    name: "quizs",
-  });
-
-  const { createEntity } = useCrudOperations("quiz/create");
-
-  const onSubmit = (formData) => {
-    const updatedData = {
-      category: "Choose 4 to 1 Signal",
-      bodyData: formData?.quizs?.map((item) => {
-        return {
-          question: item?.question,
-          correctAnswer: item?.correctAnswer,
-          options: [item?.answerA, item?.answerB, item?.answerC, item?.answerD],
-          meta: {
-            quizType: "image_selector",
-            difficulty: "Easy",
-          },
-        };
-      }),
-    };
-
-    createEntity.mutate(updatedData, {
-      onSuccess: (data) => {
-        toast.success(data?.message);
-        // reset();
-      },
-      onError: (error) => {
-        toast.error(error?.message);
-      },
-    });
-  };
-
-  const removeQuiz = (index) => {
-    if (getValues("quizs").length > 1) {
-      setQuizIndex(index);
-      setIsWarningModalOpen(true);
-    }
-  };
-
-  const removeQuizConfirmed = () => {
-    getValues("quizs").length > 1 && remove(quizIndex);
-    setQuizIndex(null);
-    setIsDeletingSuccess(true);
-    setIsDeleting(false);
-  };
-
-  const dragItem = useRef();
-  const dragOverItem = useRef();
-
-  const handleDragStart = (index) => {
-    dragItem.current = index;
-  };
-
-  const handleDragEnter = (index) => {
-    dragOverItem.current = index;
-  };
-
-  const handleDragEnd = () => {
-    const draggedIndex = dragItem.current;
-    const overIndex = dragOverItem.current;
-
-    if (draggedIndex !== overIndex) {
-      move(draggedIndex, overIndex);
-    }
-
-    dragItem.current = null;
-    dragOverItem.current = null;
-  };
-
-  const getCorrectAnswer = (index) => {
-    const values = getValues(`quizs[${index}]`);
-    switch (values?.correctAnswer) {
-      case "0":
-        return values?.answerA;
-      case "1":
-        return values?.answerB;
-      case "2":
-        return values?.answerC;
-      case "3":
-        return values?.answerD;
-    }
-  };
-
+  ];
   return (
     <>
       <DashboardBreadcrumb
         role="admin"
-        items={[{ name: "Questions", path: "question" }]}
+        items={[
+          { name: "Guess the Signal", path: "quiz-manage/guess-the-signal" },
+        ]}
       />
 
-      <WarningModal
-        onConfirm={removeQuizConfirmed}
-        isOpen={isWarningModalOpen}
-        setIsOpen={() => {
-          setQuizIndex(null);
-          setIsWarningModalOpen(false);
-        }}
-        isDeleting={isDeleting}
-        success={isDeletingSuccess}
-        closeSuccess={() => setIsDeletingSuccess(false)}
-        msg="SUC200 - Item Removed"
-        refetchData={() => {}}
-      />
+      <HorizontalScroll className="flex gap-5 items-center justify-between w-full my-5 bg-white p-5 rounded-2xl border">
+        <div className="flex items-center gap-3">
+          {/* Date Range Button */}
 
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-            <div className="bg-white p-6 rounded-[32px] flex justify-between items-center flex-col">
-              <div className="grid grid-cols-1 gap-2 w-full">
-                <Typography.Body
-                  variant="semibold"
-                  className="text-gray-600 border-b mb-1 pb-2"
+          <div className={cn("grid gap-2 ")}>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="date"
+                  variant="outline"
+                  className={cn(
+                    "w-[250px] justify-start text-left font-normal",
+                    !date && "text-muted-foreground"
+                  )}
                 >
-                  Questions
-                </Typography.Body>
+                  <CalendarIcon />
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "LLL dd, y")} -{" "}
+                        {format(date.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(date.from, "LLL dd, y")
+                    )
+                  ) : (
+                    <span className="whitespace-nowrap">Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={date?.from}
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          {/* Sort Button */}
+          <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
+            <ListFilter size={18} />
+            <span className="text-sm font-medium whitespace-nowrap">
+              Sort by Level
+            </span>
+          </button>
 
-                {fields?.map((field, index) => (
-                  <div
-                    key={field.id}
-                    draggable
-                    onDragStart={() => handleDragStart(index)}
-                    onDragEnter={() => handleDragEnter(index)}
-                    onDragEnd={handleDragEnd}
-                    className="!bg-[#F3F4F6] h-14 px-4 rounded-2xl border flex items-center gap-1 pr-10 relative cursor-move"
-                  >
-                    <span className="text-primary">{index + 1}.</span>
+          {/* Search Input */}
+          <div className="relative flex-grow">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <Search size={18} className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="block min-w-[150px] max-w-xs w-full py-2 pl-8 pr-3 text-sm text-gray-700 bg-transparent  border border-gray-200 rounded-full  focus:outline-none "
+              placeholder="Find Quiz Question"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/admin-dashboard/quiz-manage/choose-4-to-1/add-choose-4-to-1"
+            className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90"
+          >
+            Add Choose 4 to 1 Signal Question
+          </Link>
+        </div>
+      </HorizontalScroll>
 
-                    <div className="w-full flex items-center justify-between gap-2">
-                      <span className="line-clamp-1">
-                        {watch(`quizs[${index}].question`)}
-                      </span>
-                      <img
-                        src={getCorrectAnswer(index) || guessEmpty}
-                        alt="question"
-                        className="w-12 h-10 object-cover rounded"
+      <div className="overflow-x-auto bg-white p-5 rounded-2xl">
+        <table className="min-w-full bg-white rounded-lg overflow-hidden">
+          <thead className="bg-[#EAF2FA] rounded-full ">
+            <tr>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap  uppercase tracking-wider">
+                Quiz ID
+              </th>
+
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Quiz Question
+              </th>
+
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Correct Image
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Image Options
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Last Update
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {quizData.map((quiz, index) => (
+              <tr key={index} className="hover:bg-gray-50">
+                <td className="py-4 px-4 text-sm text-secondaryText">
+                  {quiz.id}
+                </td>
+
+                <td className="py-4 px-4 text-sm text-secondaryText line-clamp-2">
+                  {quiz.quizQuestion}
+                </td>
+
+                <td className="py-4 px-4 text-sm text-secondaryText whitespace-nowrap">
+                  <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                </td>
+
+                <td className="py-4 px-4 text-sm text-secondaryText font-medium ">
+                  <div className="flex gap-1">
+                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                  </div>
+                </td>
+                <td className="py-4 px-4 text-sm text-secondaryText">
+                  {quiz.lastUpdate}
+                </td>
+                <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
+                  <button className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                       />
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => removeQuiz(index)}
-                      className="absolute right-4 top-4.5 text-red-500"
+                    </svg>{" "}
+                  </button>
+                  <button className="text-red-500 hover:text-red-700 font-medium flex items-center gap-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      <CircleX size={20} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <button
-                type="button"
-                onClick={() => append()}
-                className="flex items-center justify-center w-fit gap-1 text-green-500 font-semibold text-sm mt-4"
-              >
-                <span>Add Question</span>
-                <CirclePlus size={16} />
-              </button>
-            </div>
-            <div className="sm:col-span-2 bg-white p-6 rounded-[32px]">
-              {fields?.map((field, index) => (
-                <div key={field.id} className="">
-                  <div
-                    className={`${
-                      index > 0
-                        ? "border-b-[1px] border-secondary col-span-3 my-4"
-                        : "hidden"
-                    }`}
-                  ></div>
-                  <div className="col-span-3 relative">
-                    <CustomInput
-                      type="textarea"
-                      name={`quizs[${index}].question`}
-                      placeholder="Enter Question"
-                      label="Enter Question"
-                      rows={3}
-                      index={index}
-                    />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-                    <div className="flex items-center gap-2 absolute top-0.5 right-4 text-sm z-10">
-                      <span className="text-secondary">
-                        Question No. {index + 1}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => append()}
-                        className="w-fit text-green-500"
-                      >
-                        <CirclePlus size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removeQuiz(index)}
-                        className="w-fit text-red-500"
-                      >
-                        <CircleX size={16} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <label
-                      className="block text-primary_text text-base mb-4"
-                      htmlFor={`quizs[${index}].image`}
-                    >
-                      Upload Image Options{" "}
-                      <span className="text-red-500">*</span>
-                    </label>
-
-                    <div className="grid min-[475px]:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <div className="w-full flex flex-col justify-center items-center gap-4">
-                        <div className="w-full">
-                          <CustomImageUploaderSecond
-                            name={`quizs[${index}].answerA`}
-                            placeholder="Quiz Answer A"
-                            label="Answer A"
-                            index={index}
-                            labelShown={false}
-                            previewShown={false}
-                          />
-                        </div>
-
-                        <input
-                          {...register(`quizs[${index}].correctAnswer`)}
-                          value="0"
-                          type="radio"
-                          className="accent-pink-500 cursor-pointer size-5"
-                          defaultChecked
-                        />
-                      </div>
-
-                      <div className="w-full flex flex-col justify-center items-center gap-4">
-                        <div className="w-full">
-                          <CustomImageUploaderSecond
-                            name={`quizs[${index}].answerB`}
-                            placeholder="Quiz Answer B"
-                            label="Answer B"
-                            index={index}
-                            labelShown={false}
-                            previewShown={false}
-                          />
-                        </div>
-
-                        <input
-                          {...register(`quizs[${index}].correctAnswer`)}
-                          value="1"
-                          type="radio"
-                          className="accent-pink-500 cursor-pointer size-5"
-                        />
-                      </div>
-
-                      <div className="w-full flex flex-col justify-center items-center gap-4">
-                        <div className="w-full">
-                          <CustomImageUploaderSecond
-                            name={`quizs[${index}].answerC`}
-                            placeholder="Quiz Answer C"
-                            label="Answer C"
-                            index={index}
-                            labelShown={false}
-                            previewShown={false}
-                          />
-                        </div>
-
-                        <input
-                          {...register(`quizs[${index}].correctAnswer`)}
-                          value="2"
-                          type="radio"
-                          className="accent-pink-500 cursor-pointer size-5"
-                        />
-                      </div>
-
-                      <div className="w-full flex flex-col justify-center items-center gap-4">
-                        <div className="w-full">
-                          <CustomImageUploaderSecond
-                            name={`quizs[${index}].answerD`}
-                            placeholder="Quiz Answer D"
-                            label="Answer D"
-                            index={index}
-                            labelShown={false}
-                            previewShown={false}
-                          />
-                        </div>
-
-                        <input
-                          {...register(`quizs[${index}].correctAnswer`)}
-                          value="3"
-                          type="radio"
-                          className="accent-pink-500 cursor-pointer size-5"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="text-center mt-8 sm:col-span-3">
-            <button
-              type="submit"
-              className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
-              disabled={createEntity?.isPending ? true : false}
-            >
-              {createEntity?.isPending ? (
-                <Spinner size={24} className="text-white" />
-              ) : (
-                "Add A Question"
-              )}
-            </button>
-          </div>
-        </form>
-      </FormProvider>
+        <div className="flex justify-between mt-10">
+          <ItemPerPage />
+          <PaginationCompo />
+        </div>
+      </div>
     </>
   );
 };

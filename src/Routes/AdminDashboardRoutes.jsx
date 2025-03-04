@@ -2,13 +2,14 @@ import AdminDashboardAddGuessTheSignalQuestions from "@/Pages/AdminDashboard/Adm
 import AdminDashboardCategories from "@/Pages/AdminDashboard/AdminDashboardCategories";
 import AdminDashboardChapterDetails from "@/Pages/AdminDashboard/AdminDashboardChapterDetails";
 import AdminDashboardChapters from "@/Pages/AdminDashboard/AdminDashboardChapters";
-import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardChooseTheSignalQuestions";
+import AdminDashboardAddChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardAddChooseTheSignalQuestions";
 import AdminDashboardGuessTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardGuessTheSignalQuestions";
 import AdminDashboardIndex from "@/Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardQuizQuestion from "@/Pages/AdminDashboard/AdminDashboardQuizQuestion";
 import AdminDashboardQuizQuestions from "@/Pages/AdminDashboard/AdminDashboardQuizQuestions";
 import AdminDashboardSubjects from "@/Pages/AdminDashboard/AdminDashboardSubjects";
 import Practice from "@/Shared/Practice/Practice";
+import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardChooseTheSignalQuestions";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -41,8 +42,12 @@ const AdminDashboardRoutes = [
     Component: AdminDashboardAddGuessTheSignalQuestions,
   },
   {
-    path: "quiz-manage/choose-4-to-1",
+    path: "quiz-manage/choose-4-to-1/",
     Component: AdminDashboardChooseTheSignalQuestions,
+  },
+  {
+    path: "quiz-manage/choose-4-to-1/add-choose-4-to-1",
+    Component: AdminDashboardAddChooseTheSignalQuestions,
   },
 ];
 
