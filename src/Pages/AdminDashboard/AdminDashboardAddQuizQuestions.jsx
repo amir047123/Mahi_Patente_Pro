@@ -13,7 +13,7 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 
-const AdminDashboardQuizQuestions = () => {
+const AdminDashboardAddQuizQuestions = () => {
   const query = useQueryClient();
   const { pathname } = useLocation();
   const [selectedChapter, setSelectedChapter] = useState(null);
@@ -177,7 +177,7 @@ const AdminDashboardQuizQuestions = () => {
       onSuccess: (data) => {
         toast.success(data?.message);
         query.invalidateQueries({
-          queryKey: ["subject/all"],
+          queryKey: ["quiz"],
         });
         // reset();
       },
@@ -495,4 +495,4 @@ const AdminDashboardQuizQuestions = () => {
   );
 };
 
-export default AdminDashboardQuizQuestions;
+export default AdminDashboardAddQuizQuestions;

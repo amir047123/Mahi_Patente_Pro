@@ -6,7 +6,7 @@ import AdminDashboardAddChooseTheSignalQuestions from "@/Pages/AdminDashboard/Ad
 import AdminDashboardGuessTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardGuessTheSignalQuestions";
 import AdminDashboardIndex from "@/Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardQuizQuestion from "@/Pages/AdminDashboard/AdminDashboardQuizQuestion";
-import AdminDashboardQuizQuestions from "@/Pages/AdminDashboard/AdminDashboardQuizQuestions";
+import AdminDashboardAddQuizQuestions from "@/Pages/AdminDashboard/AdminDashboardAddQuizQuestions";
 import AdminDashboardSubjects from "@/Pages/AdminDashboard/AdminDashboardSubjects";
 import Practice from "@/Shared/Practice/Practice";
 import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardChooseTheSignalQuestions";
@@ -26,12 +26,12 @@ const AdminDashboardRoutes = [
   },
   {
     path: "quiz-manage/chapters/:chapter/:subject/add-quiz",
-    Component: AdminDashboardQuizQuestions,
+    Component: AdminDashboardAddQuizQuestions,
   },
   { path: "quiz-manage/subjects", Component: AdminDashboardSubjects },
   {
     path: "quiz-manage/add-quiz",
-    Component: AdminDashboardQuizQuestions,
+    Component: AdminDashboardAddQuizQuestions,
   },
   {
     path: "quiz-manage/guess-the-signal",

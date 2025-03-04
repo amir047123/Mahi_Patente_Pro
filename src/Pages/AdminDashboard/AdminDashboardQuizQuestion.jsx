@@ -18,8 +18,11 @@ import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
+import AdminEditQuizQuestionModal from "./AdminEditQuizQuestionModal";
 
 const AdminDashboardQuizQuestion = () => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [item, setItem] = useState(null);
   const [searchText, setSearchText] = useState("");
 
   const [date, setDate] = useState({
@@ -61,6 +64,13 @@ const AdminDashboardQuizQuestion = () => {
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
+
+  useEffect(() => {
+    if (!isEditModalOpen) {
+      setItem(null);
+    }
+  }, [isEditModalOpen]);
+
   return (
     <>
       <DashboardBreadcrumb role="admin" items={breadCrumbData} />
@@ -237,7 +247,13 @@ const AdminDashboardQuizQuestion = () => {
                   </span>
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      setItem(quiz);
+                      setIsEditModalOpen(true);
+                    }}
+                    className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
@@ -279,6 +295,12 @@ const AdminDashboardQuizQuestion = () => {
           <ItemPerPage />
           <PaginationCompo />
         </div>
+
+        <AdminEditQuizQuestionModal
+          item={item}
+          isOpen={isEditModalOpen}
+          setIsOpen={setIsEditModalOpen}
+        />
       </div>
     </>
   );
