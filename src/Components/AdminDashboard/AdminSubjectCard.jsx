@@ -7,8 +7,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import AdminEditSubjectModal from "@/Pages/AdminDashboard/AdminEditSubjectModal";
 
-const AdminSubjectCard = ({ subject, chapterId }) => {
+const AdminSubjectCard = ({ subject }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
@@ -31,14 +35,17 @@ const AdminSubjectCard = ({ subject, chapterId }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-36">
               <Link
-                to={`/admin-dashboard/quiz-manage/chapters/${chapterId}/${subject?._id}`}
+                to={`/admin-dashboard/quiz-manage/chapters/${subject?.chapter}/${subject?._id}`}
               >
                 <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
                   <EyeIcon className="h-5 w-5 text-gray-700" />
                   <span className="text-gray-700 font-medium">Open</span>
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
+              <DropdownMenuItem
+                className="flex gap-2 py-2 cursor-pointer"
+                onClick={() => setIsEditModalOpen(true)}
+              >
                 <PencilIcon className="h-5 w-5 text-gray-700" />
                 <span className="text-gray-700 font-medium">Edit</span>
               </DropdownMenuItem>
@@ -51,6 +58,12 @@ const AdminSubjectCard = ({ subject, chapterId }) => {
         </div>
         <p className="text-secondaryText text-sm mt-2">500 Questions</p>
       </div>
+
+      <AdminEditSubjectModal
+        isOpen={isEditModalOpen}
+        setIsOpen={setIsEditModalOpen}
+        item={subject}
+      />
     </div>
   );
 };

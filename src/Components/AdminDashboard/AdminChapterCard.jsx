@@ -7,8 +7,11 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import AdminEditChapterModal from "@/Pages/AdminDashboard/AdminEditChapterModal";
+import { useState } from "react";
 
 const AdminChapterCard = ({ item }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
@@ -39,7 +42,10 @@ const AdminChapterCard = ({ item }) => {
                   <span className="text-gray-700 font-medium">Open</span>
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer">
+              <DropdownMenuItem
+                className="flex gap-2 py-2 cursor-pointer"
+                onClick={() => setIsEditModalOpen(true)}
+              >
                 <PencilIcon className="h-5 w-5 text-gray-700" />
                 <span className="text-gray-700 font-medium">Edit</span>
               </DropdownMenuItem>
@@ -54,6 +60,12 @@ const AdminChapterCard = ({ item }) => {
           5 Subject · 18 Questions added
         </p>
       </div>
+
+      <AdminEditChapterModal
+        isOpen={isEditModalOpen}
+        setIsOpen={setIsEditModalOpen}
+        item={item}
+      />
     </div>
   );
 };
