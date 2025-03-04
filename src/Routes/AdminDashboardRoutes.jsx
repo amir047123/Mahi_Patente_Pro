@@ -1,3 +1,4 @@
+import AdminDashboardAddGuessTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardAddGuessTheSignalQuestions";
 import AdminDashboardCategories from "@/Pages/AdminDashboard/AdminDashboardCategories";
 import AdminDashboardChapterDetails from "@/Pages/AdminDashboard/AdminDashboardChapterDetails";
 import AdminDashboardChapters from "@/Pages/AdminDashboard/AdminDashboardChapters";
@@ -34,6 +35,10 @@ const AdminDashboardRoutes = [
   {
     path: "quiz-manage/guess-the-signal",
     Component: AdminDashboardGuessTheSignalQuestions,
+  },
+  {
+    path: "quiz-manage/guess-the-signal/add-guess-the-signal",
+    Component: AdminDashboardAddGuessTheSignalQuestions,
   },
   {
     path: "quiz-manage/choose-4-to-1",
