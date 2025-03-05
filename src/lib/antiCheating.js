@@ -53,13 +53,4 @@ export const AntiCheating = {
       }
     });
   },
-
-  startTimer(quizDuration, onTimeUp) {
-    setTimeout(() => {
-      alert("Time's up! Submitting your answers.");
-      if (typeof onTimeUp === "function") {
-        onTimeUp();
-      }
-    }, quizDuration * 60 * 1000);
-  },
 };

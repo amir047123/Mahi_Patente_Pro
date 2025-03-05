@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 
 const UserDashboardSubjectDetails = () => {
-  const { id } = useParams();
+  const { subject } = useParams();
   const [breadCrumbData, setBreadCrumbData] = useState([
     { name: "Theory", path: "theory" },
   ]);
@@ -21,7 +21,7 @@ const UserDashboardSubjectDetails = () => {
     error,
     isError,
     isLoading,
-  } = useEntityById(id);
+  } = useEntityById(subject);
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -67,7 +67,7 @@ const UserDashboardSubjectDetails = () => {
           </div>
         </div>
         <Link
-          to="/user-dashboard/quiz"
+          to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}
           className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
         >
           Start Quiz

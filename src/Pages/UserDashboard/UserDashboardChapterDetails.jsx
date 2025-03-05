@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 
 const UserDashboardChapterDetails = () => {
-  const { id } = useParams();
+  const { chapter } = useParams();
 
   const { useEntityById } = useCrudOperations("subject");
 
@@ -18,7 +18,7 @@ const UserDashboardChapterDetails = () => {
     error,
     isError,
     isLoading,
-  } = useEntityById(id);
+  } = useEntityById(chapter);
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -38,7 +38,7 @@ const UserDashboardChapterDetails = () => {
           { name: "Theory", path: "theory" },
           {
             name: response?.data?.chapter?.name,
-            path: `theory/${id}`,
+            path: `theory/${chapter}`,
           },
         ]}
       />
@@ -65,7 +65,10 @@ const UserDashboardChapterDetails = () => {
 
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5">
         {response?.data?.subjects?.map((subject, index) => (
-          <Link key={index} to={`/user-dashboard/theory/${id}/${subject._id}`}>
+          <Link
+            key={index}
+            to={`/user-dashboard/theory/${chapter}/${subject._id}`}
+          >
             <SubjectCard subject={subject} />
           </Link>
         ))}

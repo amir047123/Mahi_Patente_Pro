@@ -19,7 +19,8 @@ import TimeLeftModal from "./TimeLeftModal";
 import QuestionLeftModal from "./QuestionLeftModal";
 import { useQueryClient } from "@tanstack/react-query";
 import QuickSettingsModal from "./QuickSettingsModal";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 // import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
@@ -41,10 +42,48 @@ const OfficialQuiz = () => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [hasTimer, setHasTimer] = useState(false);
   const navigate = useNavigate();
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const { pathname } = useLocation();
+  const [breadCrumbData, setBreadCrumbData] = useState([
+    { name: "Quiz", path: "quiz" },
+    { name: "Official Quiz", path: "quiz/official-quiz" },
+  ]);
+
+  useEffect(() => {
+    const subject = pathname?.split("/")[4];
+    if (subject) {
+      setSelectedSubject(subject);
+    } else {
+      setSelectedSubject(null);
+    }
+  }, [pathname]);
+
+  const { useEntityById } = useCrudOperations("quiz");
+
+  const { data: response, isSuccess } = useEntityById(selectedSubject);
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      setBreadCrumbData([
+        { name: "Theory", path: "theory" },
+        {
+          name: `${response?.data?.chapter?.name}`,
+          path: `theory/${response?.data?.chapter?._id}`,
+        },
+        {
+          name: `${response?.data?.subject?.name}`,
+          path: `theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}`,
+        },
+        {
+          name: `Official Quiz`,
+          path: `theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`,
+        },
+      ]);
+    }
+  }, [isSuccess, response]);
 
   // useEffect(() => {
   //   AntiCheating.init();
-  //   AntiCheating.startTimer(1, () => console.log("Auto-submitting quiz..."));
   // }, []);
 
   const getQuizzes = async () => {
@@ -61,6 +100,7 @@ const OfficialQuiz = () => {
           category: "Theory",
           hasTimer,
           showAnswer,
+          subject: selectedSubject,
         }),
       });
       const data = await response.json();
@@ -231,13 +271,7 @@ const OfficialQuiz = () => {
 
   return (
     <>
-      <DashboardBreadcrumb
-        role="user"
-        items={[
-          { name: "Quiz", path: "quiz" },
-          { name: "Official Quiz", path: "quiz/official-quiz" },
-        ]}
-      />
+      <DashboardBreadcrumb role="user" items={breadCrumbData} />
 
       {/* {isLoading ? (
         <div className="py-40 flex items-center justify-center">
