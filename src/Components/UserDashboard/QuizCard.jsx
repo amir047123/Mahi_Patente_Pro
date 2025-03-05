@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import languageCodes from "@/lib/languageCodes";
+import Spinner from "../ui/Spinner";
 
 const QuizCard = ({ question }) => {
   const [translatedText, setTranslatedText] = useState();
@@ -77,7 +78,11 @@ const QuizCard = ({ question }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="bg-[#E3FAFF] p-2 border rounded-md">
-                <MdGTranslate className="text-lg" />
+                {translate?.isPending ? (
+                  <Spinner size={16} className="!text-gray-600" />
+                ) : (
+                  <MdGTranslate className="text-lg" />
+                )}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-44 p-4">

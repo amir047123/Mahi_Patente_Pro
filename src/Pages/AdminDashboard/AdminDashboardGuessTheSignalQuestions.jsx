@@ -10,13 +10,16 @@ import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrum
 import HorizontalScroll from "@/Shared/HorizontalScroll";
 import { addDays, format } from "date-fns";
 import { CalendarIcon, ListFilter, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
-import prevImg from '@/assets/AdminDashboard/demo-prev.svg'
+import prevImg from "@/assets/AdminDashboard/demo-prev.svg";
+import AdminEditGuessTheSignalModal from "./AdminEditGuessTheSignalModal";
 
 const AdminDashboardGuessTheSignalQuestions = () => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [item, setItem] = useState(null);
   const [searchText, setSearchText] = useState("");
 
   const [date, setDate] = useState({
@@ -29,17 +32,29 @@ const AdminDashboardGuessTheSignalQuestions = () => {
       id: "#001",
       img: prevImg,
       quizQuestion: "Guess the signal",
-      correctAnswer: "Supplementary Panel",
-      options:
-        "Supplementary Panel, Mandatory Sign, Indicator Sign, Danger Sign",
-      lastUpdate: "16 Feb 2025, 12:30 PM",
-    }
+      correctAnswer: "1",
+      options: [
+        "Supplementary Panel",
+        "Mandatory Sign",
+        "Indicator Sign",
+        "Danger Sign",
+      ],
+      updatedAt: new Date(),
+    },
   ];
+
+  useEffect(() => {
+    if (!isEditModalOpen) {
+      setItem(null);
+    }
+  }, [isEditModalOpen]);
   return (
     <>
       <DashboardBreadcrumb
         role="admin"
-        items={[{ name: "Guess the Signal", path: "quiz-manage/guess-the-signal" }]}
+        items={[
+          { name: "Guess the Signal", path: "quiz-manage/guess-the-signal" },
+        ]}
       />
 
       <HorizontalScroll className="flex gap-5 items-center justify-between w-full my-5 bg-white p-5 rounded-2xl border">
@@ -159,13 +174,32 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                   {quiz.correctAnswer}
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText font-medium">
-                  {quiz.options}
+                  {quiz.options?.join(", ")}
                 </td>
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {quiz.lastUpdate}
+                <td className="py-4 px-4 text-sm text-secondaryText text-center">
+                  <span className="block">
+                    {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <span>
+                    {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                    })}
+                  </span>
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      setItem(quiz);
+                      setIsEditModalOpen(true);
+                    }}
+                    className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
@@ -207,6 +241,12 @@ const AdminDashboardGuessTheSignalQuestions = () => {
           <ItemPerPage />
           <PaginationCompo />
         </div>
+
+        <AdminEditGuessTheSignalModal
+          item={item}
+          isOpen={isEditModalOpen}
+          setIsOpen={setIsEditModalOpen}
+        />
       </div>
     </>
   );
