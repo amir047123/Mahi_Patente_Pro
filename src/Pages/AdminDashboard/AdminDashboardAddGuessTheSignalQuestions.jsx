@@ -258,10 +258,7 @@ const AdminDashboardAddGuessTheSignalQuestions = () => {
                   </div>
 
                   <div>
-                    <label
-                      className="block text-primary_text text-base mb-4"
-                      htmlFor={`quizs[${index}].image`}
-                    >
+                    <label className="block text-primary_text text-base mb-4">
                       Enter Options
                     </label>
 

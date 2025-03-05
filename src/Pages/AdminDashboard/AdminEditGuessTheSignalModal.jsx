@@ -28,8 +28,16 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
 
   const onSubmit = (formData) => {
     const updatedData = {
-      ...formData,
-      category: item?.category,
+      correctAnswer: formData?.correctAnswer,
+      options: [
+        formData?.answerA,
+        formData?.answerB,
+        formData?.answerC,
+        formData?.answerD,
+      ],
+      media: {
+        image: formData?.media?.image,
+      },
       _id: item?._id,
     };
 
@@ -51,7 +59,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
     setValue("answerB", item?.options?.[1]);
     setValue("answerC", item?.options?.[2]);
     setValue("answerD", item?.options?.[3]);
-    setValue("image", item?.image);
+    setValue("media.image", item?.media?.image);
     setValue("correctAnswer", item?.correctAnswer);
   }, [item, setValue]);
 
@@ -75,7 +83,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
               <div className="relative">
                 <label
                   className="block text-primary_text text-base mb-2"
-                  htmlFor={`image`}
+                  htmlFor={`media.image`}
                 >
                   Image Preview
                 </label>
@@ -84,7 +92,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
               <div className="grid grid-cols-1 min-[475px]:grid-cols-3  gap-4 border-b pb-4 mb-4">
                 <div className="pt-4 lg:py-4 pr-4 min-[475px]:border-r w-full text-center flex items-center justify-center">
                   <img
-                    src={watch(`image`) || guessEmpty}
+                    src={watch(`media.image`) || guessEmpty}
                     alt="question"
                     className="lg:w-full h-full object-scale-down border rounded-2xl"
                   />
@@ -93,7 +101,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
                 <div className="min-[475px]:col-span-2 sm:flex sm:flex-col sm:justify-between">
                   <div className="mt-3">
                     <CustomImageUpload
-                      name={`image`}
+                      name={`media.image`}
                       placeholder="Upload Question Image"
                       label="Upload Question Image"
                       previewShown={false}
@@ -113,10 +121,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
               </div>
 
               <div>
-                <label
-                  className="block text-primary_text text-base mb-4"
-                  htmlFor={`image`}
-                >
+                <label className="block text-primary_text text-base mb-4">
                   Enter Options
                 </label>
 

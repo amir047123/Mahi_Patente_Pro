@@ -26,8 +26,13 @@ const AdminEditChooseTheSignalModal = ({ isOpen, setIsOpen, item }) => {
 
   const onSubmit = (formData) => {
     const updatedData = {
-      ...formData,
-      category: item?.category,
+      correctAnswer: formData?.correctAnswer,
+      options: [
+        formData?.answerA,
+        formData?.answerB,
+        formData?.answerC,
+        formData?.answerD,
+      ],
       _id: item?._id,
     };
 

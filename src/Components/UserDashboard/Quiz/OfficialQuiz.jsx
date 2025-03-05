@@ -449,6 +449,8 @@ const OfficialQuiz = () => {
         </div>
 
         <UserDashboardQuizSummary
+          handleSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
           showAnswer={showAnswer}
           hasTimer={hasTimer}
           time={time}
