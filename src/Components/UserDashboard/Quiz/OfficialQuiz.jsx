@@ -43,6 +43,8 @@ const OfficialQuiz = () => {
   const [hasTimer, setHasTimer] = useState(false);
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [chapters] = useState([]);
+  const [subjects] = useState([]);
   const { pathname } = useLocation();
   const [breadCrumbData, setBreadCrumbData] = useState([
     { name: "Quiz", path: "quiz" },
@@ -100,7 +102,8 @@ const OfficialQuiz = () => {
           category: "Theory",
           hasTimer,
           showAnswer,
-          subject: selectedSubject,
+          subjects: selectedSubject ? [selectedSubject] : subjects,
+          chapters,
         }),
       });
       const data = await response.json();
