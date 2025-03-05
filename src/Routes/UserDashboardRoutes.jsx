@@ -20,7 +20,7 @@ const UserDashboardRoutes = [
   { path: "theory/:id/:id", Component: UserDashboardSubjectDetails },
   { path: "quiz", Component: UserDashboardQuizLayout },
   { path: "quiz/official-quiz", Component: OfficialQuiz },
-  { path: "quiz/result", Component: UserDashboardQuizResult },
+  { path: "quiz/result/:id", Component: UserDashboardQuizResult },
   { path: "quiz/error-review", Component: ErrorReview },
   { path: "quiz/summary", Component: UserDashboardQuizSummary },
   { path: "quiz/guess-the-signal", Component: UserDashboardGuessTheSignal },

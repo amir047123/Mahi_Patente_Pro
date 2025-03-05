@@ -4,7 +4,7 @@ import {
   CircleChevronDown,
   CircleChevronUp,
   CircleHelp,
-  Clock,
+  ClockAlert,
   X,
 } from "lucide-react";
 import { IoCloseCircleOutline } from "react-icons/io5";
@@ -13,7 +13,14 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
-const UserDashboardQuizSummary = ({ isSummary, setIsSummary, quizzes }) => {
+const UserDashboardQuizSummary = ({
+  isSummary,
+  setIsSummary,
+  quizzes,
+  time,
+  hasTimer,
+  showAnswer,
+}) => {
   const summaryTableRef = useRef(null);
 
   const scrollAmount = 200;
@@ -41,6 +48,19 @@ const UserDashboardQuizSummary = ({ isSummary, setIsSummary, quizzes }) => {
       summaryTableRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [isSummary]);
+
+  const formatTime = () => {
+    // const hours = Math.floor(time / 3600)
+    //   .toString()
+    //   .padStart(2, "0");
+    const minutes = Math.floor((time % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (time % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+    // return `${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <div className={`${isSummary ? "" : "hidden"}`}>
       <div className="bg-white  lg:p-8 p-5 rounded-2xl mt-5">
@@ -84,7 +104,7 @@ const UserDashboardQuizSummary = ({ isSummary, setIsSummary, quizzes }) => {
                     <tr
                       key={index}
                       className={`${
-                        typeof quiz?.answer === "number"
+                        showAnswer && typeof quiz?.answer === "number"
                           ? `${quiz?.answer}` === quiz?.correctAnswer
                             ? "bg-green-100"
                             : "bg-red-100"
@@ -160,15 +180,16 @@ const UserDashboardQuizSummary = ({ isSummary, setIsSummary, quizzes }) => {
             Start New Quiz
           </button>
         </div>
-
-        <div className="flex items-center gap-5">
-          <Typography.Body variant="medium" className="text-secondaryText">
-            Remaining Time:
-          </Typography.Body>
-          <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
-            <Clock size={20} /> 32 : 31
-          </button>
-        </div>
+        {hasTimer && (
+          <div className="flex items-center gap-5">
+            <Typography.Body variant="medium" className="text-secondaryText">
+              Remaining Time:
+            </Typography.Body>
+            <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
+              <ClockAlert size={20} /> {formatTime()}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -10,8 +10,32 @@ import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import { Link } from "react-router-dom";
 import ErrorReviewCategoryCard from "@/Components/UserDashboard/Quiz/ErrorReviewCategoryCard";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import Spinner from "@/Components/ui/Spinner";
 
 export default function UserDashboardQuizHistory() {
+  const { useFetchEntities } = useCrudOperations("quiz-session/user-sessions");
+
+  const {
+    data: response,
+    isSuccess,
+    error,
+    isError,
+    isLoading,
+  } = useFetchEntities();
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      console.log(response?.data);
+    }
+  }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
+
   const errorReviewCategoryData = [
     {
       id: 1,
@@ -45,43 +69,6 @@ export default function UserDashboardQuizHistory() {
     },
   ];
 
-  const tableData = [
-    {
-      id: 1,
-      createdAt: new Date(),
-      quizType: "Official Quiz",
-      score: 90,
-      status: "Passed",
-    },
-    {
-      id: 2,
-      createdAt: new Date(),
-      quizType: "Choose 4 to 1 signal",
-      score: 80,
-      status: "Passed",
-    },
-    {
-      id: 3,
-      createdAt: new Date(),
-      quizType: "Guess The Signal",
-      score: 30,
-      status: "Failed",
-    },
-    {
-      id: 4,
-      createdAt: new Date(),
-      quizType: "Choose 4 to 1 signal",
-      score: 70,
-      status: "Passed",
-    },
-    {
-      id: 5,
-      createdAt: new Date(),
-      quizType: "Fast Mania",
-      score: 20,
-      status: "Failed",
-    },
-  ];
   return (
     <div>
       <DashboardBreadcrumb
@@ -112,7 +99,7 @@ export default function UserDashboardQuizHistory() {
           <div className="px-4 py-5 bg-white rounded-2xl text-left h-[98%]">
             <table className="w-full">
               <thead>
-                <tr className="text-secondary text-nowrap bg-[#EAF2FA]">
+                <tr className="text-secondary text-nowrap bg-[#EAF2FA] text-sm">
                   <th className="p-2 rounded-l-full pl-4">Date & Time</th>
                   <th className="p-2">Quiz Type</th>
                   <th className="p-2 text-center">Score</th>
@@ -121,33 +108,55 @@ export default function UserDashboardQuizHistory() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.map((item, index) => (
-                  <tr key={index} className="text-secondaryText border-b">
-                    <td className="p-2 py-3 pl-4">
-                      {new Date(item?.createdAt).toLocaleString()}
-                    </td>
-                    <td className="p-2 py-3">{item?.quizType}</td>
-                    <td className="text-center p-2 py-3">{item?.score}%</td>
-                    <td
-                      className={`text-center p-2 py-3 ${
-                        item?.status === "Passed"
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {item?.status}
-                    </td>
-                    <td
-                      className={`text-center p-2 py-3 underline ${
-                        item?.status === "Passed"
-                          ? "text-secondary"
-                          : "text-blue-600"
-                      }`}
-                    >
-                      {item?.status === "Passed" ? "View" : "Retry"}
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center">
+                      <div className="flex items-center justify-center">
+                        <Spinner size={40} />
+                      </div>
                     </td>
                   </tr>
-                ))}
+                ) : response?.data?.sessions?.length > 0 ? (
+                  response?.data?.sessions?.map((item, index) => (
+                    <tr key={index} className="text-secondaryText border-b">
+                      <td className="p-2 py-3 pl-4">
+                        {new Date(
+                          item?.timeInfo?.end || new Date()
+                        ).toLocaleString()}
+                      </td>
+                      <td className="p-2 py-3">{item?.category}</td>
+                      <td className="text-center p-2 py-3">
+                        {item?.scoreInfo?.correctPercentage}%
+                      </td>
+                      <td
+                        className={`text-center p-2 py-3 ${
+                          item?.status === "Completed"
+                            ? "text-green-500"
+                            : item?.status === "In-progress"
+                            ? "text-orange-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {item?.status}
+                      </td>
+                      <td
+                        className={`text-center p-2 py-3 underline ${
+                          item?.status === "Completed"
+                            ? "text-secondary"
+                            : "text-blue-600"
+                        }`}
+                      >
+                        {item?.status === "Completed" ? "View" : "Retry"}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="">
+                    <td colSpan={5} className="py-4 text-center !text-sm">
+                      No Session Found!
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

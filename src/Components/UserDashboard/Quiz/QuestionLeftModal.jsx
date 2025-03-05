@@ -9,6 +9,7 @@ export default function QuestionLeftModal({
   skippedAnswer,
   isSubmitting,
   submitAnswers,
+  setIsSummary,
 }) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -31,7 +32,10 @@ export default function QuestionLeftModal({
               </Typography.Base>
 
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsSummary(true);
+                }}
                 className="w-full rounded-full font-semibold border border-secondary text-secondary px-4 py-3 mb-4"
               >
                 Review missing questions

@@ -5,11 +5,7 @@ import { Ban, CircleX, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 import QuizReviewCard from "../QuizReviewCard";
 
-export default function QuizReviewModal({
-  isOpen,
-  setIsOpen,
-  data = [{}, {}],
-}) {
+export default function QuizReviewModal({ isOpen, setIsOpen, item }) {
   const [tab, setTab] = useState("wrong");
   const activeTab =
     "data-[state=active]:text-primary data-[state=active]:!font-semibold data-[state=active]:border-b-4 data-[state=active]:border-primary";
@@ -128,8 +124,6 @@ export default function QuizReviewModal({
       },
     },
   ];
-
-  console.log(tab);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>

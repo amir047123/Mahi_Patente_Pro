@@ -2,15 +2,29 @@ import * as Dialog from "@radix-ui/react-dialog";
 import settings from "@/assets/UserDashboard/settings.svg";
 import Typography from "@/Components/Typography";
 import * as Switch from "@radix-ui/react-switch";
+import { Link } from "react-router-dom";
+import Spinner from "@/Components/ui/Spinner";
 
-export default function QuickSettingsModal({ isOpen, setIsOpen, data }) {
+export default function QuickSettingsModal({
+  isOpen,
+  setIsOpen,
+  getQuizzes,
+  isLoading,
+  showAnswer,
+  setShowAnswer,
+  hasTimer,
+  setHasTimer,
+}) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn z-30" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4 z-30">
-          <Dialog.Content className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-lg focus:outline-none animate-fadeIn">
+          <Dialog.Content
+            onInteractOutside={(e) => e.preventDefault()}
+            className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-lg focus:outline-none animate-fadeIn"
+          >
             <Dialog.Title className="text-secondary !text-xl font-semibold">
               Quick Settings
             </Dialog.Title>
@@ -25,7 +39,9 @@ export default function QuickSettingsModal({ isOpen, setIsOpen, data }) {
 
                   <Switch.Root
                     className="relative h-[25px] w-[42px] cursor-default rounded-full bg-slate-300/70 shadow-md outline-none transition-all data-[state=checked]:bg-secondary"
-                    id="answers"
+                    id="showAnswer"
+                    checked={showAnswer}
+                    onCheckedChange={setShowAnswer}
                   >
                     <Switch.Thumb className="block size-[21px] translate-x-0.5 rounded-full bg-white shadow-md transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
                   </Switch.Root>
@@ -37,21 +53,31 @@ export default function QuickSettingsModal({ isOpen, setIsOpen, data }) {
 
                   <Switch.Root
                     className="relative h-[25px] w-[42px] cursor-default rounded-full bg-slate-300/70 shadow-md outline-none transition-all data-[state=checked]:bg-secondary"
-                    id="answers"
+                    id="hasTimer"
+                    checked={hasTimer}
+                    onCheckedChange={setHasTimer}
                   >
                     <Switch.Thumb className="block size-[21px] translate-x-0.5 rounded-full bg-white shadow-md transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
                   </Switch.Root>
                 </div>
               </div>
-              <button className="w-full rounded-full bg-secondary px-4 py-3 text-white">
-                Start Quiz
-              </button>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={getQuizzes}
+                className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Spinner size={24} className="text-white" />
+                ) : (
+                  "Start Quiz"
+                )}
+              </button>
+              <Link
+                to="/user-dashboard/quiz"
                 className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
               >
                 Back to Home
-              </button>
+              </Link>
             </div>
           </Dialog.Content>
         </div>

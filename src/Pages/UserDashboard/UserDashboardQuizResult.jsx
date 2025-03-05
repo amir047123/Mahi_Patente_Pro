@@ -1,16 +1,42 @@
 import Typography from "@/Components/Typography";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import quizResult from "@/assets/UserDashboard/quiz-result.svg";
+import incompleteQuiz from "@/assets/UserDashboard/quiz-result.svg";
+import failedQuiz from "@/assets/UserDashboard/quiz-result-failed.svg";
+import passedQuiz from "@/assets/UserDashboard/quiz-result-passed.svg";
 import coin from "@/assets/UserDashboard/coin.svg";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuizReviewModal from "@/Components/UserDashboard/Quiz/QuizReviewModal";
+import { Link, useParams } from "react-router-dom";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import toast from "react-hot-toast";
 
 export default function UserDashboardQuizResult({
   data = { progress: 120, total: 150 },
 }) {
   const progressWidth = `${(data?.progress * 100) / data?.total}%`;
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const { id } = useParams();
+
+  const { useEntityById } = useCrudOperations("quiz-session");
+
+  const {
+    data: response,
+    isSuccess,
+    error,
+    isError,
+    isLoading,
+  } = useEntityById(id);
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      console.log(response?.data);
+    }
+  }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
   return (
     <div>
       <DashboardBreadcrumb
@@ -23,17 +49,37 @@ export default function UserDashboardQuizResult({
 
       <div className="p-4 bg-[#F7F7F7] rounded-md mt-4 grid grid-cols-2 gap-16 items-center justify-center">
         <img
-          src={quizResult}
+          src={
+            response?.data?.result === "passed"
+              ? passedQuiz
+              : response?.data?.result === "failed"
+              ? failedQuiz
+              : incompleteQuiz
+          }
           alt="img"
           className="w-full h-full object-cover"
         />
         <div className="text-center mr-10">
-          <Typography.Heading2>Incomplete quiz</Typography.Heading2>
+          <Typography.Heading2>
+            {response?.data?.result === "passed"
+              ? "Passed"
+              : response?.data?.result === "failed"
+              ? "Failed"
+              : "Incomplete quiz"}
+          </Typography.Heading2>
+
           <Typography.Base variant="regular" className="mt-4">
-            Almost there! You missed some questions,
-            <br /> but you still earned{" "}
-            <span className="text-orange-600 font-medium">120 Coins</span>. Try
-            again!
+            {response?.data?.result === "passed" ? (
+              "Well done! You passed! Keep going for a perfect score. You earned 120 Coins!"
+            ) : response?.data?.result === "failed" ? (
+              "Almost there! Keep practicing and try  again. You earned 120 Coins!"
+            ) : (
+              <>
+                Almost there! You missed some questions, but you still earned{" "}
+                <span className="text-orange-600 font-medium">120 Coins</span>.
+                Try again!
+              </>
+            )}
           </Typography.Base>
 
           <div className="px-6 py-4 grid grid-cols-2 gap-16 bg-white rounded-2xl mt-12 border">
@@ -48,7 +94,7 @@ export default function UserDashboardQuizResult({
                 <ThumbsDown className="text-red-500" />
               </div>
               <Typography.Heading3 className="text-left mt-3">
-                3
+                {response?.data?.wrong || 0}
               </Typography.Heading3>
             </div>
             <div>
@@ -62,7 +108,7 @@ export default function UserDashboardQuizResult({
                 <ThumbsUp className="text-green-500" />
               </div>
               <Typography.Heading3 className="text-left mt-3">
-                4
+                {response?.data?.wrong || 0}
               </Typography.Heading3>
             </div>
           </div>
@@ -92,9 +138,12 @@ export default function UserDashboardQuizResult({
             </div>
           </div>
 
-          <button className="w-full rounded-full bg-secondary px-4 py-3 text-white mt-12">
+          <Link
+            to="/user-dashboard/quiz/official-quiz"
+            className="block w-full rounded-full bg-secondary px-4 py-3 text-white mt-12"
+          >
             Try new quiz
-          </button>
+          </Link>
           <button
             onClick={() => setIsReviewOpen(true)}
             className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
@@ -102,7 +151,11 @@ export default function UserDashboardQuizResult({
             Review the answers
           </button>
 
-          <QuizReviewModal isOpen={isReviewOpen} setIsOpen={setIsReviewOpen} />
+          <QuizReviewModal
+            item={response?.data}
+            isOpen={isReviewOpen}
+            setIsOpen={setIsReviewOpen}
+          />
         </div>
       </div>
     </div>

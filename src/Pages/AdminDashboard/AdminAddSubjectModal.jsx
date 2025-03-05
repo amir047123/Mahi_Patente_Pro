@@ -33,7 +33,6 @@ const AdminAddSubjectModal = ({ children }) => {
     error,
     isError,
     isLoading,
-    setValue,
   } = useFetchEntities();
 
   useEffect(() => {
@@ -51,7 +50,7 @@ const AdminAddSubjectModal = ({ children }) => {
   }
 
   const methods = useForm();
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, setValue } = methods;
 
   const { createEntity } = useCrudOperations("subject/create");
 

@@ -9,6 +9,7 @@ export default function TimeLeftModal({
   time,
   isSubmitting,
   submitAnswers,
+  setIsSummary,
 }) {
   const formatTime = () => {
     // const hours = Math.floor(time / 3600)
@@ -42,7 +43,10 @@ export default function TimeLeftModal({
               </Typography.Base>
 
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsSummary(true);
+                }}
                 className="w-full rounded-full font-semibold border border-secondary text-secondary px-4 py-3 mb-4"
               >
                 Check your answer again
