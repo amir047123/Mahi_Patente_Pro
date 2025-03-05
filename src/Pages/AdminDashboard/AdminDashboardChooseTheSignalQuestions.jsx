@@ -15,8 +15,11 @@ import { Link } from "react-router-dom";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
 import prevImg from "@/assets/AdminDashboard/demo-prev.svg";
+import AdminEditChooseTheSignalModal from "./AdminEditChooseTheSignalModal";
 
 const AdminDashboardChooseTheSignalQuestions = () => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [item, setItem] = useState(null);
   const [searchText, setSearchText] = useState("");
 
   const [date, setDate] = useState({
@@ -27,11 +30,14 @@ const AdminDashboardChooseTheSignalQuestions = () => {
   const quizData = [
     {
       id: "#001",
-      img: prevImg,
-      quizQuestion: "Choose 4 to 1",
-      lastUpdate: "16 Feb 2025, 12:30 PM",
+      image: prevImg,
+      question: "Choose 4 to 1",
+      updatedAt: new Date(),
+      options: [prevImg, prevImg, prevImg, prevImg],
+      correctAnswer: "3",
     },
   ];
+
   return (
     <>
       <DashboardBreadcrumb
@@ -147,26 +153,53 @@ const AdminDashboardChooseTheSignalQuestions = () => {
                 </td>
 
                 <td className="py-4 px-4 text-sm text-secondaryText line-clamp-2">
-                  {quiz.quizQuestion}
+                  {quiz?.question}
                 </td>
 
                 <td className="py-4 px-4 text-sm text-secondaryText whitespace-nowrap">
-                  <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                  <img
+                    className="w-16 rounded-lg"
+                    src={quiz?.options[parseInt(quiz?.correctAnswer)]}
+                    alt=""
+                  />
                 </td>
 
                 <td className="py-4 px-4 text-sm text-secondaryText font-medium ">
                   <div className="flex gap-1">
-                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
-                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
-                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
-                    <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                    {quiz?.options?.map((option, index) => (
+                      <img
+                        key={index}
+                        className="w-16 rounded-lg"
+                        src={option}
+                        alt="quiz"
+                      />
+                    ))}
                   </div>
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText">
-                  {quiz.lastUpdate}
+                  <span className="block">
+                    {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <span>
+                    {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                    })}
+                  </span>
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      setItem(quiz);
+                      setIsEditModalOpen(true);
+                    }}
+                    className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
@@ -208,6 +241,12 @@ const AdminDashboardChooseTheSignalQuestions = () => {
           <ItemPerPage />
           <PaginationCompo />
         </div>
+
+        <AdminEditChooseTheSignalModal
+          item={item}
+          isOpen={isEditModalOpen}
+          setIsOpen={setIsEditModalOpen}
+        />
       </div>
     </>
   );

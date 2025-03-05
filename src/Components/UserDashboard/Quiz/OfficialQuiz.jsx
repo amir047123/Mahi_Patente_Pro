@@ -198,7 +198,7 @@ const OfficialQuiz = () => {
   };
 
   useEffect(() => {
-    if (hasTimer && time === 0) {
+    if (hasTimer && !isSubmitting && time === 0) {
       submitAnswers();
       return;
     }
