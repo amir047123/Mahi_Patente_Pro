@@ -142,9 +142,6 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                 image preview
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Quiz Question
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
                 Correct answer
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
@@ -166,9 +163,6 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText whitespace-nowrap">
                   <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText line-clamp-1">
-                  {quiz.quizQuestion}
                 </td>
                 <td className="py-4 px-4 text-sm text-green-600 ">
                   {quiz.correctAnswer}

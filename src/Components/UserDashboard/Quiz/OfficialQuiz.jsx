@@ -40,7 +40,7 @@ const OfficialQuiz = () => {
   const [isQuickSettingsModalOpen, setIsQuickSettingsModalOpen] =
     useState(true);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [hasTimer, setHasTimer] = useState(false);
+  const [hasTimer, setHasTimer] = useState(true);
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [chapters] = useState([]);
