@@ -9,14 +9,14 @@ import { cn } from "@/lib/utils";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import HorizontalScroll from "@/Shared/HorizontalScroll";
 import { addDays, format } from "date-fns";
-import { CalendarIcon, ListFilter, Search } from "lucide-react";
+import { CalendarIcon, ListFilter, Search, UserRoundPen } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
-import prevImg from '@/assets/AdminDashboard/demo-prev.svg'
+import demoUser from "@/assets/AdminDashboard/demo-user.svg";
+import { Link } from "react-router-dom";
 
-const AdminDashboardGuessTheSignalQuestions = () => {
+const AdminDashboardUsersManage = () => {
   const [searchText, setSearchText] = useState("");
 
   const [date, setDate] = useState({
@@ -24,22 +24,31 @@ const AdminDashboardGuessTheSignalQuestions = () => {
     to: addDays(new Date(2022, 0, 20), 20),
   });
 
-  const quizData = [
+  const userData = [
     {
-      id: "#001",
-      img: prevImg,
-      quizQuestion: "Guess the signal",
-      correctAnswer: "Supplementary Panel",
-      options:
-        "Supplementary Panel, Mandatory Sign, Indicator Sign, Danger Sign",
-      lastUpdate: "16 Feb 2025, 12:30 PM",
-    }
+      id: 1,
+      img: demoUser,
+      name: "Ashikul islam ifty",
+      email: "ifty@gmail.com",
+      joinedDate: "16 Feb 2025",
+      progress: "86%",
+      lastLogin: "04-Mar-2025",
+    },
+    {
+      id: 2,
+      img: demoUser,
+      name: "Ashikul islam ifty",
+      email: "ifty@gmail.com",
+      joinedDate: "16 Feb 2025",
+      progress: "86%",
+      lastLogin: "04-Mar-2025",
+    },
   ];
   return (
     <>
       <DashboardBreadcrumb
         role="admin"
-        items={[{ name: "Guess the Signal", path: "quiz-manage/guess-the-signal" }]}
+        items={[{ name: "Users Manage", path: "users-manage" }]}
       />
 
       <HorizontalScroll className="flex gap-5 items-center justify-between w-full my-5 bg-white p-5 rounded-2xl border">
@@ -88,10 +97,11 @@ const AdminDashboardGuessTheSignalQuestions = () => {
           <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
             <ListFilter size={18} />
             <span className="text-sm font-medium whitespace-nowrap">
-              Sort by Level
+              Sort by progress
             </span>
           </button>
-
+        </div>
+        <div className="flex items-center gap-3">
           {/* Search Input */}
           <div className="relative flex-grow">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -100,19 +110,11 @@ const AdminDashboardGuessTheSignalQuestions = () => {
             <input
               type="text"
               className="block min-w-[150px] max-w-xs w-full py-2 pl-8 pr-3 text-sm text-gray-700 bg-transparent  border border-gray-200 rounded-full  focus:outline-none "
-              placeholder="Find Quiz Question"
+              placeholder="Find User"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
           </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to="/admin-dashboard/quiz-manage/guess-the-signal/add-guess-the-signal"
-            className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90"
-          >
-            Add Guess the Signal Question
-          </Link>
         </div>
       </HorizontalScroll>
 
@@ -121,22 +123,25 @@ const AdminDashboardGuessTheSignalQuestions = () => {
           <thead className="bg-[#EAF2FA] rounded-full ">
             <tr>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap  uppercase tracking-wider">
-                Quiz ID
+                User ID
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                image preview
+                Profile Image
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Quiz Question
+                Name
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Correct answer
+                Email
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                options
+                Joined On
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Last Update
+                Progress(%)
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Last Login
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
                 Action
@@ -144,59 +149,33 @@ const AdminDashboardGuessTheSignalQuestions = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {quizData.map((quiz, index) => (
-              <tr key={index} className="hover:bg-gray-50">
+            {userData.map((user, index) => (
+              <tr key={index} className="hover:bg-gray-50 border-b">
                 <td className="py-4 px-4 text-sm text-secondaryText">
-                  {quiz.id}
+                  {user.id}
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText whitespace-nowrap">
-                  <img className="w-16 rounded-lg" src={quiz?.img} alt="" />
+                  <img className="w-10 rounded-full" src={user?.img} alt="" />
                 </td>
-                <td className="py-4 px-4 text-sm text-secondaryText line-clamp-1">
-                  {quiz.quizQuestion}
+                <td className="py-4 px-4 text-sm text-secondaryText ">
+                  {user.name}
                 </td>
                 <td className="py-4 px-4 text-sm text-green-600 ">
-                  {quiz.correctAnswer}
+                  {user.email}
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText font-medium">
-                  {quiz.options}
+                  {user.joinedDate}
                 </td>
                 <td className="py-4 px-4 text-sm text-secondaryText">
-                  {quiz.lastUpdate}
+                  {user.progress}
                 </td>
-                <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>{" "}
-                  </button>
-                  <button className="text-red-500 hover:text-red-700 font-medium flex items-center gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
+                <td className="py-4 px-4 text-sm text-secondaryText">
+                  {user.lastLogin}
+                </td>
+                <td className="py-4 px-4 text-sm text-blue-600 flex justify-center gap-2">
+                  <Link className="flex gap-2 items-center" to={`/admin-dashboard/users-manage/${user.id}`}>
+                    <UserRoundPen size={20} /> View Profile
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -212,4 +191,4 @@ const AdminDashboardGuessTheSignalQuestions = () => {
   );
 };
 
-export default AdminDashboardGuessTheSignalQuestions;
+export default AdminDashboardUsersManage;

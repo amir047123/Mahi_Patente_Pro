@@ -8,6 +8,7 @@ import {
   ListTodo,
   MessageCircleQuestion,
   Signpost,
+  UserCog,
 } from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
@@ -45,11 +46,7 @@ const items = [
     url: "/admin-dashboard/categories",
     icon: ListTodo,
   },
-  // {
-  //   title: "Chapters",
-  //   url: "/admin-dashboard/chapter",
-  //   icon: List,
-  // },
+
   {
     title: "Quiz Manage",
     url: "/admin-dashboard/quiz-manage",
@@ -82,6 +79,11 @@ const items = [
         icon: Captions,
       },
     ],
+  },
+  {
+    title: "Users Manage",
+    url: "/admin-dashboard/users-manage",
+    icon: UserCog,
   },
 ];
 

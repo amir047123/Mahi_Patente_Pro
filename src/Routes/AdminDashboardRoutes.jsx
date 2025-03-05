@@ -10,6 +10,8 @@ import AdminDashboardAddQuizQuestions from "@/Pages/AdminDashboard/AdminDashboar
 import AdminDashboardSubjects from "@/Pages/AdminDashboard/AdminDashboardSubjects";
 import Practice from "@/Shared/Practice/Practice";
 import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardChooseTheSignalQuestions";
+import AdminDashboardUsersManage from "@/Pages/AdminDashboard/AdminDashboardUsersManage";
+import AdminDashboardUserProfile from "@/Pages/AdminDashboard/AdminDashboardUserProfile";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -48,6 +50,14 @@ const AdminDashboardRoutes = [
   {
     path: "quiz-manage/choose-4-to-1/add-choose-4-to-1",
     Component: AdminDashboardAddChooseTheSignalQuestions,
+  },
+  {
+    path: "users-manage",
+    Component: AdminDashboardUsersManage,
+  },
+  {
+    path: "users-manage/:id",
+    Component: AdminDashboardUserProfile,
   },
 ];
 
