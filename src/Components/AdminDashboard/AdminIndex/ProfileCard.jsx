@@ -1,5 +1,6 @@
 import { CiMail } from "react-icons/ci";
-import demoUser from "@/assets/adminDashboard/demo-user.svg";
+import demoUser from "@/assets/AdminDashboard/demo-user.svg";
+// import demoUser from "@/assets/adminDashboard/demo-user.svg";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlinePhonePaused } from "react-icons/md";
 import Typography from "@/Components/Typography";
