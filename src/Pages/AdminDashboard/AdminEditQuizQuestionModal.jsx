@@ -170,7 +170,7 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
                 <CustomInput
                   type="textarea"
                   name={`explaination`}
-                  placeholder="Quiz Question"
+                  placeholder="Write Question Explanation Here"
                   label="Write Explanation Here"
                   rows={3}
                   required={false}

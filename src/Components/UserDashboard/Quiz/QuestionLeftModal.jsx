@@ -1,8 +1,15 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clock from "@/assets/UserDashboard/clock.svg";
 import Typography from "@/Components/Typography";
+import Spinner from "@/Components/ui/Spinner";
 
-export default function QuestionLeftModal({ isOpen, setIsOpen, data }) {
+export default function QuestionLeftModal({
+  isOpen,
+  setIsOpen,
+  skippedAnswer,
+  isSubmitting,
+  submitAnswers,
+}) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
@@ -16,21 +23,30 @@ export default function QuestionLeftModal({ isOpen, setIsOpen, data }) {
                 You still have to answer
               </Typography.Base>
               <Typography.Heading2 variant="bold" className="mt-2">
-                23 questions
+                {skippedAnswer?.length || 0} questions
               </Typography.Heading2>
               <Typography.Base variant="regular" className="my-8">
                 To increase your chances of passing the test, we recommend that
                 you answer all the questions.
               </Typography.Base>
 
-              <button className="w-full rounded-full bg-secondary px-4 py-3 text-white">
-                Review missing questions
-              </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
+                className="w-full rounded-full font-semibold border border-secondary text-secondary px-4 py-3 mb-4"
               >
-                Check anyway
+                Review missing questions
+              </button>
+
+              <button
+                onClick={submitAnswers}
+                className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Spinner size={24} className="text-white" />
+                ) : (
+                  "Submit answers"
+                )}
               </button>
             </div>
           </Dialog.Content>

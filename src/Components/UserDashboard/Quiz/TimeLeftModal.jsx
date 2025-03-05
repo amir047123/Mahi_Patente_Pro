@@ -1,8 +1,26 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clock from "@/assets/UserDashboard/clock.svg";
 import Typography from "@/Components/Typography";
+import Spinner from "@/Components/ui/Spinner";
 
-export default function TimeLeftModal({ isOpen, setIsOpen, data }) {
+export default function TimeLeftModal({
+  isOpen,
+  setIsOpen,
+  time,
+  isSubmitting,
+  submitAnswers,
+}) {
+  const formatTime = () => {
+    // const hours = Math.floor(time / 3600)
+    //   .toString()
+    //   .padStart(2, "0");
+    const minutes = Math.floor((time % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (time % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+    // return `${hours}:${minutes}:${seconds}`;
+  };
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
@@ -16,21 +34,30 @@ export default function TimeLeftModal({ isOpen, setIsOpen, data }) {
                 Are you finished? You still have
               </Typography.Base>
               <Typography.Heading2 variant="bold" className="mt-2">
-                19:29
+                {formatTime()}
               </Typography.Heading2>
               <Typography.Base variant="regular" className="my-8">
                 You can recheck the questions and change your answer or check
                 your result.
               </Typography.Base>
 
-              <button className="w-full rounded-full bg-secondary px-4 py-3 text-white">
-                Check the result
-              </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
+                className="w-full rounded-full font-semibold border border-secondary text-secondary px-4 py-3 mb-4"
               >
                 Check your answer again
+              </button>
+
+              <button
+                onClick={submitAnswers}
+                className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center mb-4"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Spinner size={24} className="text-white" />
+                ) : (
+                  "Submit answers"
+                )}
               </button>
             </div>
           </Dialog.Content>

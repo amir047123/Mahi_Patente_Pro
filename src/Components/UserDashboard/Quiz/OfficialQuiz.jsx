@@ -10,6 +10,10 @@ import { baseURL } from "@/Config";
 import Spinner from "@/Components/ui/Spinner";
 import UserDashboardQuizSummary from "@/Pages/UserDashboard/UserDashboardQuizSummary";
 import { MdDone } from "react-icons/md";
+import QuizTimer from "@/Shared/QuizTimer";
+import QuizCountDownTimer from "@/Shared/QuizCountDownTimer";
+import TimeLeftModal from "./TimeLeftModal";
+import QuestionLeftModal from "./QuestionLeftModal";
 // import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
@@ -21,6 +25,11 @@ const OfficialQuiz = () => {
   const [quizSession, setQuizSession] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [initialTime, setInitialTime] = useState(10);
+  const [time, setTime] = useState(initialTime);
+  const [skippedAnswer, setSkippedAnswer] = useState(0);
+  const [isTimeLeftModalOpen, setIsTimeLeftModalOpen] = useState(false);
+  const [isQuestionLeftModalOpen, setIsQuestionLeftModalOpen] = useState(false);
 
   // useEffect(() => {
   //   AntiCheating.init();
@@ -42,6 +51,9 @@ const OfficialQuiz = () => {
 
       if (response.ok) {
         setQuizSession(data?.data);
+      } else if (response.status === 409) {
+        setQuizSession(data?.data);
+        toast.error(data?.message);
       } else {
         throw new Error(data?.message);
       }
@@ -94,7 +106,7 @@ const OfficialQuiz = () => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const submitAnswers = async () => {
     try {
       setIsSubmitting(true);
       const updatedQuizSession = {
@@ -118,6 +130,7 @@ const OfficialQuiz = () => {
 
       if (response.ok) {
         setQuizSession(data?.data);
+        setIsSummary(true);
       } else {
         throw new Error(data?.message);
       }
@@ -127,8 +140,39 @@ const OfficialQuiz = () => {
       );
     } finally {
       setIsSubmitting(false);
+      setIsTimeLeftModalOpen(false);
+      setIsQuestionLeftModalOpen(false);
     }
   };
+
+  const handleSubmit = async () => {
+    const unAnsweredQuestions = quizSession?.quizzes?.filter(
+      (item) => (item?.answer ?? "").length === 0
+    );
+
+    if (unAnsweredQuestions?.length > 0) {
+      setSkippedAnswer(unAnsweredQuestions);
+      console.log(unAnsweredQuestions);
+      console.log("Please answer all the questions");
+      setIsQuestionLeftModalOpen(true);
+      return;
+    }
+
+    if (time > 0) {
+      setIsTimeLeftModalOpen(true);
+      console.log(time);
+      return;
+    }
+
+    await submitAnswers();
+  };
+
+  useEffect(() => {
+    if (time === 0) {
+      submitAnswers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time]);
 
   return (
     <>
@@ -260,7 +304,13 @@ const OfficialQuiz = () => {
                           Remaining Time:
                         </Typography.Body>
                         <button className="px-3 font-semibold whitespace-nowrap md:text-xl text-base py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
-                          <Clock size={20} /> 32 : 31
+                          {/* <Clock size={20} /> <QuizTimer /> */}
+                          <Clock size={20} />{" "}
+                          <QuizCountDownTimer
+                            time={time}
+                            setTime={setTime}
+                            initialTime={initialTime}
+                          />
                         </button>
                       </div>
                     </div>
@@ -302,6 +352,7 @@ const OfficialQuiz = () => {
                   Close
                 </button>
                 <button
+                  disabled
                   onClick={() => setIsSummary(true)}
                   className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium"
                 >
@@ -348,6 +399,22 @@ const OfficialQuiz = () => {
             isSummary={isSummary}
             setIsSummary={setIsSummary}
             quizzes={quizSession?.quizzes}
+          />
+
+          <TimeLeftModal
+            submitAnswers={submitAnswers}
+            isSubmitting={isSubmitting}
+            time={time}
+            isOpen={isTimeLeftModalOpen}
+            setIsOpen={setIsTimeLeftModalOpen}
+          />
+
+          <QuestionLeftModal
+            submitAnswers={submitAnswers}
+            isSubmitting={isSubmitting}
+            skippedAnswer={skippedAnswer}
+            isOpen={isQuestionLeftModalOpen}
+            setIsOpen={setIsQuestionLeftModalOpen}
           />
         </>
       )}
