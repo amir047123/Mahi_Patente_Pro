@@ -11,13 +11,11 @@ import { CirclePlus, CircleX, Languages } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const AdminDashboardAddQuizQuestions = () => {
   const query = useQueryClient();
-  const { pathname } = useLocation();
-  const [selectedChapter, setSelectedChapter] = useState(null);
-  const [selectedSubject, setSelectedSubject] = useState(null);
+  const { chapter, subject } = useParams();
   const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
   const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -61,22 +59,6 @@ const AdminDashboardAddQuizQuestions = () => {
     { key: "1", label: "False" },
   ];
 
-  useEffect(() => {
-    const chapter = pathname?.split("/")[4];
-    const subject = pathname?.split("/")[5];
-
-    if (chapter) {
-      setSelectedChapter(chapter);
-    } else {
-      setSelectedChapter(null);
-    }
-    if (subject) {
-      setSelectedSubject(subject);
-    } else {
-      setSelectedSubject(null);
-    }
-  }, [pathname]);
-
   const { useFetchEntities: useFetchChapters } =
     useCrudOperations("quiz-chapter/all");
 
@@ -103,15 +85,15 @@ const AdminDashboardAddQuizQuestions = () => {
   }
 
   useEffect(() => {
-    if (selectedChapter) {
+    if (chapter) {
       chapterOptions?.map((item) => {
-        if (item?.key === selectedChapter) {
+        if (item?.key === chapter) {
           setChapterId(item?.key);
           setValue("chapter", item?.key);
         }
       });
     }
-  }, [chapterOptions, selectedChapter, setValue]);
+  }, [chapterOptions, chapter, setValue]);
 
   const { useEntityById: useFetchSubjects } = useCrudOperations("subject");
 
@@ -138,14 +120,14 @@ const AdminDashboardAddQuizQuestions = () => {
   }
 
   useEffect(() => {
-    if (selectedSubject) {
+    if (subject) {
       subjectOptions?.map((item) => {
-        if (item?.key === selectedSubject) {
+        if (item?.key === subject) {
           setValue("subject", item?.key);
         }
       });
     }
-  }, [subjectOptions, selectedSubject, setValue]);
+  }, [subjectOptions, subject, setValue]);
 
   const { createEntity } = useCrudOperations("quiz/create");
 
@@ -192,17 +174,12 @@ const AdminDashboardAddQuizQuestions = () => {
   }, [chapterId, setValue]);
 
   useEffect(() => {
-    if (
-      selectedChapter &&
-      selectedSubject &&
-      chaptersResponse &&
-      subjectsResponse
-    ) {
+    if (chapter && subject && chaptersResponse && subjectsResponse) {
       const selectedSubjectOption = subjectsResponse?.data?.subjects?.find(
-        (item) => item?._id === selectedSubject
+        (item) => item?._id === subject
       );
       const selectedChapterOption = chaptersResponse?.data?.find(
-        (item) => item?._id === selectedChapter
+        (item) => item?._id === chapter
       );
 
       setBreadCrumbData([
@@ -221,7 +198,7 @@ const AdminDashboardAddQuizQuestions = () => {
         },
       ]);
     }
-  }, [selectedChapter, selectedSubject, chaptersResponse, subjectsResponse]);
+  }, [chapter, subject, chaptersResponse, subjectsResponse]);
 
   const { createEntity: translate } = useCrudOperations("translate");
 
@@ -315,14 +292,14 @@ const AdminDashboardAddQuizQuestions = () => {
               options={chapterOptions}
               placeholder="Select Chapter"
               setValue={setChapterId}
-              isEditable={selectedChapter ? false : true}
+              isEditable={chapter ? false : true}
             />
             <CustomSelect
               name="subject"
               label="Select Subject"
               options={subjectOptions}
               placeholder="Select Subject"
-              isEditable={selectedSubject ? false : true}
+              isEditable={subject ? false : true}
             />
           </div>
 

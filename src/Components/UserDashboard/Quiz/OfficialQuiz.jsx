@@ -19,12 +19,13 @@ import TimeLeftModal from "./TimeLeftModal";
 import QuestionLeftModal from "./QuestionLeftModal";
 import { useQueryClient } from "@tanstack/react-query";
 import QuickSettingsModal from "./QuickSettingsModal";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 // import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
   const query = useQueryClient();
+  const { subject } = useParams();
   const [isSummary, setIsSummary] = useState(false);
   const [range, setRange] = useState(0);
   const [position, setPosition] = useState(1);
@@ -42,27 +43,16 @@ const OfficialQuiz = () => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [hasTimer, setHasTimer] = useState(true);
   const navigate = useNavigate();
-  const [selectedSubject, setSelectedSubject] = useState(null);
   const [chapters] = useState([]);
   const [subjects] = useState([]);
-  const { pathname } = useLocation();
   const [breadCrumbData, setBreadCrumbData] = useState([
     { name: "Quiz", path: "quiz" },
     { name: "Official Quiz", path: "quiz/official-quiz" },
   ]);
 
-  useEffect(() => {
-    const subject = pathname?.split("/")[4];
-    if (subject) {
-      setSelectedSubject(subject);
-    } else {
-      setSelectedSubject(null);
-    }
-  }, [pathname]);
-
   const { useEntityById } = useCrudOperations("quiz");
 
-  const { data: response, isSuccess } = useEntityById(selectedSubject);
+  const { data: response, isSuccess } = useEntityById(subject);
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -102,7 +92,7 @@ const OfficialQuiz = () => {
           category: "Theory",
           hasTimer,
           showAnswer,
-          subjects: selectedSubject ? [selectedSubject] : subjects,
+          subjects: subject ? [subject] : subjects,
           chapters,
         }),
       });
