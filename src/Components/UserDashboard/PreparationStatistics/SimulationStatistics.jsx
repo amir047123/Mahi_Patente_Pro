@@ -7,7 +7,7 @@ export default function SimulationStatistics() {
       <Typography.Heading5 className="text-primaryText">
         Test simulation statistics
       </Typography.Heading5>
-      <div className="p-6 flex flex-col justify-between bg-white rounded-2xl border mt-3 h-[190px]">
+      <div className="p-6 flex flex-col justify-between bg-white rounded-2xl border mt-3 h-[165px]">
         <div className=" grid grid-cols-2 gap-16">
           <div>
             <div className="flex items-center justify-between">

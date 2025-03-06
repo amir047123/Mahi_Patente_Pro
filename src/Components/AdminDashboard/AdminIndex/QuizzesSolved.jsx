@@ -1,33 +1,39 @@
 import Typography from "@/Components/Typography";
 import { ChartNoAxesColumn, MessageCircleQuestion } from "lucide-react";
 
-export default function SolvedErrorsPercentage() {
+export default function QuizzesSolved() {
   return (
     <div>
-      <Typography.Heading5 className="text-primaryText">
+       <Typography.Heading6 variant="bold" className="text-primaryText">
         Quizzes solved and percentage of errors
-      </Typography.Heading5>
-      <div className="p-6 flex flex-col justify-between bg-white rounded-2xl border mt-3 h-[165px]">
+      </Typography.Heading6>
+      <div className="p-6 flex flex-col justify-between bg-white rounded-2xl mt-3 h-[165px]">
         <div className=" grid grid-cols-2 gap-16">
           <div>
             <div className="flex items-center justify-between">
-              <Typography.Base variant="regular" className="text-secondaryText">
+              <Typography.Body
+                variant="medium"
+                className="text-secondaryText whitespace-nowrap"
+              >
                 Quizzes solved
-              </Typography.Base>
-              <MessageCircleQuestion className="text-blue-500" />
+              </Typography.Body>
+              <MessageCircleQuestion size={20} className="text-blue-500" />
             </div>
-            <Typography.Heading3 className="text-left mt-3">
+            <Typography.Heading3 variant="bold" className="text-left mt-2">
               0
             </Typography.Heading3>
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <Typography.Base variant="regular" className="text-secondaryText">
+              <Typography.Body
+                variant="medium"
+                className="text-secondaryText whitespace-nowrap"
+              >
                 Percentage errors
-              </Typography.Base>
-              <ChartNoAxesColumn className="text-red-500" />
+              </Typography.Body>
+              <ChartNoAxesColumn size={20} className="text-red-500" />
             </div>
-            <Typography.Heading3 className="text-left mt-3">
+            <Typography.Heading3 variant="bold" className="text-left mt-2">
               52%
             </Typography.Heading3>
           </div>
