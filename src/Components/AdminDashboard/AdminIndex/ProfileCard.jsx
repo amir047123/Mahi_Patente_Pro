@@ -5,7 +5,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlinePhonePaused } from "react-icons/md";
 import Typography from "@/Components/Typography";
 
-const ProfileCard = () => {
+const ProfileCard = ({ user }) => {
   return (
     <div>
       <Typography.Heading6 variant="bold" className="text-primaryText">
@@ -20,7 +20,7 @@ const ProfileCard = () => {
             <div className="relative">
               <div className="w-12 h-12 rounded-full bg-pink-100 overflow-hidden">
                 <img
-                  src={demoUser}
+                  src={user?.profile?.profilePicture || demoUser}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -30,10 +30,12 @@ const ProfileCard = () => {
 
             <div className="flex-1">
               <Typography.Heading6 className="font-semibold text-black">
-                Mohammad Amir Khan
+                {user?.profile?.name || "N/A"}
               </Typography.Heading6>
               <Typography.Body className="text-teal-500 !text-[14px]">
-                @amirkhan023
+                {user?.profile?.username
+                  ? `@${user?.profile?.username}`
+                  : "N/A"}
               </Typography.Body>
             </div>
           </div>
@@ -44,13 +46,13 @@ const ProfileCard = () => {
               <div className="flex items-center gap-2 text-gray-600 dark:text-white/70">
                 <CiMail className="w-3 h-3" />
                 <Typography.Body className="!text-[13px]">
-                  it15024roman@hotmail.com
+                  {user?.auth?.email || "N/A"}
                 </Typography.Body>
               </div>
               <div className="flex items-center gap-2 text-gray-600 dark:text-white/70">
                 <MdOutlinePhonePaused className="w-3 h-3" />
                 <Typography.Body className="!text-[13px]">
-                  +39 345 678 9012
+                  {user?.auth?.phone || "N/A"}
                 </Typography.Body>
               </div>
             </div>
@@ -60,7 +62,7 @@ const ProfileCard = () => {
                 PRO
               </span>
               <span className="bg-green-100 px-2 flex items-center h-5 rounded-3xl text-[9px] text-green-500">
-                ACTIVE
+                {user?.profile?.status || "N/A"}
               </span>
             </div>
           </div>

@@ -120,9 +120,26 @@ export default function UserDashboardQuizHistory() {
                   response?.data?.sessions?.map((item, index) => (
                     <tr key={index} className="text-secondaryText border-b">
                       <td className="p-2 py-3 pl-4">
-                        {new Date(
-                          item?.timeInfo?.end || new Date()
-                        ).toLocaleString()}
+                        <span className="block">
+                          {new Date(item?.timeInfo?.end)?.toLocaleString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </span>
+                        <span>
+                          {new Date(item?.timeInfo?.end)?.toLocaleString(
+                            "en-US",
+                            {
+                              hour: "numeric",
+                              minute: "numeric",
+                              second: "numeric",
+                            }
+                          )}
+                        </span>
                       </td>
                       <td className="p-2 py-3">{item?.category}</td>
                       <td className="text-center p-2 py-3">
