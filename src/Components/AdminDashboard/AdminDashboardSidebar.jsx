@@ -7,6 +7,7 @@ import {
   List,
   ListTodo,
   MessageCircleQuestion,
+  MonitorCog,
   Signpost,
   UserCog,
 } from "lucide-react";
@@ -84,6 +85,11 @@ const items = [
     title: "Users Manage",
     url: "/admin-dashboard/users-manage",
     icon: UserCog,
+  },
+  {
+    title: "Quiz Configuration",
+    url: "/admin-dashboard/quiz-configuration",
+    icon: MonitorCog,
   },
 ];
 

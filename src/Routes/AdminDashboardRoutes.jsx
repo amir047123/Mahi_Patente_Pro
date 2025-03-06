@@ -12,6 +12,7 @@ import Practice from "@/Shared/Practice/Practice";
 import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/AdminDashboardChooseTheSignalQuestions";
 import AdminDashboardUsersManage from "@/Pages/AdminDashboard/AdminDashboardUsersManage";
 import AdminDashboardUserProfile from "@/Pages/AdminDashboard/AdminDashboardUserProfile";
+import AdminDashboardQuizConfiguration from "@/Pages/AdminDashboard/AdminDashboardQuizConfiguration";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -58,6 +59,11 @@ const AdminDashboardRoutes = [
   {
     path: "users-manage/:id",
     Component: AdminDashboardUserProfile,
+  },
+
+  {
+    path: "quiz-configuration",
+    Component: AdminDashboardQuizConfiguration,
   },
 ];
 
