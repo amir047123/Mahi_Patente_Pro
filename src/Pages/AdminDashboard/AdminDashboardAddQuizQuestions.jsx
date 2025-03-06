@@ -59,6 +59,11 @@ const AdminDashboardAddQuizQuestions = () => {
     { key: "1", label: "False" },
   ];
 
+  const statusOptions = [
+    { key: "Active", label: "Active" },
+    { key: "Inactive", label: "Inactive" },
+  ];
+
   const { useFetchEntities: useFetchChapters } =
     useCrudOperations("quiz-chapter/all");
 
@@ -148,6 +153,7 @@ const AdminDashboardAddQuizQuestions = () => {
           meta: {
             difficulty: item?.difficulty,
             quizType: "true_false",
+            status: item?.status,
           },
           ...staticData,
           difficulty: undefined,
@@ -415,16 +421,26 @@ const AdminDashboardAddQuizQuestions = () => {
                     />
                   </div>
 
-                  <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                    <div className="sm:col-span-2 md:col-span-1 lg:col-span-2">
-                      <CustomImageUpload
-                        required={false}
-                        name={`quizs[${index}].media.image`}
-                        placeholder="Upload Image"
-                        label="Upload Image (Optional)"
-                        index={index}
-                      />
-                    </div>
+                  <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
+                    <CustomImageUpload
+                      required={false}
+                      name={`quizs[${index}].media.image`}
+                      placeholder="Upload Image"
+                      label="Upload Image (Optional)"
+                      index={index}
+                    />
+
+                    <CustomSelect
+                      name={`quizs[${index}].status`}
+                      label="Status"
+                      options={statusOptions}
+                      placeholder="Select Status"
+                      index={index}
+                      required={false}
+                    />
+                  </div>
+
+                  <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
                     <CustomSelect
                       name={`quizs[${index}].difficulty`}
                       label="Difficulty"

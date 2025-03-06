@@ -34,6 +34,11 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
     { key: "1", label: "False" },
   ];
 
+  const statusOptions = [
+    { key: "Active", label: "Active" },
+    { key: "Inactive", label: "Inactive" },
+  ];
+
   const { updateEntity } = useCrudOperations("quiz");
 
   const onSubmit = (formData) => {
@@ -59,6 +64,7 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
     setValue("questionBn", item?.questionBn);
     setValue("media.image", item?.media?.image);
     setValue("meta.difficulty", item?.meta?.difficulty);
+    setValue("meta.status", item?.meta?.status);
     setValue("correctAnswer", item?.correctAnswer);
     setValue("explaination", item?.explaination);
   }, [item, setValue]);
@@ -141,16 +147,25 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
                 />
               </div>
 
-              <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="sm:col-span-2">
-                  <CustomImageUpload
-                    required={false}
-                    name={`media.image`}
-                    placeholder="Upload Image"
-                    label="Upload Image (Optional)"
-                    value={item?.media?.image}
-                  />
-                </div>
+              <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
+                <CustomImageUpload
+                  required={false}
+                  name={`media.image`}
+                  placeholder="Upload Image"
+                  label="Upload Image (Optional)"
+                  value={item?.media?.image}
+                />
+
+                <CustomSelect
+                  name={`meta.status`}
+                  label="Status"
+                  options={statusOptions}
+                  placeholder="Select Status"
+                  required={false}
+                />
+              </div>
+
+              <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
                 <CustomSelect
                   name={`meta.difficulty`}
                   label="Difficulty"

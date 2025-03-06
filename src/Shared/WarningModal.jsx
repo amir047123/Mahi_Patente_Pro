@@ -9,6 +9,7 @@ export default function WarningModal({
   setIsOpen,
   isDeleting,
   msg,
+  desc = "You are about to delete this item permanently.",
   success,
   refetchData = () => console.log("Implement refetchData!"),
   closeSuccess,
@@ -31,7 +32,7 @@ export default function WarningModal({
               </Typography.Heading4>
 
               <Typography.Base variant="regular" className="text-slate-500">
-                You are about to delete this item permanently.
+                {desc}
                 <br /> This action cannot be undone.
               </Typography.Base>
             </div>

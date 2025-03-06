@@ -92,6 +92,7 @@ const AdminDashboardChapters = () => {
           setIsDeletingSuccess(false);
         }}
         msg="SUC200 - Chapter Deleted Successfully"
+        desc="You are about to delete this chapter with its subjects and questions permanently."
         refetchData={() => {}}
       />
 
