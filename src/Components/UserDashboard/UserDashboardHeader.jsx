@@ -7,7 +7,7 @@ import socket from "@/socket";
 import { useEffect, useRef, useState } from "react";
 import { useAuthContext } from "@/Context/AuthContext";
 import Typography from "../Typography";
-import notificationSound from "/public/audio/notification.mp3";
+import notificationSound from "/audio/notification.mp3";
 import NotificationComponent from "@/Shared/NotificationComponent";
 import { useNotificationsContext } from "@/Context/NotificationsContext";
 

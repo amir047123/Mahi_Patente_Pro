@@ -19,6 +19,8 @@ import HorizontalScroll from "@/Shared/HorizontalScroll";
 import AdminAddChapterCard from "@/Components/AdminDashboard/AdminAddChapterCard";
 import toast from "react-hot-toast";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { useQueryClient } from "@tanstack/react-query";
+import WarningModal from "@/Shared/WarningModal";
 
 const AdminDashboardChapters = () => {
   const [searchText, setSearchText] = useState("");
@@ -27,6 +29,31 @@ const AdminDashboardChapters = () => {
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   });
+
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
+  const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
+  const [itemIndex, setItemIndex] = useState(-1);
+
+  const query = useQueryClient();
+
+  const { deleteEntity } = useCrudOperations("quiz-chapter");
+
+  const handleDelete = async () => {
+    const deleteId = response?.data?.[itemIndex]?._id;
+
+    deleteEntity.mutate(deleteId, {
+      onSuccess: (updatedData) => {
+        toast.success(updatedData?.message);
+        setIsDeletingSuccess(true);
+        query.invalidateQueries({
+          queryKey: ["quiz-chapter/all"],
+        });
+      },
+      onError: (error) => {
+        toast.error(error?.message);
+      },
+    });
+  };
 
   const { useFetchEntities } = useCrudOperations("quiz-chapter/all");
 
@@ -50,6 +77,24 @@ const AdminDashboardChapters = () => {
 
   return (
     <>
+      <WarningModal
+        onConfirm={handleDelete}
+        isOpen={isWarningModalOpen}
+        setIsOpen={() => {
+          setItemIndex(-1);
+          setIsWarningModalOpen(false);
+          setIsDeletingSuccess(false);
+        }}
+        isDeleting={deleteEntity.isPending}
+        success={isDeletingSuccess}
+        closeSuccess={() => {
+          setItemIndex(-1);
+          setIsDeletingSuccess(false);
+        }}
+        msg="SUC200 - Chapter Deleted Successfully"
+        refetchData={() => {}}
+      />
+
       <DashboardBreadcrumb
         role="admin"
         items={[{ name: "Chapters", path: "quiz-manage/chapters" }]}
@@ -130,7 +175,13 @@ const AdminDashboardChapters = () => {
 
       <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-3">
         {response?.data?.map((item, index) => (
-          <AdminChapterCard key={index} item={item} />
+          <AdminChapterCard
+            key={index}
+            item={item}
+            index={index}
+            setItemIndex={setItemIndex}
+            setIsWarningModalOpen={setIsWarningModalOpen}
+          />
         ))}
         <AdminAddChapterCard />
       </div>

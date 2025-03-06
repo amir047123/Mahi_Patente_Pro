@@ -275,10 +275,14 @@ const AdminDashboardAddQuizQuestions = () => {
         setIsOpen={() => {
           setQuizIndex(null);
           setIsWarningModalOpen(false);
+          setIsDeletingSuccess(false);
         }}
         isDeleting={isDeleting}
         success={isDeletingSuccess}
-        closeSuccess={() => setIsDeletingSuccess(false)}
+        closeSuccess={() => {
+          setQuizIndex(null);
+          setIsDeletingSuccess(false);
+        }}
         msg="SUC200 - Item Removed"
         refetchData={() => {}}
       />

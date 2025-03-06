@@ -10,8 +10,14 @@ import { Link } from "react-router-dom";
 import AdminEditChapterModal from "@/Pages/AdminDashboard/AdminEditChapterModal";
 import { useState } from "react";
 
-const AdminChapterCard = ({ item }) => {
+const AdminChapterCard = ({
+  item,
+  index,
+  setItemIndex,
+  setIsWarningModalOpen,
+}) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
@@ -49,7 +55,13 @@ const AdminChapterCard = ({ item }) => {
                 <PencilIcon className="h-5 w-5 text-gray-700" />
                 <span className="text-gray-700 font-medium">Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex gap-2 py-2 cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-50">
+              <DropdownMenuItem
+                onClick={() => {
+                  setItemIndex(index);
+                  setIsWarningModalOpen(true);
+                }}
+                className="flex gap-2 py-2 cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-50"
+              >
                 <TrashIcon className="h-5 w-5" />
                 <span className="font-medium">Delete</span>
               </DropdownMenuItem>
