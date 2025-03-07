@@ -19,6 +19,7 @@ import ItemPerPage from "@/Shared/ItemPerPage";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import AdminEditQuizQuestionModal from "./AdminEditQuizQuestionModal";
+import Spinner from "@/Components/ui/Spinner";
 
 const AdminDashboardQuizQuestion = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -35,7 +36,7 @@ const AdminDashboardQuizQuestion = () => {
     { name: "Chapters", path: "quiz-manage/chapters" },
   ]);
 
-  const { useEntityById } = useCrudOperations("quiz");
+  const { useFetchEntities } = useCrudOperations("quiz");
 
   const {
     data: response,
@@ -43,7 +44,7 @@ const AdminDashboardQuizQuestion = () => {
     error,
     isError,
     isLoading,
-  } = useEntityById(subject);
+  } = useFetchEntities({ subject: subject });
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -209,85 +210,101 @@ const AdminDashboardQuizQuestion = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {response?.data?.questions?.map((quiz, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {index + 1}
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText whitespace-nowrap">
-                  <img
-                    src={quiz?.media?.image}
-                    alt="quiz question"
-                    className="h-10 w-full object-scale-down"
-                  />
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText line-clamp-2">
-                  {quiz?.question}
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {quiz?.meta?.difficulty}
-                </td>
-                <td className="py-4 px-4 text-sm text-green-600 font-medium">
-                  {quiz?.correctAnswer === "0" ? "True" : "False"}
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText text-center">
-                  <span className="block">
-                    {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
-                  <span>
-                    {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
-                      hour: "numeric",
-                      minute: "numeric",
-                      second: "numeric",
-                    })}
-                  </span>
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
-                  <button
-                    onClick={() => {
-                      setItem(quiz);
-                      setIsEditModalOpen(true);
-                    }}
-                    className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>{" "}
-                  </button>
-                  <button className="text-red-500 hover:text-red-700 font-medium flex items-center gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
+            {isLoading ? (
+              <tr>
+                <td colSpan={7} className="py-6 text-center">
+                  <div className="flex items-center justify-center">
+                    <Spinner size={40} />
+                  </div>
                 </td>
               </tr>
-            ))}
+            ) : response?.data?.questions?.length > 0 ? (
+              response?.data?.questions?.map((quiz, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {index + 1}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText whitespace-nowrap">
+                    <img
+                      src={quiz?.media?.image}
+                      alt="quiz question"
+                      className="h-10 w-full object-scale-down"
+                    />
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText line-clamp-2">
+                    {quiz?.question}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {quiz?.meta?.difficulty}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-green-600 font-medium">
+                    {quiz?.correctAnswer === "0" ? "True" : "False"}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText text-center">
+                    <span className="block">
+                      {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                    <span>
+                      {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        second: "numeric",
+                      })}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText flex justify-center gap-5">
+                    <button
+                      onClick={() => {
+                        setItem(quiz);
+                        setIsEditModalOpen(true);
+                      }}
+                      className="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>{" "}
+                    </button>
+                    <button className="text-red-500 hover:text-red-700 font-medium flex items-center gap-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="">
+                <td colSpan={7} className="py-4 text-center !text-sm">
+                  No Question Found!
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 

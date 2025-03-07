@@ -10,12 +10,14 @@ import toast from "react-hot-toast";
 import guessEmpty from "@/assets/AdminDashboard/guess-empty.png";
 import CustomInput from "@/Shared/Form/CustomInput";
 import Spinner from "@/Components/ui/Spinner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AdminDashboardAddGuessTheSignalQuestions = () => {
   const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
   const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [quizIndex, setQuizIndex] = useState("");
+  const query = useQueryClient();
 
   const methods = useForm({
     defaultValues: {
@@ -52,6 +54,9 @@ const AdminDashboardAddGuessTheSignalQuestions = () => {
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {
         toast.success(data?.message);
+        query.invalidateQueries({
+          queryKey: ["quiz"],
+        });
         // reset();
       },
       onError: (error) => {
