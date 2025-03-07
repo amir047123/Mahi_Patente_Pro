@@ -26,6 +26,7 @@ const AdminEditChooseTheSignalModal = ({ isOpen, setIsOpen, item }) => {
 
   const onSubmit = (formData) => {
     const updatedData = {
+      question: formData?.question,
       correctAnswer: formData?.correctAnswer,
       options: [
         formData?.answerA,
@@ -66,7 +67,7 @@ const AdminEditChooseTheSignalModal = ({ isOpen, setIsOpen, item }) => {
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
               <ArrowLeft />{" "}
               <span className="whitespace-nowrap">
-                Edit Edit Guess the Signal Question
+                Edit Choose 4 to 1 Question
               </span>
             </DialogTitle>
           </DialogClose>

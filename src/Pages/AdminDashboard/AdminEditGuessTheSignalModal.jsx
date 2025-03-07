@@ -71,7 +71,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
               <ArrowLeft />{" "}
               <span className="whitespace-nowrap">
-                Edit Edit Guess the Signal Question
+                Edit Guess the Signal Question
               </span>
             </DialogTitle>
           </DialogClose>

@@ -18,7 +18,7 @@ export default function UserDashboardQuizResult({
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const { id } = useParams();
 
-  const { useEntityById } = useCrudOperations("quiz-session");
+  const { useEntityById } = useCrudOperations("quiz-session/user-session");
 
   const {
     data: response,

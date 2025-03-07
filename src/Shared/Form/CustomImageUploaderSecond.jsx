@@ -124,8 +124,9 @@ const CustomImageUploaderSecond = ({
   }, []);
 
   useEffect(() => {
-    if (resetUploadedFile) {
+    if (resetUploadedFile !== 1) {
       setSelectedFile(null);
+      setValue(name, null, { shouldValidate: true });
       setUploadedFile(null);
     }
   }, [resetUploadedFile]);
