@@ -98,7 +98,7 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-4xl bg-[#ECF2F8] ">
+      <DialogContent className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] ">
         <DialogHeader>
           <DialogClose asChild>
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
