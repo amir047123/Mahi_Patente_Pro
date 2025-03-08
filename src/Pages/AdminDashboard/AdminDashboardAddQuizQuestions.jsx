@@ -461,7 +461,7 @@ const AdminDashboardAddQuizQuestions = () => {
                   <div className="col-span-2">
                     <CustomInput
                       type="textarea"
-                      name={`quizs[${index}].explaination`}
+                      name={`quizs[${index}].explanation`}
                       placeholder="Write Question Explanation Here"
                       label="Write Explanation Here"
                       rows={3}

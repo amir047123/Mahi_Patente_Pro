@@ -66,7 +66,7 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
     setValue("meta.difficulty", item?.meta?.difficulty);
     setValue("meta.status", item?.meta?.status);
     setValue("correctAnswer", item?.correctAnswer);
-    setValue("explaination", item?.explaination);
+    setValue("explanation", item?.explanation);
   }, [item, setValue]);
 
   const { createEntity: translate } = useCrudOperations("translate");
@@ -184,7 +184,7 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
               <div className="col-span-2">
                 <CustomInput
                   type="textarea"
-                  name={`explaination`}
+                  name={`explanation`}
                   placeholder="Write Question Explanation Here"
                   label="Write Explanation Here"
                   rows={3}

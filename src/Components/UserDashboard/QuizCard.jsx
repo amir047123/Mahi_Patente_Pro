@@ -16,10 +16,10 @@ import {
 } from "../ui/dropdown-menu";
 import languageCodes from "@/lib/languageCodes";
 import Spinner from "../ui/Spinner";
-import QuizExplainationModal from "./Quiz/QuizExplainationModal";
+import QuizExplanationModal from "./Quiz/QuizExplanationModal";
 
 const QuizCard = ({ question }) => {
-  const [isExplainationModalOpen, setIsExplainationModalOpen] = useState(false);
+  const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [translatedText, setTranslatedText] = useState();
   const { createEntity: translate } = useCrudOperations("translate");
   const [translatedLang, setTranslatedLang] = useState("bn");
@@ -116,7 +116,7 @@ const QuizCard = ({ question }) => {
             <AiOutlineSound className="text-lg" />
           </button>
           <button
-            onClick={() => setIsExplainationModalOpen(true)}
+            onClick={() => setIsExplanationModalOpen(true)}
             className="bg-[#E3FAFF] p-2 border rounded-md"
           >
             <MdOutlineBook className="text-lg" />
@@ -129,10 +129,10 @@ const QuizCard = ({ question }) => {
           </button>
         </div>
       </div>
-      <QuizExplainationModal
-        isOpen={isExplainationModalOpen}
-        setIsOpen={setIsExplainationModalOpen}
-        explaination={question?.explaination}
+      <QuizExplanationModal
+        isOpen={isExplanationModalOpen}
+        setIsOpen={setIsExplanationModalOpen}
+        explanation={question?.explanation}
       />
     </div>
   );

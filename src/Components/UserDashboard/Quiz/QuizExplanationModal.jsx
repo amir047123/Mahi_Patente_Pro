@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/Components/ui/dialog";
 
-const QuizExplainationModal = ({ isOpen, setIsOpen, explaination }) => {
+const QuizExplanationModal = ({ isOpen, setIsOpen, explanation }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className=" overflow-y-auto max-h-screen max-w-xl bg-[#ECF2F8] ">
@@ -18,11 +18,11 @@ const QuizExplainationModal = ({ isOpen, setIsOpen, explaination }) => {
         </DialogHeader>
 
         <textarea
-          name="explaination"
-          id="explaination"
+          name="explanation"
+          id="explanation"
           rows={10}
           className="w-full bg-white text-gray-900 text-sm rounded-3xl focus:ring-none focus:border-none block p-4 focus:outline-none focus:shadow-none resize-none mb-3"
-          value={explaination}
+          value={explanation}
           readOnly
         ></textarea>
 
@@ -38,4 +38,4 @@ const QuizExplainationModal = ({ isOpen, setIsOpen, explaination }) => {
   );
 };
 
-export default QuizExplainationModal;
+export default QuizExplanationModal;
