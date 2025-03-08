@@ -146,7 +146,7 @@ const UserDashboardGuessTheSignal = () => {
         });
         setQuizSession(data?.data);
         setIsSummary(true);
-        navigate(`/user-dashboard/quiz/result/${quizSession?._id}`);
+        navigate(`/user-dashboard/quiz/guess-the-signal/${quizSession?._id}`);
       } else {
         throw new Error(data?.message);
       }

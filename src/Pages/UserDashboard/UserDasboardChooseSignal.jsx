@@ -146,7 +146,9 @@ const UserDasboardChooseSignal = () => {
         });
         setQuizSession(data?.data);
         setIsSummary(true);
-        navigate(`/user-dashboard/quiz/result/${quizSession?._id}`);
+        navigate(
+          `/user-dashboard/quiz/choose-4-to-1-signal/${quizSession?._id}`
+        );
       } else {
         throw new Error(data?.message);
       }

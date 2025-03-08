@@ -1,5 +1,6 @@
 import Typography from "@/Components/Typography";
 import QuizCard from "@/Components/UserDashboard/QuizCard";
+import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import chapterImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
@@ -23,6 +24,7 @@ const UserDashboardSubjectDetails = () => {
     error,
     isError,
     isLoading,
+    refetch,
   } = useFetchEntities({ subject: subject });
 
   useEffect(() => {
@@ -59,6 +61,7 @@ const UserDashboardSubjectDetails = () => {
           query.invalidateQueries({
             queryKey: ["quiz-chapter/all"],
           });
+          refetch();
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -86,18 +89,33 @@ const UserDashboardSubjectDetails = () => {
             >
               {response?.data?.subject?.name}
             </Typography.Heading3>
-            <button className="bg-blue-600 hover:bg-blue-500 font-medium rounded-full text-white py-1.5 px-6  text-sm mt-5">
-              In Progress
+            <button
+              className={`font-medium rounded-full text-white py-1.5 px-6  text-sm mt-5 ${
+                response?.data?.subject?.isCompleted
+                  ? "bg-[#2ACCB0] hover:bg-[#2ACCB0]/80"
+                  : "bg-blue-600 hover:bg-blue-500"
+              }`}
+            >
+              {response?.data?.subject?.isCompleted
+                ? "Completed"
+                : "In Progress"}
             </button>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <button
+            disabled={updateEntity?.isPending}
             onClick={markAsComplete}
-            className="bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 font-medium rounded-full text-white py-3 px-6 text-sm transition-all"
+            className={`bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 w-40 font-medium rounded-full text-white py-3 px-4 text-sm transition-all flex items-center justify-center ${
+              response?.data?.subject?.isCompleted ? "hidden" : ""
+            }`}
           >
-            Mark as complete
+            {updateEntity?.isPending ? (
+              <Spinner size={20} className="text-white" />
+            ) : (
+              "Mark as complete"
+            )}
           </button>
           <Link
             to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}

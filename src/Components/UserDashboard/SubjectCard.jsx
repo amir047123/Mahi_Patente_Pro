@@ -17,7 +17,7 @@ const SubjectCard = ({ subject }) => {
             {subject?.name}
           </Typography.Heading5>
           <Typography.Body variant="medium" className="text-secondaryText mt-1">
-            10 Questions
+            {subject?.totalQuizes || 0} Questions
           </Typography.Body>
         </div>
 

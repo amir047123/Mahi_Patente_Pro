@@ -45,6 +45,9 @@ const OfficialQuiz = () => {
   const navigate = useNavigate();
   const [chapters] = useState([]);
   const [subjects] = useState([]);
+  const [navigateUrl, setNavigateUrl] = useState(
+    `/user-dashboard/quiz/official-quiz/${quizSession?._id}`
+  );
   const [breadCrumbData, setBreadCrumbData] = useState([
     { name: "Quiz", path: "quiz" },
     { name: "Official Quiz", path: "quiz/official-quiz" },
@@ -72,7 +75,15 @@ const OfficialQuiz = () => {
         },
       ]);
     }
-  }, [isSuccess, response]);
+
+    if (subject && isSuccess && response?.success) {
+      setNavigateUrl(
+        `/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz/${quizSession?._id}`
+      );
+    } else {
+      setNavigateUrl(`/user-dashboard/quiz/official-quiz/${quizSession?._id}`);
+    }
+  }, [isSuccess, response, quizSession, subject]);
 
   // useEffect(() => {
   //   AntiCheating.init();
@@ -196,7 +207,8 @@ const OfficialQuiz = () => {
         });
         setQuizSession(data?.data);
         setIsSummary(true);
-        navigate(`/user-dashboard/quiz/result/${quizSession?._id}`);
+
+        navigate(navigateUrl);
       } else {
         throw new Error(data?.message);
       }
