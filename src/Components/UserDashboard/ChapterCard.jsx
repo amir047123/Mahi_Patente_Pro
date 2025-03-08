@@ -2,7 +2,9 @@ import Typography from "@/Components/Typography";
 import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 
 const ChapterCard = ({ item }) => {
-  const progressWidth = `${(item?.progress * 100) / item?.total}%`;
+  const progressWidth = `${
+    (item?.count?.completedSubjects * 100) / item?.count?.totalSubjects
+  }%`;
 
   return (
     <div className="bg-white flex gap-4 rounded-lg sm:max-w-sm h-full">
@@ -24,9 +26,9 @@ const ChapterCard = ({ item }) => {
           </Typography.Heading5>
         </div>
 
-        <div className="">
+        <div className="mt-2">
           <Typography.Body className="text-secondaryText">
-            {item?.progress}/{item?.total}
+            {item?.count?.completedSubjects}/{item?.count?.totalSubjects}
           </Typography.Body>
           <div className="w-full bg-[#E1E1E1] rounded-full h-2.5">
             <div

@@ -1,8 +1,8 @@
 import Typography from "@/Components/Typography";
-import totalUsers from "@/assets/adminDashboard/icon/total-users.svg";
-import inactiveUsers from "@/assets/adminDashboard/icon/inactive-users.svg";
-import subUsers from "@/assets/adminDashboard/icon/sub-users.svg";
-import user from "@/assets/adminDashboard/icon/user.svg";
+import totalUsers from "@/assets/AdminDashboard/icon/total-users.svg";
+import inactiveUsers from "@/assets/AdminDashboard/icon/inactive-users.svg";
+import subUsers from "@/assets/AdminDashboard/icon/sub-users.svg";
+import user from "@/assets/AdminDashboard/icon/user.svg";
 const UserStatistics = () => {
   return (
     <div className="bg-white rounded-2xl p-5 lg:col-span-3 col-span-5 md:mt-5 mt-3">

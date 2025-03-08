@@ -1,18 +1,22 @@
 "use client";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { CardContent, CardFooter, CardHeader } from "@/Components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@/Components/ui/chart";
 import Typography from "@/Components/Typography";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/Components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
 
 const chartData = [
   { month: "January", desktop: 186 },
