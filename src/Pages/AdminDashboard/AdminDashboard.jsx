@@ -7,8 +7,10 @@ export default function AdminDashboard() {
     <div>
       <AdminDashboardLayout>
         <AdminDashboardHeader />
-        <div className="max-w-screen-max_screen mx-auto p-4">
-          <Outlet />
+        <div className="max-w-screen-max_screen mx-auto w-[97%] py-4">
+          
+            <Outlet />
+          
         </div>
       </AdminDashboardLayout>
     </div>
