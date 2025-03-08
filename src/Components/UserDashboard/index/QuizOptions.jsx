@@ -8,7 +8,7 @@ function QuizOptions() {
       description: "Official Quizzes",
       icon: "Building",
       time: "20 min",
-      path: "official-quizzes",
+      path: "official-quiz",
       bgColor: "bg-[#B2FFB2]",
       timeBGColor: "bg-[#9EE39E]",
     },
