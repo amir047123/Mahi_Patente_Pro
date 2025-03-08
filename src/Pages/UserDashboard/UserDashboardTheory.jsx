@@ -26,6 +26,8 @@ const UserDashboardTheory = () => {
     toast.error(error?.message);
   }
 
+
+  console.log("res",response?.data)
   return (
     <>
       <DashboardBreadcrumb

@@ -46,7 +46,7 @@ function QuizOptions() {
 
   return (
     <>
-      <div className="grid xl:grid-cols-7 lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-4 mb-10">
+      <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 mb-10">
         {quizCardsData?.map((item, index) => (
           <FastManiaCategoryCard key={index} item={item} />
         ))}
