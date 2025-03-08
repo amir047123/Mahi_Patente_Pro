@@ -100,7 +100,7 @@ export default function UserDashboardQuizHistory() {
             <table className="w-full">
               <thead>
                 <tr className="text-secondary text-nowrap bg-[#EAF2FA] text-sm">
-                  <th className="p-2 rounded-l-full pl-4">Date & Time</th>
+                  <th className="p-2 rounded-l-full pl-4">End Time</th>
                   <th className="p-2">Quiz Type</th>
                   <th className="p-2 text-center">Score</th>
                   <th className="p-2 text-center">Status</th>
@@ -158,12 +158,24 @@ export default function UserDashboardQuizHistory() {
                       </td>
                       <td
                         className={`text-center p-2 py-3 underline ${
-                          item?.status === "Completed"
+                          item?.status === "Completed" ||
+                          item?.status === "Expired"
                             ? "text-secondary"
                             : "text-blue-600"
                         }`}
                       >
-                        {item?.status === "Completed" ? "View" : "Retry"}
+                        {item?.status === "Completed" ||
+                        item?.status === "Expired" ? (
+                          <Link to={`/user-dashboard/history/${item?._id}`}>
+                            View
+                          </Link>
+                        ) : (
+                          <Link
+                            to={`/user-dashboard/quiz/official-quiz?in-progress=yes`}
+                          >
+                            Retry
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   ))

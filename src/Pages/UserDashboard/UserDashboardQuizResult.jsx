@@ -15,6 +15,7 @@ export default function UserDashboardQuizResult({
   data = { progress: 120, total: 150 },
 }) {
   const progressWidth = `${(data?.progress * 100) / data?.total}%`;
+  const [status, setStatus] = useState("");
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const { id } = useParams();
 
@@ -30,29 +31,36 @@ export default function UserDashboardQuizResult({
 
   useEffect(() => {
     if (isSuccess && response?.success) {
-      console.log(response?.data);
+      if (response?.data?.scoreInfo?.notSubmittedQuizzes > 0) {
+        setStatus("incomplete");
+      } else if (response?.data?.scoreInfo?.correctPercentage > 90) {
+        setStatus("passed");
+      } else {
+        setStatus("failed");
+      }
     }
   }, [isSuccess, response]);
 
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
+
   return (
     <div>
       <DashboardBreadcrumb
         role="user"
         items={[
           { name: "Quiz", path: "quiz" },
-          { name: "Result", path: "quiz/result" },
+          { name: "Result", path: "quiz/result/id" },
         ]}
       />
 
       <div className="p-4 bg-[#F7F7F7] rounded-md mt-4 grid grid-cols-2 gap-16 items-center justify-center">
         <img
           src={
-            response?.data?.result === "passed"
+            status === "passed"
               ? passedQuiz
-              : response?.data?.result === "failed"
+              : status === "failed"
               ? failedQuiz
               : incompleteQuiz
           }
@@ -61,18 +69,25 @@ export default function UserDashboardQuizResult({
         />
         <div className="text-center mr-10">
           <Typography.Heading2>
-            {response?.data?.result === "passed"
+            {status === "passed"
               ? "Passed"
-              : response?.data?.result === "failed"
+              : status === "failed"
               ? "Failed"
               : "Incomplete quiz"}
           </Typography.Heading2>
 
           <Typography.Base variant="regular" className="mt-4">
-            {response?.data?.result === "passed" ? (
-              "Well done! You passed! Keep going for a perfect score. You earned 120 Coins!"
-            ) : response?.data?.result === "failed" ? (
-              "Almost there! Keep practicing and try  again. You earned 120 Coins!"
+            {status === "passed" ? (
+              <>
+                Well done! You passed! Keep going for a perfect score. You
+                earned{" "}
+                <span className="text-orange-600 font-medium">120 Coins!</span>
+              </>
+            ) : status === "failed" ? (
+              <>
+                Almost there! Keep practicing and try again. You earned{" "}
+                <span className="text-orange-600 font-medium">120 Coins!</span>
+              </>
             ) : (
               <>
                 Almost there! You missed some questions, but you still earned{" "}
@@ -94,7 +109,7 @@ export default function UserDashboardQuizResult({
                 <ThumbsDown className="text-red-500" />
               </div>
               <Typography.Heading3 className="text-left mt-3">
-                {response?.data?.wrong || 0}
+                {response?.data?.scoreInfo?.incorrectQuizzes || 0}
               </Typography.Heading3>
             </div>
             <div>
@@ -108,7 +123,7 @@ export default function UserDashboardQuizResult({
                 <ThumbsUp className="text-green-500" />
               </div>
               <Typography.Heading3 className="text-left mt-3">
-                {response?.data?.wrong || 0}
+                {response?.data?.scoreInfo?.correctQuizzes || 0}
               </Typography.Heading3>
             </div>
           </div>
@@ -152,7 +167,7 @@ export default function UserDashboardQuizResult({
           </button>
 
           <QuizReviewModal
-            item={response?.data}
+            data={response?.data?.quizzes}
             isOpen={isReviewOpen}
             setIsOpen={setIsReviewOpen}
           />

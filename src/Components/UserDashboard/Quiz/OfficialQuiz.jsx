@@ -39,7 +39,7 @@ const OfficialQuiz = () => {
   const [isTimeLeftModalOpen, setIsTimeLeftModalOpen] = useState(false);
   const [isQuestionLeftModalOpen, setIsQuestionLeftModalOpen] = useState(false);
   const [isQuickSettingsModalOpen, setIsQuickSettingsModalOpen] =
-    useState(true);
+    useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [hasTimer, setHasTimer] = useState(true);
   const navigate = useNavigate();
@@ -261,6 +261,17 @@ const OfficialQuiz = () => {
     return `${minutes}:${seconds}`;
     // return `${hours}:${minutes}:${seconds}`;
   };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+
+    if (queryParams.get("in-progress") !== "yes") {
+      setIsQuickSettingsModalOpen(true);
+    } else {
+      getQuizzes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

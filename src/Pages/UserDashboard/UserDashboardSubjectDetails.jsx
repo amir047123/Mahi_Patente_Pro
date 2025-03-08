@@ -13,7 +13,7 @@ const UserDashboardSubjectDetails = () => {
     { name: "Theory", path: "theory" },
   ]);
 
-  const { useEntityById } = useCrudOperations("quiz");
+  const { useFetchEntities } = useCrudOperations("quiz");
 
   const {
     data: response,
@@ -21,7 +21,7 @@ const UserDashboardSubjectDetails = () => {
     error,
     isError,
     isLoading,
-  } = useEntityById(subject);
+  } = useFetchEntities({ subject: subject });
 
   useEffect(() => {
     if (isSuccess && response?.success) {

@@ -34,19 +34,17 @@ const QuizReviewCard = ({ question, quizReviewData }) => {
           </div>
 
           <div className="flex items-center gap-2 mt-auto">
-            {question?.answer !== undefined &&
-            String(question?.answer) !== question?.correctAnswer ? (
+            {question?.isCorrect === false && question?.selectedAnswer ? (
               <ThumbsDown size={20} className="text-secondary" />
-            ) : question?.answer !== undefined &&
-              String(question?.answer) === question?.correctAnswer ? (
+            ) : question?.isCorrect === true && question?.selectedAnswer ? (
               <ThumbsUp size={20} className="text-green-500" />
             ) : (
               <X size={20} className="text-primaryText" />
             )}
             <Typography.Base variant="medium" className="text-secondaryText ">
-              {question?.answer === 1
+              {question?.selectedAnswer === "1"
                 ? "You Answered FALSE"
-                : question?.answer === 0
+                : question?.selectedAnswer === "0"
                 ? "You Answered TRUE"
                 : "You didn’t answer"}
             </Typography.Base>
@@ -55,10 +53,10 @@ const QuizReviewCard = ({ question, quizReviewData }) => {
 
         <span
           className={`${
-            question?.correctAnswer == 0 ? "bg-[#2CD673]" : "bg-red-500"
+            question?.correctAnswer === "0" ? "bg-[#2CD673]" : "bg-red-500"
           } rounded-lg px-3.5 py-1.5 md:text-2xl text-xl w-fit h-fit text-white`}
         >
-          {question?.correctAnswer == 0 ? "V" : "F"}
+          {question?.correctAnswer == "0" ? "V" : "F"}
         </span>
       </div>
     </div>

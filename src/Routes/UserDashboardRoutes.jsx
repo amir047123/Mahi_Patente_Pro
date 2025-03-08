@@ -27,6 +27,8 @@ const UserDashboardRoutes = [
   { path: "quiz/guess-the-signal", Component: UserDashboardGuessTheSignal },
   { path: "quiz/choose-4-to-1-signal", Component: UserDasboardChooseSignal },
   { path: "history", Component: UserDashboardQuizHistory },
+  { path: "history/:id", Component: UserDashboardQuizResult },
+
   {
     path: "preparation-statistics",
     Component: UserDashboardPreparationStatistics,

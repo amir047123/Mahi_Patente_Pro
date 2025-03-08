@@ -25,7 +25,8 @@ const AdminDashboardAddChooseTheSignalQuestions = () => {
     },
   });
 
-  const { handleSubmit, reset, control, watch, getValues, register } = methods;
+  const { handleSubmit, reset, control, watch, getValues, register, setError } =
+    methods;
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: "quizs",
@@ -34,6 +35,52 @@ const AdminDashboardAddChooseTheSignalQuestions = () => {
   const { createEntity } = useCrudOperations("quiz/create");
 
   const onSubmit = (formData) => {
+    const options = formData?.quizs
+      ?.flatMap((item) => [
+        item?.answerA?.trim(),
+        item?.answerB?.trim(),
+        item?.answerC?.trim(),
+        item?.answerD?.trim(),
+      ])
+      .filter(Boolean);
+
+    if (options.length !== 4) {
+      toast.error("There must be exactly four options.");
+      return;
+    }
+
+    const uniqueValues = new Set(options);
+
+    if (uniqueValues.size !== 4) {
+      toast.error("Quizzes must have unique options.");
+
+      formData.quizs.forEach((item, quizIndex) => {
+        const answers = [
+          item.answerA,
+          item.answerB,
+          item.answerC,
+          item.answerD,
+        ];
+        const seen = new Set();
+
+        answers.forEach((answer, idx) => {
+          if (seen.has(answer?.trim())) {
+            setError(
+              `quizs[${quizIndex}].answer${String.fromCharCode(65 + idx)}`,
+              {
+                type: "manual",
+                message: "Each option must be unique.",
+              }
+            );
+          } else {
+            seen.add(answer?.trim());
+          }
+        });
+      });
+
+      return;
+    }
+
     const updatedData = {
       category: "Choose 4 to 1 Signal",
       bodyData: formData?.quizs?.map((item) => {

@@ -22,11 +22,44 @@ const AdminEditGuessTheSignalModal = ({ isOpen, setIsOpen, item }) => {
   const query = useQueryClient();
 
   const methods = useForm();
-  const { handleSubmit, setValue, watch, register } = methods;
+  const { handleSubmit, setValue, watch, register, setError } = methods;
 
   const { updateEntity } = useCrudOperations("quiz");
 
   const onSubmit = (formData) => {
+    const optionKeys = ["answerA", "answerB", "answerC", "answerD"];
+
+    const options = optionKeys
+      .map((key) => formData?.[key]?.trim())
+      .filter(Boolean);
+
+    if (options.length !== 4) {
+      toast.error("There must be exactly four options.");
+      return;
+    }
+
+    const uniqueValues = new Set(options);
+
+    if (uniqueValues.size !== 4) {
+      toast.error("Quizzes must have unique options.");
+
+      const seen = new Set();
+
+      optionKeys.forEach((key) => {
+        const value = formData?.[key]?.trim();
+        if (seen.has(value)) {
+          setError(key, {
+            type: "manual",
+            message: "Each option must be unique.",
+          });
+        } else {
+          seen.add(value);
+        }
+      });
+
+      return;
+    }
+
     const updatedData = {
       correctAnswer: formData?.correctAnswer,
       options: [
