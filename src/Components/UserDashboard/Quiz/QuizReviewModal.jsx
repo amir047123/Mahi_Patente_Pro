@@ -2,13 +2,38 @@ import Typography from "@/Components/Typography";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Ban, CircleX, ThumbsDown, ThumbsUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuizReviewCard from "../QuizReviewCard";
 
 export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
+  const [wrong, setWrong] = useState([]);
+  const [right, setRight] = useState([]);
+  const [skipped, setSkipped] = useState([]);
+
   const [tab, setTab] = useState("wrong");
   const activeTab =
     "data-[state=active]:text-primary data-[state=active]:!font-semibold data-[state=active]:border-b-4 data-[state=active]:border-primary";
+
+  useEffect(() => {
+    if (data) {
+      setWrong(
+        data?.filter(
+          (item) => item?.selectedAnswer !== null && item?.isCorrect === false
+        )
+      );
+      setRight(
+        data?.filter(
+          (item) => item?.selectedAnswer !== null && item?.isCorrect === true
+        )
+      );
+      setSkipped(
+        data?.filter(
+          (item) =>
+            item?.selectedAnswer === null || item?.selectedAnswer === undefined
+        )
+      );
+    }
+  }, [data]);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -44,13 +69,7 @@ export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
                       Wrong
                     </Typography.Base>
                     <span className="px-2 text-white bg-red-500 rounded-full">
-                      {
-                        data?.filter(
-                          (item) =>
-                            item?.selectedAnswer !== null &&
-                            item?.isCorrect === false
-                        )?.length
-                      }
+                      {wrong?.length}
                     </span>
                   </Tabs.Trigger>
                   <Tabs.Trigger
@@ -65,13 +84,7 @@ export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
                       Right
                     </Typography.Base>
                     <span className="px-2 text-white bg-green-500 rounded-full">
-                      {
-                        data?.filter(
-                          (item) =>
-                            item?.selectedAnswer !== null &&
-                            item?.isCorrect === true
-                        )?.length
-                      }
+                      {right?.length}
                     </span>
                   </Tabs.Trigger>
                   <Tabs.Trigger
@@ -86,65 +99,53 @@ export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
                       No Answer
                     </Typography.Base>
                     <span className="px-2 text-white bg-primaryText rounded-full">
-                      {
-                        data?.filter(
-                          (item) =>
-                            item?.selectedAnswer === null ||
-                            item?.selectedAnswer === undefined
-                        )?.length
-                      }
+                      {skipped?.length}
                     </span>
                   </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="wrong">
                   <div className="flex flex-col gap-5 w-full">
-                    {data
-                      ?.filter(
-                        (item) =>
-                          item?.selectedAnswer !== null &&
-                          item?.isCorrect === false
-                      )
-                      ?.map((item, index) => (
+                    {wrong?.length > 0 ? (
+                      wrong?.map((item, index) => (
                         <QuizReviewCard
                           key={index}
                           question={item}
                           quizReviewData={data}
                         />
-                      ))}
+                      ))
+                    ) : (
+                      <p className="my-4 text-center">No wrong answers</p>
+                    )}
                   </div>
                 </Tabs.Content>
                 <Tabs.Content value="right">
                   <div className="flex flex-col gap-5 w-full">
-                    {data
-                      ?.filter(
-                        (item) =>
-                          item?.selectedAnswer !== null &&
-                          item?.isCorrect === true
-                      )
-                      ?.map((item, index) => (
+                    {right?.length > 0 ? (
+                      right?.map((item, index) => (
                         <QuizReviewCard
                           key={index}
                           question={item}
                           quizReviewData={data}
                         />
-                      ))}
+                      ))
+                    ) : (
+                      <p className="my-4 text-center">No right answers</p>
+                    )}
                   </div>
                 </Tabs.Content>
                 <Tabs.Content value="skip">
                   <div className="flex flex-col gap-5 w-full">
-                    {data
-                      ?.filter(
-                        (item) =>
-                          item?.selectedAnswer === null ||
-                          item?.selectedAnswer === undefined
-                      )
-                      ?.map((item, index) => (
+                    {skipped?.length > 0 ? (
+                      skipped.map((item, index) => (
                         <QuizReviewCard
                           key={index}
                           question={item}
                           quizReviewData={data}
                         />
-                      ))}
+                      ))
+                    ) : (
+                      <p className="my-4 text-center">No skipped answers</p>
+                    )}
                   </div>
                 </Tabs.Content>
               </Tabs.Root>

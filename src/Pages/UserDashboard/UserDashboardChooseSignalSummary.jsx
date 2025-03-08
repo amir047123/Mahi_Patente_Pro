@@ -3,17 +3,24 @@ import {
   CircleChevronDown,
   CircleChevronUp,
   CircleHelp,
-  Clock,
+  ClockAlert,
 } from "lucide-react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import Spinner from "@/Components/ui/Spinner";
+import { MdDone } from "react-icons/md";
 
 const UserDashboardChooseSignalSummary = ({
   isSummary,
   setIsSummary,
   quizzes,
+  time,
+  hasTimer,
+  showAnswer,
+  handleSubmit,
+  isSubmitting,
 }) => {
   const summaryTableRef = useRef(null);
 
@@ -42,6 +49,19 @@ const UserDashboardChooseSignalSummary = ({
       summaryTableRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [isSummary]);
+
+  const formatTime = () => {
+    // const hours = Math.floor(time / 3600)
+    //   .toString()
+    //   .padStart(2, "0");
+    const minutes = Math.floor((time % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (time % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+    // return `${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <div className={`${isSummary ? "" : "hidden"}`}>
       <div className="bg-white  lg:p-8 p-5 rounded-2xl mt-5">
@@ -78,7 +98,7 @@ const UserDashboardChooseSignalSummary = ({
                     <tr
                       key={index}
                       className={`${
-                        typeof quiz?.answer === "number"
+                        showAnswer && typeof quiz?.answer === "number"
                           ? `${quiz?.answer}` === quiz?.correctAnswer
                             ? "bg-green-100"
                             : "bg-red-100"
@@ -148,12 +168,31 @@ const UserDashboardChooseSignalSummary = ({
           </button>
         </div>
 
-        <div className="flex items-center gap-5">
-          <Typography.Body variant="medium" className="text-secondaryText">
-            Remaining Time:
-          </Typography.Body>
-          <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
-            <Clock size={20} /> 32 : 31
+        <div className="flex items-center gap-4">
+          {hasTimer && (
+            <div className="flex items-center gap-5">
+              <Typography.Body variant="medium" className="text-secondaryText">
+                Remaining Time:
+              </Typography.Body>
+              <button className="px-3 font-semibold text-xl py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
+                <ClockAlert size={20} /> {formatTime()}
+              </button>
+            </div>
+          )}
+
+          <button
+            onClick={handleSubmit}
+            className="bg-green-500 text-white rounded-lg px-4 py-2 shadow-sm flex items-center font-medium w-28 justify-center disabled:bg-green-500/70 disabled:cursor-not-allowed"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <Spinner size={20} className="text-white" />
+            ) : (
+              <>
+                Submit
+                <MdDone className="w-4 h-4 ml-1" />
+              </>
+            )}
           </button>
         </div>
       </div>

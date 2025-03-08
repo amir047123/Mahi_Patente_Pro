@@ -14,6 +14,10 @@ import toast from "react-hot-toast";
 export default function UserDashboardQuizResult({
   data = { progress: 120, total: 150 },
 }) {
+  const [newQuizLink, setNewQuizLink] = useState(
+    "/user-dashboard/quiz/official-quiz"
+  );
+  const [quizCategory, setQuizCategory] = useState(0);
   const progressWidth = `${(data?.progress * 100) / data?.total}%`;
   const [status, setStatus] = useState("");
   const [isReviewOpen, setIsReviewOpen] = useState(false);
@@ -31,6 +35,17 @@ export default function UserDashboardQuizResult({
 
   useEffect(() => {
     if (isSuccess && response?.success) {
+      if (response?.data?.category?.name === "Theory") {
+        setNewQuizLink("/user-dashboard/quiz/official-quiz");
+        setQuizCategory(0);
+      } else if (response?.data?.category?.name === "Guess the Signal") {
+        setNewQuizLink("/user-dashboard/quiz/guess-the-signal");
+        setQuizCategory(1);
+      } else {
+        setNewQuizLink("/user-dashboard/quiz/choose-4-to-1-signal");
+        setQuizCategory(2);
+      }
+
       if (response?.data?.scoreInfo?.notSubmittedQuizzes > 0) {
         setStatus("incomplete");
       } else if (response?.data?.scoreInfo?.correctPercentage > 90) {
@@ -154,7 +169,7 @@ export default function UserDashboardQuizResult({
           </div>
 
           <Link
-            to="/user-dashboard/quiz/official-quiz"
+            to={newQuizLink}
             className="block w-full rounded-full bg-secondary px-4 py-3 text-white mt-12"
           >
             Try new quiz
@@ -166,11 +181,25 @@ export default function UserDashboardQuizResult({
             Review the answers
           </button>
 
-          <QuizReviewModal
-            data={response?.data?.quizzes}
-            isOpen={isReviewOpen}
-            setIsOpen={setIsReviewOpen}
-          />
+          {quizCategory === 0 ? (
+            <QuizReviewModal
+              data={response?.data?.quizzes}
+              isOpen={isReviewOpen}
+              setIsOpen={setIsReviewOpen}
+            />
+          ) : quizCategory === 1 ? (
+            <QuizReviewModal
+              data={response?.data?.quizzes}
+              isOpen={isReviewOpen}
+              setIsOpen={setIsReviewOpen}
+            />
+          ) : (
+            <QuizReviewModal
+              data={response?.data?.quizzes}
+              isOpen={isReviewOpen}
+              setIsOpen={setIsReviewOpen}
+            />
+          )}
         </div>
       </div>
     </div>

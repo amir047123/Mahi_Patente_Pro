@@ -19,7 +19,7 @@ import TimeLeftModal from "./TimeLeftModal";
 import QuestionLeftModal from "./QuestionLeftModal";
 import { useQueryClient } from "@tanstack/react-query";
 import QuickSettingsModal from "./QuickSettingsModal";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 // import { AntiCheating } from "@/lib/antiCheating";
 
@@ -50,9 +50,9 @@ const OfficialQuiz = () => {
     { name: "Official Quiz", path: "quiz/official-quiz" },
   ]);
 
-  const { useEntityById } = useCrudOperations("quiz");
+  const { useFetchEntities } = useCrudOperations("quiz");
 
-  const { data: response, isSuccess } = useEntityById(subject);
+  const { data: response, isSuccess } = useFetchEntities({ subject: subject });
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -439,10 +439,13 @@ const OfficialQuiz = () => {
           {/* prev and next btn */}
           <div className="col-span-1 md:col-span-3 flex justify-between mt-5">
             <div className="flex space-x-2">
-              <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2">
+              <Link
+                to="/user-dashboard/quiz"
+                className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2"
+              >
                 <IoIosCloseCircleOutline className="text-xl" />
-                Close
-              </button>
+                Close Quiz
+              </Link>
               <button
                 onClick={() => setIsSummary(true)}
                 className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium"
