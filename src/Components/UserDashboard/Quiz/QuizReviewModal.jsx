@@ -55,20 +55,24 @@ export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
               <Tabs.Root value={tab} onValueChange={setTab}>
                 <Tabs.List
                   aria-label="quiz review tabs"
-                  className="flex items-center gap-10 mb-4 border-b border-slate-300 text-secondaryText"
+                  className="flex items-center gap-4 sm:gap-10 mb-4 border-b border-slate-300 text-secondaryText"
                 >
                   <Tabs.Trigger
                     value="wrong"
                     className={`flex items-center gap-2 py-2 ${activeTab}`}
                     onClick={() => setTab("wrong")}
                   >
-                    <ThumbsDown size={20} className="text-red-500" />
+                    <ThumbsDown
+                      size={20}
+                      className="text-red-500 hidden min-[450px]:block"
+                    />
                     <Typography.Base
                       variant={tab === "wrong" ? "semibold" : "regular"}
+                      className="text-xs min-[450px]:text-sm sm:text-base"
                     >
                       Wrong
                     </Typography.Base>
-                    <span className="px-2 text-white bg-red-500 rounded-full">
+                    <span className="px-2 text-white bg-red-500 rounded-full text-xs min-[450px]:text-sm sm:text-base">
                       {wrong?.length}
                     </span>
                   </Tabs.Trigger>
@@ -77,13 +81,17 @@ export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
                     className={`flex items-center gap-2 py-2 font-normal ${activeTab}`}
                     onClick={() => setTab("right")}
                   >
-                    <ThumbsUp size={20} className="text-green-500" />
+                    <ThumbsUp
+                      size={20}
+                      className="text-green-500 hidden min-[450px]:block"
+                    />
                     <Typography.Base
                       variant={tab === "right" ? "semibold" : "regular"}
+                      className="text-xs min-[450px]:text-sm sm:text-base"
                     >
                       Right
                     </Typography.Base>
-                    <span className="px-2 text-white bg-green-500 rounded-full">
+                    <span className="px-2 text-white bg-green-500 rounded-full text-xs min-[450px]:text-sm sm:text-base">
                       {right?.length}
                     </span>
                   </Tabs.Trigger>
@@ -92,13 +100,17 @@ export default function QuizReviewModal({ isOpen, setIsOpen, data }) {
                     className={`flex items-center gap-2 py-2 font-normal ${activeTab}`}
                     onClick={() => setTab("skip")}
                   >
-                    <Ban size={20} className="text-secondaryText" />
+                    <Ban
+                      size={20}
+                      className="text-secondaryText hidden min-[450px]:block"
+                    />
                     <Typography.Base
                       variant={tab === "skip" ? "semibold" : "regular"}
+                      className="text-xs min-[450px]:text-sm sm:text-base"
                     >
                       No Answer
                     </Typography.Base>
-                    <span className="px-2 text-white bg-primaryText rounded-full">
+                    <span className="px-2 text-white bg-primaryText rounded-full text-xs min-[450px]:text-sm sm:text-base">
                       {skipped?.length}
                     </span>
                   </Tabs.Trigger>

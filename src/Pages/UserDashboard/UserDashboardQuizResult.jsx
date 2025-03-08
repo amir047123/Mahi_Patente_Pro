@@ -70,7 +70,7 @@ export default function UserDashboardQuizResult({
         ]}
       />
 
-      <div className="p-4 bg-[#F7F7F7] rounded-md mt-4 grid grid-cols-2 gap-16 items-center justify-center">
+      <div className="p-4 bg-[#F7F7F7] rounded-md mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-16 items-center justify-center">
         <img
           src={
             status === "passed"
@@ -80,9 +80,9 @@ export default function UserDashboardQuizResult({
               : incompleteQuiz
           }
           alt="img"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover mt-6 sm:mt-0 order-2 sm:order-1"
         />
-        <div className="text-center mr-10">
+        <div className="text-center mr-4 lg:mr-10  order-1 sm:order-2">
           <Typography.Heading2>
             {status === "passed"
               ? "Passed"
@@ -91,7 +91,10 @@ export default function UserDashboardQuizResult({
               : "Incomplete quiz"}
           </Typography.Heading2>
 
-          <Typography.Base variant="regular" className="mt-4">
+          <Typography.Base
+            variant="regular"
+            className="mt-4 text-sm md:text-base"
+          >
             {status === "passed" ? (
               <>
                 Well done! You passed! Keep going for a perfect score. You
@@ -112,16 +115,16 @@ export default function UserDashboardQuizResult({
             )}
           </Typography.Base>
 
-          <div className="px-6 py-4 grid grid-cols-2 gap-16 bg-white rounded-2xl mt-12 border">
+          <div className="px-6 py-4 grid grid-cols-2 gap-4 xl:gap-16 bg-white rounded-2xl mt-12 border">
             <div>
               <div className="flex items-center justify-between">
                 <Typography.Base
                   variant="regular"
-                  className="text-secondaryText"
+                  className="text-secondaryText text-sm lg:text-base"
                 >
                   Wrong
                 </Typography.Base>
-                <ThumbsDown className="text-red-500" />
+                <ThumbsDown className="text-red-500" size={20} />
               </div>
               <Typography.Heading3 className="text-left mt-3">
                 {response?.data?.scoreInfo?.incorrectQuizzes || 0}
@@ -131,11 +134,11 @@ export default function UserDashboardQuizResult({
               <div className="flex items-center justify-between">
                 <Typography.Base
                   variant="regular"
-                  className="text-secondaryText"
+                  className="text-secondaryText text-sm lg:text-base"
                 >
                   Right
                 </Typography.Base>
-                <ThumbsUp className="text-green-500" />
+                <ThumbsUp className="text-green-500" size={20} />
               </div>
               <Typography.Heading3 className="text-left mt-3">
                 {response?.data?.scoreInfo?.correctQuizzes || 0}
@@ -170,13 +173,13 @@ export default function UserDashboardQuizResult({
 
           <Link
             to={newQuizLink}
-            className="block w-full rounded-full bg-secondary px-4 py-3 text-white mt-12"
+            className="block w-full rounded-full bg-secondary px-2 py-1.5 sm:px-4 sm:py-3 text-white mt-6 md:mt-12"
           >
             Try new quiz
           </Link>
           <button
             onClick={() => setIsReviewOpen(true)}
-            className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
+            className="mt-3 w-full rounded-full border border-secondary bg-white px-2 py-1.5 sm:px-4 sm:py-3 text-secondary"
           >
             Review the answers
           </button>

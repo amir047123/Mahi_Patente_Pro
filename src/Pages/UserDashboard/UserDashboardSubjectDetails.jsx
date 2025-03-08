@@ -3,11 +3,13 @@ import QuizCard from "@/Components/UserDashboard/QuizCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import chapterImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 
 const UserDashboardSubjectDetails = () => {
+  const query = useQueryClient();
   const { subject } = useParams();
   const [breadCrumbData, setBreadCrumbData] = useState([
     { name: "Theory", path: "theory" },
@@ -42,6 +44,29 @@ const UserDashboardSubjectDetails = () => {
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
+
+  const { updateEntity } = useCrudOperations("subject/complete");
+
+  const markAsComplete = () => {
+    updateEntity.mutate(
+      { _id: response?.data?.subject?._id },
+      {
+        onSuccess: (data) => {
+          toast.success(data?.message);
+          query.invalidateQueries({
+            queryKey: ["subject/all"],
+          });
+          query.invalidateQueries({
+            queryKey: ["quiz-chapter/all"],
+          });
+        },
+        onError: (error) => {
+          toast.error(error?.message);
+        },
+      }
+    );
+  };
+
   return (
     <>
       <DashboardBreadcrumb role="user" items={breadCrumbData} />
@@ -66,12 +91,21 @@ const UserDashboardSubjectDetails = () => {
             </button>
           </div>
         </div>
-        <Link
-          to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}
-          className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
-        >
-          Start Quiz
-        </Link>
+
+        <div className="flex items-center gap-4">
+          <button
+            onClick={markAsComplete}
+            className="bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 font-medium rounded-full text-white py-3 px-6 text-sm transition-all"
+          >
+            Mark as complete
+          </button>
+          <Link
+            to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}
+            className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
+          >
+            Start Quiz
+          </Link>
+        </div>
       </div>
 
       <div className="space-y-4">
