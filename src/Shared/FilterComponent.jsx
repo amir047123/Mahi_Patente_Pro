@@ -185,6 +185,62 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
+
+              {/* Sort by Quiz Type */}
+              {field?.type === "quizType" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
+                      <ListFilter size={18} />
+                      <span className="text-sm font-medium whitespace-nowrap">
+                        {filters?.quizType || "Quiz Type"}
+                      </span>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-w-56 text-secondaryText">
+                    <DropdownMenuLabel>Quiz Type</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={filters?.quizType}
+                      onValueChange={(e) => handleInputChange(field?.name, e)}
+                    >
+                      {field?.options?.map((option) => (
+                        <DropdownMenuRadioItem key={option} value={option}>
+                          {option}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+
+              {/* Sort by status */}
+              {field?.type === "status" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
+                      <ListFilter size={18} />
+                      <span className="text-sm font-medium whitespace-nowrap">
+                        {filters?.status || "Sort By Status"}
+                      </span>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-w-56 text-secondaryText">
+                    <DropdownMenuLabel>Sort by Status</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={filters?.status}
+                      onValueChange={(e) => handleInputChange(field?.name, e)}
+                    >
+                      {field?.options?.map((option) => (
+                        <DropdownMenuRadioItem key={option} value={option}>
+                          {option}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             {/* Search Input */}

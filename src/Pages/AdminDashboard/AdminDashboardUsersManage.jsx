@@ -1,6 +1,6 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import {  UserRoundPen } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
 import demoUser from "@/assets/AdminDashboard/demo-user.svg";
@@ -11,8 +11,7 @@ import Spinner from "@/Components/ui/Spinner";
 import FilterComponent from "@/Shared/FilterComponent";
 
 const AdminDashboardUsersManage = () => {
-
-
+ const [filters, setFilters] = useState({});
   const { useFetchEntities } = useCrudOperations("user/users");
 
   const {
@@ -33,9 +32,7 @@ const AdminDashboardUsersManage = () => {
     toast.error(error?.message);
   }
 
-     const handleFilterChange = (filters) => {
-       console.log(filters);
-     };
+
   return (
     <>
       <DashboardBreadcrumb
@@ -43,10 +40,9 @@ const AdminDashboardUsersManage = () => {
         items={[{ name: "Users Manage", path: "users-manage" }]}
       />
 
-  
-
       <FilterComponent
-        onChange={handleFilterChange}
+        filters={filters}
+        setFilters={setFilters}
         fields={[
           {
             type: "date",
@@ -62,7 +58,6 @@ const AdminDashboardUsersManage = () => {
             type: "search",
             name: "searchText",
           },
-        
         ]}
       />
 

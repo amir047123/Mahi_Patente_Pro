@@ -1,23 +1,18 @@
 import Typography from "@/Components/Typography";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import {
-  ArrowDownNarrowWide,
-  CalendarCog,
-  ChartBarStacked,
-  Volleyball,
-} from "lucide-react";
 import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import { Link } from "react-router-dom";
 import ErrorReviewCategoryCard from "@/Components/UserDashboard/Quiz/ErrorReviewCategoryCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
+import FilterComponent from "@/Shared/FilterComponent";
 
 export default function UserDashboardQuizHistory() {
   const { useFetchEntities } = useCrudOperations("quiz-session/user-sessions");
-
+ const [filters, setFilters] = useState({});
   const {
     data: response,
     isSuccess,
@@ -69,6 +64,8 @@ export default function UserDashboardQuizHistory() {
     },
   ];
 
+console.log(filters)
+
   return (
     <div>
       <DashboardBreadcrumb
@@ -78,24 +75,29 @@ export default function UserDashboardQuizHistory() {
 
       <div className="mt-4 grid grid-cols-3 gap-8 pb-10">
         <div className="col-span-2 h-full mb-4">
-          <div className="flex items-center gap-4 text-secondaryText mb-4">
-            <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-              <CalendarCog size={20} className="text-[#9CA3AF]" />
-              Select Date Range
-            </button>
-            <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-              <Volleyball size={20} className="text-[#9CA3AF]" />
-              Select Score Range
-            </button>
-            <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-              <ChartBarStacked size={20} className="text-[#9CA3AF]" />
-              Quiz Type
-            </button>
-            <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-              <ArrowDownNarrowWide size={20} className="text-[#9CA3AF]" />
-              Sorting
-            </button>
-          </div>
+         
+          <FilterComponent
+            filters={filters}
+            setFilters={setFilters}
+            fields={[
+              {
+                type: "date",
+                name: "date",
+              },
+              {
+                type: "quizType",
+                name: "quizType",
+                options: ["Official Quizzes", "Selected Topic Quiz", "Guess the Signal","Choose 4 to 1 Signal"],
+              },
+              {
+                type: "status",
+                name: "status",
+                options: ["on Progress", "completed", "pending"],
+              },
+
+             
+            ]}
+          />
           <div className="px-4 py-5 bg-white rounded-2xl text-left h-[98%]">
             <table className="w-full">
               <thead>

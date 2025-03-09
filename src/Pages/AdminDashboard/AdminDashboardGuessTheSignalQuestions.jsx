@@ -11,10 +11,9 @@ import FilterComponent from "@/Shared/FilterComponent";
 const AdminDashboardGuessTheSignalQuestions = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [item, setItem] = useState(null);
+   const [filters, setFilters] = useState({});
 
-   const handleFilterChange = (filters) => {
-     console.log(filters);
-   };
+
 
   const { useFetchEntities } = useCrudOperations("quiz");
 
@@ -51,7 +50,8 @@ const AdminDashboardGuessTheSignalQuestions = () => {
       />
 
       <FilterComponent
-        onChange={handleFilterChange}
+        filters={filters}
+        setFilters={setFilters}
         fields={[
           {
             type: "date",
