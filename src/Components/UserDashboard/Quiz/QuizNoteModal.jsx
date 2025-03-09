@@ -6,11 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/Components/ui/dialog";
+import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const QuizNoteModal = ({ isOpen, setIsOpen, question, notes }) => {
+  const query = useQueryClient();
   const [note, setNote] = useState("");
   const { createEntity: createNotes } = useCrudOperations("note/create");
 
@@ -20,6 +23,13 @@ const QuizNoteModal = ({ isOpen, setIsOpen, question, notes }) => {
       {
         onSuccess: (data) => {
           toast.success(data?.message);
+          query.invalidateQueries({
+            queryKey: ["quiz"],
+          });
+          query.invalidateQueries({
+            queryKey: ["quiz-session/user-session"],
+          });
+          setIsOpen(false);
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -30,7 +40,7 @@ const QuizNoteModal = ({ isOpen, setIsOpen, question, notes }) => {
 
   useEffect(() => {
     if (isOpen) {
-      setNote(notes?.note);
+      setNote(notes);
     } else {
       setNote(null);
     }
@@ -56,14 +66,19 @@ const QuizNoteModal = ({ isOpen, setIsOpen, question, notes }) => {
 
         <DialogFooter className="flex gap-5 items-center">
           <button
+            disabled={createNotes?.isPending}
             onClick={addNotes}
-            className="bg-secondary hover:bg-secondary/90 px-6 py-2.5 text-sm font-medium text-white rounded-full w-full"
+            className="bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-medium text-white rounded-full w-full flex items-center justify-center"
           >
-            Add Notes
+            {createNotes?.isPending ? (
+              <Spinner size={20} className="text-white" />
+            ) : (
+              "Save"
+            )}
           </button>
 
           <DialogClose asChild>
-            <button className="bg-secondary hover:bg-secondary/90 px-6 py-2.5 text-sm font-medium text-white rounded-full w-full">
+            <button className="border border-secondary/90 px-6 py-2.5 text-sm font-medium text-secondary rounded-full w-full">
               Back
             </button>
           </DialogClose>

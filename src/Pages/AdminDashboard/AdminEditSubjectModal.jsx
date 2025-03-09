@@ -132,7 +132,7 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
           <button
             onClick={handleSubmit(onSubmit)}
             className="text-sm px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
-            disabled={updateEntity?.isPending ? true : false}
+            disabled={updateEntity?.isPending}
           >
             {updateEntity?.isPending ? (
               <Spinner size={20} className="text-white" />

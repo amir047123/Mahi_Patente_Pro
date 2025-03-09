@@ -2,7 +2,6 @@ import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
 import { MdGTranslate, MdOutlineBook } from "react-icons/md";
 import { AiOutlineSound } from "react-icons/ai";
-import { CiBookmarkCheck } from "react-icons/ci";
 import { LuMessageCircleMore } from "react-icons/lu";
 import textToSpeech from "@/lib/textToSpeech";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
@@ -18,12 +17,21 @@ import languageCodes from "@/lib/languageCodes";
 import Spinner from "../ui/Spinner";
 import QuizExplanationModal from "./Quiz/QuizExplanationModal";
 import QuizNoteModal from "./Quiz/QuizNoteModal";
+import { BookMarked } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/Components/ui/tooltip";
 
-const QuizCard = ({ question, refetch }) => {
+const QuizCard = ({ question }) => {
+  const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
   const [translatedText, setTranslatedText] = useState();
-  const [translatedLang, setTranslatedLang] = useState("bn");
+  const [translatedLang, setTranslatedLang] = useState("en");
   const { createEntity: translate } = useCrudOperations("translate");
 
   const translateText = () => {
@@ -52,8 +60,10 @@ const QuizCard = ({ question, refetch }) => {
       { _id: question?._id },
       {
         onSuccess: (data) => {
+          query.invalidateQueries({
+            queryKey: ["quiz"],
+          });
           toast.success(data?.message);
-          refetch();
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -89,23 +99,32 @@ const QuizCard = ({ question, refetch }) => {
           <span
             className={`${
               question?.correctAnswer == 0 ? "bg-[#2CD673]" : "bg-red-500"
-            } rounded-lg px-3.5 py-1.5 md:text-2xl text-xl w-fit h-fit text-white`}
+            } rounded-lg px-3.5 py-1 md:text-2xl text-xl w-fit h-fit text-white`}
           >
-            {question?.correctAnswer == 0 ? "True" : "False"}
+            {question?.correctAnswer == 0 ? "V" : "F"}
           </span>
         </div>
 
         <div className="mt-4 flex gap-3 text-gray-600 ml-auto">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="bg-[#E3FAFF] p-2 border rounded-md">
-                {translate?.isPending ? (
-                  <Spinner size={16} className="!text-gray-600" />
-                ) : (
-                  <MdGTranslate className="text-lg" />
-                )}
-              </button>
-            </DropdownMenuTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <button className="bg-[#E3FAFF] p-2 border rounded-md">
+                      {translate?.isPending ? (
+                        <Spinner size={16} className="!text-gray-600" />
+                      ) : (
+                        <MdGTranslate className="text-lg" />
+                      )}
+                    </button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="center">
+                  Translate Question To Other Language
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <DropdownMenuContent className="w-44 p-4">
               <select
                 value={translatedLang}
@@ -128,32 +147,90 @@ const QuizCard = ({ question, refetch }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <button
-            onClick={() => textToSpeech(question?.question)}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <AiOutlineSound className="text-lg" />
-          </button>
-          <button
-            onClick={() => setIsExplanationModalOpen(true)}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <MdOutlineBook className="text-lg" />
-          </button>
-          <button
-            onClick={addOrRemoveBookmark}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <CiBookmarkCheck className="text-lg" />
-          </button>
-          <button
-            onClick={() => setIsNotesModalOpen(true)}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <LuMessageCircleMore className="text-lg" />
-          </button>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => textToSpeech(question?.question)}
+                  className="bg-[#E3FAFF] p-2 border rounded-md"
+                >
+                  <AiOutlineSound className="text-lg" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                Listen To The Question
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  disabled={!question?.explanation}
+                  onClick={() => setIsExplanationModalOpen(true)}
+                  className={`bg-[#E3FAFF] p-2 border rounded-md ${
+                    !question?.explanation ? "cursor-not-allowed" : ""
+                  }`}
+                >
+                  <MdOutlineBook
+                    className={`text-lg  ${
+                      !question?.explanation
+                        ? "cursor-not-allowed text-[#b1b1b1]"
+                        : ""
+                    }`}
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                View Question Explanation
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={addOrRemoveBookmark}
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    question?.isBookmarked
+                      ? "hover:text-[#b1b1b1]"
+                      : "text-[#b1b1b1] hover:text-gray-600"
+                  }`}
+                >
+                  <BookMarked size={18} className="text-sm" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                Add/Remove Bookmark
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsNotesModalOpen(true)}
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    question?.note
+                      ? "hover:text-[#b1b1b1]"
+                      : "text-[#b1b1b1] hover:text-gray-600"
+                  }`}
+                >
+                  <LuMessageCircleMore className="text-lg" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                View/Add Notes
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
+
       <QuizExplanationModal
         isOpen={isExplanationModalOpen}
         setIsOpen={setIsExplanationModalOpen}
@@ -164,7 +241,7 @@ const QuizCard = ({ question, refetch }) => {
         isOpen={isNotesModalOpen}
         setIsOpen={setIsNotesModalOpen}
         question={question?._id}
-        notes={question?.notes}
+        notes={question?.note}
       />
     </div>
   );

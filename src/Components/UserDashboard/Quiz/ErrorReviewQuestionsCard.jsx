@@ -1,16 +1,47 @@
 import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
 import textToSpeech from "@/lib/textToSpeech";
-import { ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { BookMarked, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { AiOutlineSound } from "react-icons/ai";
-import { CiBookmarkCheck } from "react-icons/ci";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { MdOutlineBook } from "react-icons/md";
 import QuizExplanationModal from "./QuizExplanationModal";
 import { useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/Components/ui/tooltip";
+import QuizNoteModal from "./QuizNoteModal";
+import toast from "react-hot-toast";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
+  const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+
+  const { updateEntity } = useCrudOperations("bookmark");
+
+  const addOrRemoveBookmark = () => {
+    updateEntity.mutate(
+      { _id: question?._id },
+      {
+        onSuccess: (data) => {
+          query.invalidateQueries({
+            queryKey: ["quiz-session/user-session"],
+          });
+          toast.success(data?.message);
+        },
+        onError: (error) => {
+          toast.error(error?.message);
+        },
+      }
+    );
+  };
+
   return (
     <div className="flex flex-col sm:flex-row w-full bg-white rounded-3xl p-4 border">
       <div className="">
@@ -22,24 +53,86 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
           />
         </div>
         <div className="mt-4 mb-4 sm:mb-0 flex items-center justify-center gap-3 text-gray-600 ml-auto w-full">
-          <button
-            onClick={() => textToSpeech(question?.question)}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <AiOutlineSound className="text-lg" />
-          </button>
-          <button
-            onClick={() => setIsExplanationModalOpen(true)}
-            className="bg-[#E3FAFF] p-2 border rounded-md"
-          >
-            <MdOutlineBook className="text-lg" />
-          </button>
-          <button className="bg-[#E3FAFF] p-2 border rounded-md">
-            <CiBookmarkCheck className="text-lg" />
-          </button>
-          <button className="bg-[#E3FAFF] p-2 border rounded-md">
-            <LuMessageCircleMore className="text-lg" />
-          </button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => textToSpeech(question?.question)}
+                  className="bg-[#E3FAFF] p-2 border rounded-md"
+                >
+                  <AiOutlineSound className="text-lg" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                Listen To The Question
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  disabled={!question?.explanation}
+                  onClick={() => setIsExplanationModalOpen(true)}
+                  className={`bg-[#E3FAFF] p-2 border rounded-md ${
+                    !question?.explanation ? "cursor-not-allowed" : ""
+                  }`}
+                >
+                  <MdOutlineBook
+                    className={`text-lg  ${
+                      !question?.explanation
+                        ? "cursor-not-allowed text-[#b1b1b1]"
+                        : ""
+                    }`}
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                View Question Explanation
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={addOrRemoveBookmark}
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    question?.isBookmarked
+                      ? "hover:text-[#b1b1b1]"
+                      : "text-[#b1b1b1] hover:text-gray-600"
+                  }`}
+                >
+                  <BookMarked size={18} className="text-sm" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                Add/Remove Bookmark
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsNotesModalOpen(true)}
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    question?.note
+                      ? "hover:text-[#b1b1b1]"
+                      : "text-[#b1b1b1] hover:text-gray-600"
+                  }`}
+                >
+                  <LuMessageCircleMore className="text-lg" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                View/Add Notes
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
@@ -113,6 +206,13 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
         isOpen={isExplanationModalOpen}
         setIsOpen={setIsExplanationModalOpen}
         explanation={question?.explanation}
+      />
+
+      <QuizNoteModal
+        isOpen={isNotesModalOpen}
+        setIsOpen={setIsNotesModalOpen}
+        question={question?._id}
+        notes={question?.note}
       />
     </div>
   );

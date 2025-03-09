@@ -406,7 +406,7 @@ const AdminDashboardAddGuessTheSignalQuestions = () => {
             <button
               type="submit"
               className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
-              disabled={createEntity?.isPending ? true : false}
+              disabled={createEntity?.isPending}
             >
               {createEntity?.isPending ? (
                 <Spinner size={24} className="text-white" />

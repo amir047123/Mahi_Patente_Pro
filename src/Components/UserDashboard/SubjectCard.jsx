@@ -1,5 +1,6 @@
 import chapterImg from "@/assets/UserDashboard/subject-demo-img.svg";
 import Typography from "@/Components/Typography";
+
 const SubjectCard = ({ subject }) => {
   return (
     <div className="bg-white flex gap-4 rounded-lg sm:max-w-sm h-full">
@@ -22,9 +23,13 @@ const SubjectCard = ({ subject }) => {
         </div>
 
         <div className="">
-          <button className="bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 font-medium rounded-full text-white py-1.5 px-6  text-sm">
-            Complete
-          </button>
+          <p
+            className={`font-medium rounded-full text-white py-1.5 px-6 w-fit text-sm mt-5 ${
+              subject?.isCompleted ? "bg-[#2ACCB0]" : "bg-blue-600"
+            }`}
+          >
+            {subject?.isCompleted ? "Completed" : "In Progress"}
+          </p>
         </div>
       </div>
     </div>

@@ -24,7 +24,6 @@ const UserDashboardSubjectDetails = () => {
     error,
     isError,
     isLoading,
-    refetch,
   } = useFetchEntities({ subject: subject });
 
   useEffect(() => {
@@ -61,7 +60,9 @@ const UserDashboardSubjectDetails = () => {
           query.invalidateQueries({
             queryKey: ["quiz-chapter/all"],
           });
-          refetch();
+          query.invalidateQueries({
+            queryKey: ["quiz"],
+          });
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -96,17 +97,17 @@ const UserDashboardSubjectDetails = () => {
                   >
                     {response?.data?.subject?.name}
                   </Typography.Heading3>
-                  <button
-                    className={`font-medium rounded-full text-white py-1.5 px-6  text-sm mt-5 ${
+                  <p
+                    className={`font-medium rounded-full text-white py-1.5 px-6 w-fit text-sm mt-5 ${
                       response?.data?.subject?.isCompleted
-                        ? "bg-[#2ACCB0] hover:bg-[#2ACCB0]/80"
-                        : "bg-blue-600 hover:bg-blue-500"
+                        ? "bg-[#2ACCB0]"
+                        : "bg-blue-600"
                     }`}
                   >
                     {response?.data?.subject?.isCompleted
                       ? "Completed"
                       : "In Progress"}
-                  </button>
+                  </p>
                 </div>
               </div>
 
@@ -136,7 +137,7 @@ const UserDashboardSubjectDetails = () => {
           {response?.data?.questions?.length > 0 ? (
             <div className="space-y-4">
               {response?.data?.questions?.map((question, index) => (
-                <QuizCard key={index} question={question} refetch={refetch} />
+                <QuizCard key={index} question={question} />
               ))}
             </div>
           ) : (
