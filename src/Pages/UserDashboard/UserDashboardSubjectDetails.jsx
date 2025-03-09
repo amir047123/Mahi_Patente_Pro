@@ -74,63 +74,76 @@ const UserDashboardSubjectDetails = () => {
     <>
       <DashboardBreadcrumb role="user" items={breadCrumbData} />
 
-      <div className="py-5 border-b mb-5 flex items-center justify-between">
-        <div className=" gap-4 flex items-center ">
-          <img
-            className="h-[100px] object-cover rounded-xl"
-            src={response?.data?.subject?.image || chapterImg}
-            alt="image"
-          />
-
-          <div>
-            <Typography.Heading3
-              className="text-primaryText leading-7 mt-2 line-clamp-1"
-              variant="semibold"
-            >
-              {response?.data?.subject?.name}
-            </Typography.Heading3>
-            <button
-              className={`font-medium rounded-full text-white py-1.5 px-6  text-sm mt-5 ${
-                response?.data?.subject?.isCompleted
-                  ? "bg-[#2ACCB0] hover:bg-[#2ACCB0]/80"
-                  : "bg-blue-600 hover:bg-blue-500"
-              }`}
-            >
-              {response?.data?.subject?.isCompleted
-                ? "Completed"
-                : "In Progress"}
-            </button>
-          </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center mt-10">
+          <Spinner size={40} />
         </div>
+      ) : (
+        <>
+          {response?.data?.subject && (
+            <div className="py-5 border-b mb-5 flex items-center justify-between">
+              <div className=" gap-4 flex items-center ">
+                <img
+                  className="h-[100px] object-cover rounded-xl"
+                  src={response?.data?.subject?.image || chapterImg}
+                  alt="image"
+                />
 
-        <div className="flex items-center gap-4">
-          <button
-            disabled={updateEntity?.isPending}
-            onClick={markAsComplete}
-            className={`bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 w-40 font-medium rounded-full text-white py-3 px-4 text-sm transition-all flex items-center justify-center ${
-              response?.data?.subject?.isCompleted ? "hidden" : ""
-            }`}
-          >
-            {updateEntity?.isPending ? (
-              <Spinner size={20} className="text-white" />
-            ) : (
-              "Mark as complete"
-            )}
-          </button>
-          <Link
-            to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}
-            className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
-          >
-            Start Quiz
-          </Link>
-        </div>
-      </div>
+                <div>
+                  <Typography.Heading3
+                    className="text-primaryText leading-7 mt-2 line-clamp-1"
+                    variant="semibold"
+                  >
+                    {response?.data?.subject?.name}
+                  </Typography.Heading3>
+                  <button
+                    className={`font-medium rounded-full text-white py-1.5 px-6  text-sm mt-5 ${
+                      response?.data?.subject?.isCompleted
+                        ? "bg-[#2ACCB0] hover:bg-[#2ACCB0]/80"
+                        : "bg-blue-600 hover:bg-blue-500"
+                    }`}
+                  >
+                    {response?.data?.subject?.isCompleted
+                      ? "Completed"
+                      : "In Progress"}
+                  </button>
+                </div>
+              </div>
 
-      <div className="space-y-4">
-        {response?.data?.questions?.map((question, index) => (
-          <QuizCard key={index} question={question} />
-        ))}
-      </div>
+              <div className="flex items-center gap-4">
+                <button
+                  disabled={updateEntity?.isPending}
+                  onClick={markAsComplete}
+                  className={`bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 w-40 font-medium rounded-full text-white py-3 px-4 text-sm transition-all flex items-center justify-center ${
+                    response?.data?.subject?.isCompleted ? "hidden" : ""
+                  }`}
+                >
+                  {updateEntity?.isPending ? (
+                    <Spinner size={20} className="text-white" />
+                  ) : (
+                    "Mark as complete"
+                  )}
+                </button>
+                <Link
+                  to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}
+                  className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
+                >
+                  Start Quiz
+                </Link>
+              </div>
+            </div>
+          )}
+          {response?.data?.questions?.length > 0 ? (
+            <div className="space-y-4">
+              {response?.data?.questions?.map((question, index) => (
+                <QuizCard key={index} question={question} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center mt-10">No questions found!</p>
+          )}
+        </>
+      )}
     </>
   );
 };

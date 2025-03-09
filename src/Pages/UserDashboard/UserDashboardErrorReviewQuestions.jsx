@@ -1,18 +1,17 @@
+import Typography from "@/Components/Typography";
+import Spinner from "@/Components/ui/Spinner";
 import ErrorReviewQuestionsCard from "@/Components/UserDashboard/Quiz/ErrorReviewQuestionsCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import {
-  ArrowDownNarrowWide,
-  CalendarCog,
-  ChartBarStacked,
-  Volleyball,
-} from "lucide-react";
-import { useEffect } from "react";
+import { ArrowDownNarrowWide } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 
 const UserDashboardErrorReviewQuestions = () => {
   const { id } = useParams();
+  const [filteredQuizzes, setFilteredQuizzes] = useState([]);
+  const [isFiltered, setIsFiltered] = useState(true);
   const { useEntityById } = useCrudOperations("quiz-session/user-session");
 
   const {
@@ -23,15 +22,19 @@ const UserDashboardErrorReviewQuestions = () => {
     isLoading,
   } = useEntityById(id);
 
-  useEffect(() => {
-    if (isSuccess && response?.success) {
-      console.log(response?.data);
-    }
-  }, [isSuccess, response]);
-
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
+
+  useEffect(() => {
+    if (isFiltered && isSuccess && response?.success) {
+      setFilteredQuizzes(
+        response?.data?.quizzes?.filter((quiz) => quiz.isCorrect === false)
+      );
+    } else {
+      setFilteredQuizzes(response?.data?.quizzes);
+    }
+  }, [isFiltered, response, isSuccess]);
 
   return (
     <>
@@ -45,24 +48,22 @@ const UserDashboardErrorReviewQuestions = () => {
       />
 
       <div className="flex items-center justify-between h-full my-4">
-        <div className="flex items-center gap-4 text-secondaryText mb-4">
-          <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-            <CalendarCog size={20} className="text-[#9CA3AF]" />
-            Select Date Range
-          </button>
-          <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-            <Volleyball size={20} className="text-[#9CA3AF]" />
-            Select Score Range
-          </button>
-          <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-            <ChartBarStacked size={20} className="text-[#9CA3AF]" />
-            Quiz Type
-          </button>
-          <button className="border flex items-center gap-2 py-2 px-4 rounded-full text-sm">
-            <ArrowDownNarrowWide size={20} className="text-[#9CA3AF]" />
-            Sorting
-          </button>
-        </div>
+        <button
+          onClick={() => setIsFiltered((prev) => !prev)}
+          className={`border flex items-center gap-2 py-2 px-4 rounded-full text-sm ${
+            isFiltered
+              ? "border-secondary text-secondary"
+              : "text-secondaryText border-slate-300"
+          }`}
+        >
+          <ArrowDownNarrowWide
+            size={20}
+            className={`${isFiltered ? "text-secondary" : "text-[#9CA3AF]"} `}
+          />
+          {isFiltered
+            ? "Show Errors with Correct Questions"
+            : "Show Only Error Questions"}
+        </button>
 
         <Link
           to={`/user-dashboard/quiz/official-quiz`}
@@ -72,16 +73,30 @@ const UserDashboardErrorReviewQuestions = () => {
         </Link>
       </div>
 
-      <div className="">
-        {response?.data?.quizzes?.map((question, index) => (
-          <div key={index} className="mb-4">
-            <ErrorReviewQuestionsCard
-              question={question}
-              quizReviewData={response?.data?.quizzes}
-            />
-          </div>
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center mt-10">
+          <Spinner size={40} />
+        </div>
+      ) : filteredQuizzes?.length > 0 ? (
+        <div className="">
+          {filteredQuizzes?.map((question, index) => (
+            <div key={index} className="mb-4">
+              <ErrorReviewQuestionsCard
+                question={question}
+                quizReviewData={response?.data?.quizzes}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center mt-10">
+          <Typography.Body variant="medium">
+            {isFiltered
+              ? "No error review questions found! Try switching filters!"
+              : "No error questions found!"}
+          </Typography.Body>
+        </div>
+      )}
     </>
   );
 };
