@@ -1,28 +1,36 @@
 import { cn } from "@/lib/utils";
 import HorizontalScroll from "./HorizontalScroll";
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/Components/ui/popover";
 import { Button } from "@/Components/ui/button";
-import { CalendarIcon, ListFilter, Search } from "lucide-react";
+import { CalendarIcon, ListFilter, Search, X } from "lucide-react";
 import { Calendar } from "@/Components/ui/calendar";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { addDays, format } from "date-fns";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
+import { format } from "date-fns";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
 
-const FilterComponent = ({ fields, onChange }) => {
-    const [date, setDate] = useState({
-      from: new Date(),
-      to: addDays(new Date(), 20),
-    });
-  const [filters, setFilters] = useState({});
+const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
+  const [date, setDate] = useState({});
 
-   const handleInputChange = (name, value) => {
-     setFilters((prev) => ({ ...prev, [name]: value }));
-   };
+  const handleInputChange = (name, value) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
 
-     useEffect(() => {
-       onChange({...filters,dateRange:date});
-     }, [filters]);
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, dateRange: date }));
+  }, [date, setFilters]);
 
   return (
     <HorizontalScroll
@@ -63,18 +71,32 @@ const FilterComponent = ({ fields, onChange }) => {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
+                        showOutsideDays={false}
                         initialFocus
                         mode="range"
-                        defaultMonth={date?.from}
+                        defaultMonth={date?.from || new Date()}
                         selected={date}
-                        onSelect={(e) =>
+                        onSelect={(e) => {
+                          if (!e) return;
                           setDate({
-                            from: format(e.from, "LLL dd, y"),
-                            to: format(e.to, "LLL dd, y"),
-                          })
-                        }
+                            from: e.from,
+                            to: e.to || e.from,
+                          });
+                        }}
                         numberOfMonths={2}
                       />
+
+                      <div className="flex justify-end p-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setDate({ from: undefined, to: undefined })
+                          }
+                        >
+                          Clear
+                        </Button>
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -172,13 +194,24 @@ const FilterComponent = ({ fields, onChange }) => {
                 </div>
                 <input
                   type="text"
-                  className="block min-w-[150px] max-w-xs w-full py-2 pl-8 pr-3 text-sm text-gray-700 bg-transparent  border border-gray-200 rounded-full  focus:outline-none "
+                  className="block min-w-[150px] max-w-xs w-full py-2 pl-8 pr-7 text-sm text-gray-700 bg-transparent  border border-gray-200 rounded-full  focus:outline-none "
                   placeholder="Search..."
-                  value={fields?.searchText}
+                  value={filters?.searchText || ""}
                   onChange={(e) =>
                     handleInputChange(field?.name, e.target.value)
                   }
                 />
+
+                {filters?.searchText && (
+                  <X
+                    tabIndex={0}
+                    className="absolute top-2.5 right-2.5 flex items-center cursor-pointer text-secondaryText"
+                    size={16}
+                    onClick={() =>
+                      setFilters((prev) => ({ ...prev, searchText: "" }))
+                    }
+                  />
+                )}
               </div>
             )}
           </div>
