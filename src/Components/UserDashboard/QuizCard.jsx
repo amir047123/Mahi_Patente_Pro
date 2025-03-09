@@ -17,12 +17,14 @@ import {
 import languageCodes from "@/lib/languageCodes";
 import Spinner from "../ui/Spinner";
 import QuizExplanationModal from "./Quiz/QuizExplanationModal";
+import QuizNoteModal from "./Quiz/QuizNoteModal";
 
-const QuizCard = ({ question }) => {
+const QuizCard = ({ question, refetch }) => {
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
   const [translatedText, setTranslatedText] = useState();
-  const { createEntity: translate } = useCrudOperations("translate");
   const [translatedLang, setTranslatedLang] = useState("bn");
+  const { createEntity: translate } = useCrudOperations("translate");
 
   const translateText = () => {
     if (!translatedLang) {
@@ -35,6 +37,23 @@ const QuizCard = ({ question }) => {
         onSuccess: (data) => {
           toast.success(data?.message);
           setTranslatedText(data?.data?.translatedText);
+        },
+        onError: (error) => {
+          toast.error(error?.message);
+        },
+      }
+    );
+  };
+
+  const { updateEntity } = useCrudOperations("bookmark");
+
+  const addOrRemoveBookmark = () => {
+    updateEntity.mutate(
+      { _id: question?._id },
+      {
+        onSuccess: (data) => {
+          toast.success(data?.message);
+          refetch();
         },
         onError: (error) => {
           toast.error(error?.message);
@@ -121,10 +140,16 @@ const QuizCard = ({ question }) => {
           >
             <MdOutlineBook className="text-lg" />
           </button>
-          <button className="bg-[#E3FAFF] p-2 border rounded-md">
+          <button
+            onClick={addOrRemoveBookmark}
+            className="bg-[#E3FAFF] p-2 border rounded-md"
+          >
             <CiBookmarkCheck className="text-lg" />
           </button>
-          <button className="bg-[#E3FAFF] p-2 border rounded-md">
+          <button
+            onClick={() => setIsNotesModalOpen(true)}
+            className="bg-[#E3FAFF] p-2 border rounded-md"
+          >
             <LuMessageCircleMore className="text-lg" />
           </button>
         </div>
@@ -133,6 +158,13 @@ const QuizCard = ({ question }) => {
         isOpen={isExplanationModalOpen}
         setIsOpen={setIsExplanationModalOpen}
         explanation={question?.explanation}
+      />
+
+      <QuizNoteModal
+        isOpen={isNotesModalOpen}
+        setIsOpen={setIsNotesModalOpen}
+        question={question?._id}
+        notes={question?.notes}
       />
     </div>
   );

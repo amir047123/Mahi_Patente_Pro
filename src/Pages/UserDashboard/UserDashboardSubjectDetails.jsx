@@ -136,7 +136,7 @@ const UserDashboardSubjectDetails = () => {
           {response?.data?.questions?.length > 0 ? (
             <div className="space-y-4">
               {response?.data?.questions?.map((question, index) => (
-                <QuizCard key={index} question={question} />
+                <QuizCard key={index} question={question} refetch={refetch} />
               ))}
             </div>
           ) : (
