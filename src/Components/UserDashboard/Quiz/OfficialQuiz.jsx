@@ -21,7 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import QuickSettingsModal from "./QuickSettingsModal";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
-// import { AntiCheating } from "@/lib/antiCheating";
+import { AntiCheating } from "@/lib/antiCheating";
 
 const OfficialQuiz = () => {
   const query = useQueryClient();
@@ -99,9 +99,14 @@ const OfficialQuiz = () => {
     }
   }, [isSuccess, response, quizSession, subject]);
 
-  // useEffect(() => {
-  //   AntiCheating.init();
-  // }, []);
+  useEffect(() => {
+    if (quizSession?.quizzes?.length > 0) {
+      AntiCheating.init(submitAnswers);
+    }
+    return () => {
+      AntiCheating.destroy();
+    };
+  }, [quizSession, navigateUrl]);
 
   const getQuizzes = async () => {
     try {
@@ -127,14 +132,16 @@ const OfficialQuiz = () => {
         (new Date(data?.data?.timeInfo?.end || new Date()) - new Date()) / 1000
       );
 
+      const startQuiz = () => {
+        setQuizSession(data?.data);
+        hasTimer && setTime(timeToPlay);
+        setIsQuickSettingsModalOpen(false);
+      };
+
       if (response.ok) {
-        setQuizSession(data?.data);
-        hasTimer && setTime(timeToPlay);
-        setIsQuickSettingsModalOpen(false);
+        startQuiz();
       } else if (response.status === 409) {
-        setQuizSession(data?.data);
-        hasTimer && setTime(timeToPlay);
-        setIsQuickSettingsModalOpen(false);
+        startQuiz();
         toast.error(data?.message);
       } else {
         throw new Error(data?.message);
@@ -145,10 +152,6 @@ const OfficialQuiz = () => {
       setIsLoading(false);
     }
   };
-
-  // useEffect(() => {
-  //   getQuizzes();
-  // }, []);
 
   useEffect(() => {
     if (currentPosition <= 10) {
@@ -277,15 +280,11 @@ const OfficialQuiz = () => {
   }, [time, hasTimer]);
 
   const formatTime = () => {
-    // const hours = Math.floor(time / 3600)
-    //   .toString()
-    //   .padStart(2, "0");
     const minutes = Math.floor((time % 3600) / 60)
       .toString()
       .padStart(2, "0");
     const seconds = (time % 60).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
-    // return `${hours}:${minutes}:${seconds}`;
   };
 
   useEffect(() => {
@@ -302,12 +301,6 @@ const OfficialQuiz = () => {
   return (
     <>
       <DashboardBreadcrumb role="user" items={breadCrumbData} />
-
-      {/* {isLoading ? (
-        <div className="py-40 flex items-center justify-center">
-          <Spinner size={60} />
-        </div>
-      ) : ( */}
       <>
         <div className={`${isSummary ? "hidden" : ""}`}>
           <div className="grid grid-cols-3 mt-5">
@@ -422,7 +415,6 @@ const OfficialQuiz = () => {
                           Remaining Time:
                         </Typography.Body>
                         <span className="px-3 font-semibold whitespace-nowrap md:text-xl text-base py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
-                          {/* <Clock size={20} /> <QuizTimer /> */}
                           <ClockAlert size={20} /> {formatTime()}
                         </span>
                       </div>
@@ -555,7 +547,6 @@ const OfficialQuiz = () => {
           setIsOpen={setIsQuickSettingsModalOpen}
         />
       </>
-      {/* )} */}
     </>
   );
 };

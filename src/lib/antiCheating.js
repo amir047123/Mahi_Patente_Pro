@@ -1,5 +1,7 @@
 export const AntiCheating = {
-  init() {
+  init(submitQuiz) {
+    this.submitQuiz = submitQuiz;
+    this.enableFullScreen();
     this.preventTabSwitch();
     this.preventWindowBlur();
     this.disableRightClick();
@@ -8,40 +10,61 @@ export const AntiCheating = {
     this.disableKeyboardShortcuts();
   },
 
+  enableFullScreen() {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error("Error enabling full screen:", err);
+      });
+    }
+  },
+
+  exitFullScreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error exiting full screen:", err);
+      });
+    }
+  },
+
   preventTabSwitch() {
-    document.addEventListener("visibilitychange", () => {
+    this.handleVisibilityChange = () => {
       if (document.hidden) {
-        alert("Tab switching is not allowed! Your attempt may be invalidated.");
+        this.submitQuiz();
       }
-    });
+    };
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
   },
 
   preventWindowBlur() {
-    window.addEventListener("blur", () => {
-      alert("You switched windows! This may affect your quiz score.");
-    });
+    this.handleWindowBlur = () => {
+      this.submitQuiz();
+    };
+    window.addEventListener("blur", this.handleWindowBlur);
   },
 
   disableRightClick() {
-    document.addEventListener("contextmenu", (event) => event.preventDefault());
+    this.handleRightClick = (event) => event.preventDefault();
+    document.addEventListener("contextmenu", this.handleRightClick);
   },
 
   disableCopyPaste() {
-    document.addEventListener("copy", (e) => e.preventDefault());
-    document.addEventListener("paste", (e) => e.preventDefault());
+    this.handleCopy = (e) => e.preventDefault();
+    this.handlePaste = (e) => e.preventDefault();
+    document.addEventListener("copy", this.handleCopy);
+    document.addEventListener("paste", this.handlePaste);
   },
 
   preventDevTools() {
-    setInterval(() => {
+    this.devToolsCheck = setInterval(() => {
       const start = performance.now();
       if (performance.now() - start > 100) {
-        alert("DevTools detected! Cheating attempt recorded.");
+        this.submitQuiz();
       }
     }, 1000);
   },
 
   disableKeyboardShortcuts() {
-    document.addEventListener("keydown", (event) => {
+    this.handleKeyDown = (event) => {
       if (
         event.ctrlKey &&
         ["u", "s", "h", "j", "i", "c", "x", "p"].includes(
@@ -49,8 +72,27 @@ export const AntiCheating = {
         )
       ) {
         event.preventDefault();
-        alert("Shortcut disabled for security reasons.");
       }
-    });
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        this.submitQuiz();
+      }
+    };
+    document.addEventListener("keydown", this.handleKeyDown);
+  },
+
+  destroy() {
+    this.exitFullScreen();
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
+    window.removeEventListener("blur", this.handleWindowBlur);
+    document.removeEventListener("contextmenu", this.handleRightClick);
+    document.removeEventListener("copy", this.handleCopy);
+    document.removeEventListener("paste", this.handlePaste);
+    document.removeEventListener("keydown", this.handleKeyDown);
+    clearInterval(this.devToolsCheck);
   },
 };

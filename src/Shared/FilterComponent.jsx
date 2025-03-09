@@ -10,7 +10,7 @@ import { CalendarIcon, ListFilter, Search, X } from "lucide-react";
 import { Calendar } from "@/Components/ui/calendar";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,7 +74,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                         showOutsideDays={false}
                         initialFocus
                         mode="range"
-                        defaultMonth={date?.from || new Date()}
+                        defaultMonth={date?.from || subMonths(new Date(), 1)}
                         selected={date}
                         onSelect={(e) => {
                           if (!e) return;
@@ -84,6 +84,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                           });
                         }}
                         numberOfMonths={2}
+                        disabled={{ after: new Date() }}
                       />
 
                       <div className="flex justify-end p-2">
