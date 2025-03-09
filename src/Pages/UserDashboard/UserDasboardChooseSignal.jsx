@@ -18,6 +18,7 @@ import { MdDone } from "react-icons/md";
 import TimeLeftModal from "@/Components/UserDashboard/Quiz/TimeLeftModal";
 import QuestionLeftModal from "@/Components/UserDashboard/Quiz/QuestionLeftModal";
 import QuickSettingsModal from "@/Components/UserDashboard/Quiz/QuickSettingsModal";
+import { AntiCheating } from "@/lib/antiCheating";
 
 const UserDasboardChooseSignal = () => {
   const query = useQueryClient();
@@ -37,9 +38,16 @@ const UserDasboardChooseSignal = () => {
   const [hasTimer, setHasTimer] = useState(true);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   AntiCheating.init();
-  // }, []);
+  useEffect(() => {
+    if (quizSession?.quizzes?.length > 0) {
+      AntiCheating.init(submitAnswers);
+    }
+
+    return () => {
+      AntiCheating.destroy();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizSession]);
 
   const getQuizzes = async () => {
     try {
@@ -63,14 +71,16 @@ const UserDasboardChooseSignal = () => {
         (new Date(data?.data?.timeInfo?.end || new Date()) - new Date()) / 1000
       );
 
+      const startQuiz = () => {
+        setQuizSession(data?.data);
+        hasTimer && setTime(timeToPlay);
+        setIsQuickSettingsModalOpen(false);
+      };
+
       if (response.ok) {
-        setQuizSession(data?.data);
-        hasTimer && setTime(timeToPlay);
-        setIsQuickSettingsModalOpen(false);
+        startQuiz();
       } else if (response.status === 409) {
-        setQuizSession(data?.data);
-        hasTimer && setTime(timeToPlay);
-        setIsQuickSettingsModalOpen(false);
+        startQuiz();
         toast.error(data?.message);
       } else {
         throw new Error(data?.message);

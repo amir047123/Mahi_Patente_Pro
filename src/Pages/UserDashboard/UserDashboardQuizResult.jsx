@@ -188,6 +188,14 @@ export default function UserDashboardQuizResult({
     toast.error(error?.message);
   }
 
+  useEffect(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error exiting full screen:", err);
+      });
+    }
+  }, []);
+
   return (
     <div>
       <DashboardBreadcrumb role="user" items={breadCrumbData} />

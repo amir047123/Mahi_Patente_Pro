@@ -83,7 +83,6 @@ export const AntiCheating = {
   },
 
   destroy() {
-    this.exitFullScreen();
     document.removeEventListener(
       "visibilitychange",
       this.handleVisibilityChange
