@@ -14,6 +14,7 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
+import FilterComponent from "@/Shared/FilterComponent";
 
 export default function UserDashboardQuizHistory() {
   const { useFetchEntities } = useCrudOperations("quiz-session/user-sessions");
@@ -69,6 +70,10 @@ export default function UserDashboardQuizHistory() {
     },
   ];
 
+     const handleFilterChange = (filters) => {
+       console.log(filters);
+     };
+
   return (
     <div>
       <DashboardBreadcrumb
@@ -96,6 +101,25 @@ export default function UserDashboardQuizHistory() {
               Sorting
             </button>
           </div>
+          <FilterComponent
+            onChange={handleFilterChange}
+            fields={[
+              {
+                type: "date",
+                name: "date",
+              },
+              {
+                type: "progress",
+                name: "progress",
+                options: ["100% to 0%", "0% to 100%"],
+              },
+
+              {
+                type: "search",
+                name: "searchText",
+              },
+            ]}
+          />
           <div className="px-4 py-5 bg-white rounded-2xl text-left h-[98%]">
             <table className="w-full">
               <thead>
