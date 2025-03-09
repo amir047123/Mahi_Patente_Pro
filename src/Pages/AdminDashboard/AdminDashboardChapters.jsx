@@ -1,6 +1,5 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 
 import AdminAddChapterModal from "./AdminAddChapterModal";
 import AdminChapterCard from "@/Components/AdminDashboard/AdminChapterCard";
@@ -12,8 +11,7 @@ import WarningModal from "@/Shared/WarningModal";
 import FilterComponent from "@/Shared/FilterComponent";
 
 const AdminDashboardChapters = () => {
-
-
+  const [filters, setFilters] = useState({});
   const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
   const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
   const [itemIndex, setItemIndex] = useState(-1);
@@ -41,25 +39,14 @@ const AdminDashboardChapters = () => {
 
   const {
     data: response,
-    isSuccess,
     error,
     isError,
     isLoading,
-  } = useFetchEntities();
-
-  useEffect(() => {
-    if (isSuccess && response?.success) {
-      console.log(response?.data);
-    }
-  }, [isSuccess, response]);
+  } = useFetchEntities(filters);
 
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
-
-     const handleFilterChange = (filters) => {
-       console.log(filters);
-     };
 
   return (
     <>
@@ -87,10 +74,9 @@ const AdminDashboardChapters = () => {
         items={[{ name: "Chapters", path: "quiz-manage/chapters" }]}
       />
 
-  
-
       <FilterComponent
-        onChange={handleFilterChange}
+        filters={filters}
+        setFilters={setFilters}
         fields={[
           {
             type: "date",
