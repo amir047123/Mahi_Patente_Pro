@@ -3,8 +3,8 @@ import FastManiaCategoryCard from "@/Components/UserDashboard/Quiz/FastManiaCate
 import MinisterialQuizCard from "@/Components/UserDashboard/Quiz/MinisterialQuizCard";
 import * as Tabs from "@radix-ui/react-tabs";
 import { ListChecks, TimerReset } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/MinisterialCategoryCard";
@@ -12,8 +12,11 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import FeedQuizQuestionCard from "@/Components/UserDashboard/Quiz/FeedQuizQuestionCard";
 import Classification from "@/Components/UserDashboard/Quiz/Classification";
+import Spinner from "@/Components/ui/Spinner";
+import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 
 const UserDashboardQuizLayout = () => {
+  const [selectedChapters, setSelectedChapters] = useState([]);
   const [tab, setTab] = useState("fastMania");
   const activeTab =
     "data-[state=active]:text-primary data-[state=active]:!font-semibold data-[state=active]:border-b-4 data-[state=active]:border-primary";
@@ -24,7 +27,7 @@ const UserDashboardQuizLayout = () => {
       title: "Guess the Signal",
       description: "Guess the Signal",
       icon: "Signpost",
-      time: "2 min",
+      time: "10 min",
       path: "guess-the-signal",
       bgColor: "bg-red-500/50",
       timeBGColor: "bg-red-400",
@@ -34,7 +37,7 @@ const UserDashboardQuizLayout = () => {
       title: "Choose 4 Signal",
       description: "Choose 4 to 1 Signal",
       icon: "Grid2x2Check",
-      time: "2 min",
+      time: "10 min",
       path: "choose-4-to-1-signal",
       bgColor: "bg-green-500/50",
       timeBGColor: "bg-green-400",
@@ -44,61 +47,10 @@ const UserDashboardQuizLayout = () => {
       title: "Comming Soon",
       description: "Comming Soon",
       icon: "Grid2x2Check",
-      time: "2 min",
+      time: "10 min",
       path: "comming-soon",
       bgColor: "bg-[#E0E091]",
       timeBGColor: "bg-[#BDBD7D]",
-    },
-  ];
-
-  const ministerialCardData = [
-    {
-      id: 1,
-      title: "Road, vehicles, driver duties",
-      description: "Road, vehicles, driver duties",
-      icon: demoImg,
-      progress: 50,
-      total: 50,
-    },
-    {
-      id: 2,
-      title: "Danger signs",
-      description: "Danger signs",
-      icon: demoImg2,
-      progress: 40,
-      total: 50,
-    },
-    {
-      id: 3,
-      title: "Priority signs",
-      description: "Priority signs",
-      icon: demoImg,
-      progress: 50,
-      total: 50,
-    },
-    {
-      id: 4,
-      title: "Road, vehicles, driver duties",
-      description: "Road, vehicles, driver duties",
-      icon: demoImg,
-      progress: 55,
-      total: 55,
-    },
-    {
-      id: 5,
-      title: "Danger signs",
-      description: "Danger signs",
-      icon: demoImg2,
-      progress: 50,
-      total: 50,
-    },
-    {
-      id: 6,
-      title: "Priority signs",
-      description: "Priority signs",
-      icon: demoImg,
-      progress: 50,
-      total: 60,
     },
   ];
 
@@ -109,8 +61,8 @@ const UserDashboardQuizLayout = () => {
       description: "Simulate a Ministerial Quiz as if you were taking an exam.",
       slug: "official-quiz",
       icon: demoImg,
-      time: "50 min",
-      questions: 50,
+      time: "30 min",
+      questions: 30,
       bgColor: "#FCFFD9",
     },
     {
@@ -119,43 +71,36 @@ const UserDashboardQuizLayout = () => {
       description: "Make a quiz with all the mistakes you made.",
       slug: "error-review",
       icon: demoImg2,
-      time: "50 min",
-      questions: 50,
+      time: "30 min",
+      questions: 30,
       bgColor: "#F7ECDF",
     },
   ];
-  const [filters, setFilters] = useState({
-    totalPages: 1,
-    currentPage: 1,
-    itemPerPage: 10,
-    searchText: "",
-    withSubCategories: true,
-  });
-  const { useFetchEntities } = useCrudOperations("quiz-category/all");
 
-  const {
-    data: response,
-    isSuccess,
-    error,
-    isError,
-    isLoading,
-  } = useFetchEntities(filters);
+  const { useFetchEntities } = useCrudOperations("quiz-chapter/all");
 
-  useEffect(() => {
-    if (isSuccess && response?.data?.totalPages !== 0) {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        totalPages: response?.data?.totalPages,
-      }));
-    }
-  }, [isSuccess, response, filters?.currentPage]);
+  const { data: response, error, isError, isLoading } = useFetchEntities();
 
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
 
+  const navigate = useNavigate();
+
+  const handleQuizStart = () => {
+    if (selectedChapters.length === 0) {
+      toast.error("Please select at least one chapter");
+      return;
+    }
+    navigate(`/user-dashboard/quiz/official-quiz?chapters=${selectedChapters}`);
+  };
+
   return (
     <>
+      <DashboardBreadcrumb
+        role="user"
+        items={[{ name: "Quiz", path: "quiz" }]}
+      />
       <Tabs.Root value={tab} onValueChange={setTab}>
         <Tabs.List
           aria-label="quiz tabs"
@@ -231,12 +176,38 @@ const UserDashboardQuizLayout = () => {
             <Typography.Heading4 variant="semibold" className="mt-4">
               Quiz by chapter of the theory
             </Typography.Heading4>
-            <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5 mt-5">
-              {ministerialCardData?.map((item, index) => (
-                <Link key={index} to={`/user-dashboard/theory/1`}>
-                  <MinisterialQuizCard item={item} />
-                </Link>
-              ))}
+
+            {isLoading ? (
+              <div className="flex items-center justify-center mt-10">
+                <Spinner size={40} />
+              </div>
+            ) : response?.data?.length > 0 ? (
+              <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5 mt-5">
+                {response?.data?.map((item, index) => (
+                  <MinisterialQuizCard
+                    key={index}
+                    item={item}
+                    selectedChapters={selectedChapters}
+                    setSelectedChapters={setSelectedChapters}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-center mt-10">No chapter found!</p>
+            )}
+
+            <div className="flex justify-center mt-8">
+              <button
+                disabled={selectedChapters?.length === 0}
+                onClick={handleQuizStart}
+                className={`bg-secondary transition-all duration-300 ease-in-out font-medium rounded-full text-white py-3 px-6  text-sm ${
+                  selectedChapters?.length === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-secondary/80"
+                }`}
+              >
+                Start Quiz With Selected Chapters
+              </button>
             </div>
           </div>
         </Tabs.Content>

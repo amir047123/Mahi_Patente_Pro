@@ -43,7 +43,7 @@ const OfficialQuiz = () => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [hasTimer, setHasTimer] = useState(true);
   const navigate = useNavigate();
-  const [chapters] = useState([]);
+  const [chapters, setChapters] = useState([]);
   const [subjects] = useState([]);
   const [navigateUrl, setNavigateUrl] = useState(
     `/user-dashboard/quiz/official-quiz/${quizSession?._id}`
@@ -52,6 +52,20 @@ const OfficialQuiz = () => {
     { name: "Quiz", path: "quiz" },
     { name: "Official Quiz", path: "quiz/official-quiz" },
   ]);
+
+  const selectedChapters = new URLSearchParams(window.location.search).get(
+    "chapters"
+  );
+
+  useEffect(() => {
+    if (selectedChapters) {
+      setChapters(
+        selectedChapters.split(",").map((chapter) => chapter.trim()) || []
+      );
+    } else {
+      setChapters([]);
+    }
+  }, [selectedChapters]);
 
   const { useFetchEntities } = useCrudOperations("quiz");
 
