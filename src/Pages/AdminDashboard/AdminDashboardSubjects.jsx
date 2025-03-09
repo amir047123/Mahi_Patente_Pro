@@ -65,7 +65,7 @@ const AdminDashboardSubjects = () => {
         items={[{ name: "Subjects", path: "subject" }]}
       />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="bg-white p-5 rounded-2xl mt-5" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <CustomInput
               name="name"
@@ -104,7 +104,7 @@ const AdminDashboardSubjects = () => {
           <div className="text-center mt-4">
             <button
               type="submit"
-              className="px-4 py-2 bg-red-500 rounded-full text-white font-semibold text-center"
+              className="px-4 py-2 w-full bg-secondary rounded-full text-white font-semibold text-center"
             >
               Submit
             </button>

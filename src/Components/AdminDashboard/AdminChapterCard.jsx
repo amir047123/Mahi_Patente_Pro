@@ -21,7 +21,7 @@ const AdminChapterCard = ({
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
-      <img src={item?.image || img} alt="img" />
+      <img className="h-full" src={item?.image || img} alt="img" />
 
       {/* Right section with text */}
       <div className="flex-1 p-6 h-full">
