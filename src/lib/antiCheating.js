@@ -65,12 +65,17 @@ export const AntiCheating = {
 
   disableKeyboardShortcuts() {
     this.handleKeyDown = (event) => {
-      if (
-        event.ctrlKey &&
-        ["u", "s", "h", "j", "i", "c", "x", "p"].includes(
-          event.key.toLowerCase()
-        )
-      ) {
+      const blockedKeys = ["u", "s", "h", "j", "i", "c", "x", "p"];
+
+      if (event.ctrlKey && blockedKeys.includes(event.key.toLowerCase())) {
+        event.preventDefault();
+      }
+
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "i") {
+        event.preventDefault();
+      }
+
+      if (event.key === "F12") {
         event.preventDefault();
       }
 
@@ -79,6 +84,7 @@ export const AntiCheating = {
         this.submitQuiz();
       }
     };
+
     document.addEventListener("keydown", this.handleKeyDown);
   },
 
