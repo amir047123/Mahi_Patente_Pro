@@ -130,15 +130,15 @@ const UserDashboardHeader = () => {
             <div className="flex items-center sm:gap-2.5 gap-1">
               <img
                 className="w-9 rounded-full border"
-                src={demoUser}
+                src={user?.profile?.profilePicture || demoUser}
                 alt="user img"
               />
               <div className="hidden sm:block">
                 <p className="text-[12px] font-medium text-primaryText">
-                  Ashikul islam ifty
+                  {user?.profile?.name}
                 </p>
                 <p className="text-secondaryText text-[12px]">
-                  ashikulislamifty@gmail.com
+                  {user?.auth?.email}
                 </p>
               </div>
               <ChevronDown size={24} className="text-secondaryText" />
