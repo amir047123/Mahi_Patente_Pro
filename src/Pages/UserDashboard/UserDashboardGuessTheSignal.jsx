@@ -274,13 +274,12 @@ const UserDashboardGuessTheSignal = () => {
                 </div>
                 <div className="bg-white rounded-2xl px-5 col-span-2 pb-10">
                   <div className="flex items-center justify-between md:p-4 p-2 border-b">
-                    <div className="flex items-center md:gap-5 gap-2">
+                    <div className="flex items-center  gap-2">
                       <Typography.Body
                         variant="medium"
                         className="text-secondaryText whitespace-nowrap"
                       >
-                        <span className="hidden md:inline-block">Question</span>{" "}
-                        No.
+                        Question No:
                       </Typography.Body>
                       <button className="px-3 py-2 font-semibold rounded-md border text-secondary">
                         {currentPosition}
@@ -293,7 +292,9 @@ const UserDashboardGuessTheSignal = () => {
                           variant="medium"
                           className="text-secondaryText whitespace-nowrap"
                         >
-                          Remaining Time:
+                          <span className="hidden lg:inline-block">
+                            Remaining Time:
+                          </span>
                         </Typography.Body>
                         <span className="px-3 font-semibold whitespace-nowrap md:text-xl text-base py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
                           {/* <Clock size={20} /> <QuizTimer /> */}
@@ -340,14 +341,18 @@ const UserDashboardGuessTheSignal = () => {
                   className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2"
                 >
                   <IoIosCloseCircleOutline className="text-xl" />
-                  Close Quiz
+
+                  <span className="hidden lg:inline-block whitespace-nowrap">
+                    Close Quiz
+                  </span>
                 </Link>
                 <button
                   onClick={() => setIsSummary(true)}
                   className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium"
                 >
                   <AlignJustify className="w-4 h-4 mr-1" />
-                  Summary
+
+                  <span className="hidden lg:inline-block">Summary</span>
                 </button>
               </div>
 
@@ -357,26 +362,26 @@ const UserDashboardGuessTheSignal = () => {
                   className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 font-medium"
                 >
                   <ChevronLeft className="w-4 h-4 mr-1" />
-                  Prev
+                  <span className="hidden lg:inline-block">Prev</span>
                 </button>
                 <button
                   onClick={handleNext}
                   className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 font-medium"
                 >
-                  Next
+                  <span className="hidden lg:inline-block">Next</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </button>
 
                 <button
                   onClick={handleSubmit}
-                  className="bg-green-500 text-white rounded-lg px-4 py-2 shadow-sm flex items-center font-medium w-28 justify-center disabled:bg-green-500/70 disabled:cursor-not-allowed"
+                  className="bg-green-500 text-white rounded-lg px-4 py-2 shadow-sm flex items-center font-medium justify-center disabled:bg-green-500/70 disabled:cursor-not-allowed"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <Spinner size={20} className="text-white" />
                   ) : (
                     <>
-                      Submit
+                      <span className="hidden lg:inline-block">Submit</span>
                       <MdDone className="w-4 h-4 ml-1" />
                     </>
                   )}

@@ -31,10 +31,13 @@ export default function QuickSettingsModal({
             <div className="flex flex-col items-center justify-center text-center mt-8">
               <img src={settings} alt="settings" className="mb-10" />
 
-              <div className="w-full mb-10 px-8">
+              <div className="w-full mb-10 md:px-8 text-primaryText">
                 <div className="flex items-center gap-4 justify-between">
-                  <Typography.Heading5 variant="bold" className="">
-                    Show answers after each question
+                  <Typography.Heading5 variant="semibold" className="">
+                    Show answers{" "}
+                    <span className="hidden sm:inline-block">
+                      after each question
+                    </span>
                   </Typography.Heading5>
 
                   <Switch.Root
@@ -47,7 +50,7 @@ export default function QuickSettingsModal({
                   </Switch.Root>
                 </div>
                 <div className="flex items-center gap-4 justify-between mt-4">
-                  <Typography.Heading5 variant="bold" className="">
+                  <Typography.Heading5 variant="semibold" className="">
                     Set Timer Preference
                   </Typography.Heading5>
 
@@ -63,7 +66,7 @@ export default function QuickSettingsModal({
               </div>
               <button
                 onClick={getQuizzes}
-                className="px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                className="px-4 py-2 sm:py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -74,7 +77,7 @@ export default function QuickSettingsModal({
               </button>
               <Link
                 to="/user-dashboard/quiz"
-                className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-3 text-secondary"
+                className="mt-3 w-full rounded-full border border-secondary bg-white px-4 py-2 sm:py-3 text-secondary"
               >
                 Back to Home
               </Link>
