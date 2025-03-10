@@ -28,8 +28,8 @@ const ErrorReview = () => {
           { name: "Error Review", path: "quiz/error-review" },
         ]}
       />
-      <div>
-        <Typography.Heading4 variant="semibold" className="mt-4">
+      <div className="text-primaryText">
+        <Typography.Heading4 variant="semibold" className="mt-4 text-primaryText">
           Last 5 days exam summary
         </Typography.Heading4>
 

@@ -99,16 +99,16 @@ const OfficialQuiz = () => {
     }
   }, [isSuccess, response, quizSession, subject]);
 
-  useEffect(() => {
-    if (quizSession?.quizzes?.length > 0) {
-      AntiCheating.init(submitAnswers);
-    }
+  // useEffect(() => {
+  //   if (quizSession?.quizzes?.length > 0) {
+  //     AntiCheating.init(submitAnswers);
+  //   }
 
-    return () => {
-      AntiCheating.destroy();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [quizSession, navigateUrl]);
+  //   return () => {
+  //     AntiCheating.destroy();
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [quizSession, navigateUrl]);
 
   const getQuizzes = async () => {
     try {
@@ -308,38 +308,41 @@ const OfficialQuiz = () => {
           <div className="grid grid-cols-3 mt-5">
             <button
               onClick={() => setRange(0)}
-              className={`text-secondaryText p-3 rounded-t-lg ${
+              className={`text-secondaryText p-3 whitespace-nowrap rounded-t-lg ${
                 range === 0 ? "bg-[#E5E7EB] !text-secondary" : ""
               }`}
             >
-              <div className="bg-white rounded-lg px-10 py-2.5 font-semibold">
-                Question 1 to 10
+              <div className="bg-white rounded-lg md:px-10 px-3 py-2.5 font-semibold">
+                <span className="lg:block hidden">Question 1 to 10</span>
+                <span className="lg:hidden block">1-10</span>
               </div>
             </button>
             <button
               onClick={() => setRange(1)}
-              className={`text-secondaryText p-3 rounded-t-lg ${
+              className={`text-secondaryText p-3 whitespace-nowrap rounded-t-lg ${
                 range === 1 ? "bg-[#E5E7EB] !text-secondary" : ""
               }`}
             >
-              <div className="bg-white rounded-lg px-10 py-2.5 font-semibold">
-                Question 11 to 20
+              <div className="bg-white rounded-lg md:px-10 px-3 py-2.5 font-semibold">
+                <span className="lg:block hidden">Question 11 to 20</span>
+                <span className="lg:hidden block">11-20</span>
               </div>
             </button>
             <button
               onClick={() => setRange(2)}
-              className={`text-secondaryText p-3 rounded-t-lg ${
+              className={`text-secondaryText p-3 whitespace-nowrap rounded-t-lg ${
                 range === 2 ? "bg-[#E5E7EB] !text-secondary" : ""
               }`}
             >
-              <div className="bg-white rounded-lg px-10 py-2.5 font-semibold">
-                Question 21 to 30
+              <div className="bg-white rounded-lg md:px-10 px-3 py-2.5 font-semibold">
+                <span className="lg:block hidden">Question 21 to 30</span>
+                <span className="lg:hidden block">21-30</span>
               </div>
             </button>
           </div>
 
           {/* Question number buttons */}
-          <div className="col-span-1 md:col-span-3 grid grid-cols-5 md:grid-cols-10 gap-2 bg-[#E5E7EB] p-3 rounded-r-lg rounded-bl-lg">
+          <div className="col-span-1 md:col-span-3 grid grid-cols-5 lg:grid-cols-10 gap-2 bg-[#E5E7EB] p-3 rounded-r-lg rounded-bl-lg">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
               <button
                 onClick={() => {
@@ -355,7 +358,7 @@ const OfficialQuiz = () => {
             ))}
           </div>
 
-          <div className="col-span-1 md:col-span-3 flex items-center space-x-1 overflow-x-auto bg-[#E5E7EB] p-3 mt-3 rounded-md">
+          <div className="col-span-1 md:col-span-3  items-center space-x-1 overflow-x-auto bg-[#E5E7EB] p-3 mt-3 rounded-md hidden xl:flex ">
             {[...Array(30)].map((_, i) => {
               const num = i + 1;
 
@@ -363,7 +366,7 @@ const OfficialQuiz = () => {
                 <button
                   onClick={() => setCurrentPosition(num)}
                   key={num}
-                  className={`text-[#9CA3AF]  rounded-sm w-[29px] h-[23px] flex items-center justify-center text-[12px] font-medium ${
+                  className={`text-[#9CA3AF] px-1.5 rounded-sm w-[29px] h-[23px] flex items-center justify-center text-[12px] font-medium ${
                     currentPosition === num
                       ? "border-2 border-red-500 text-black"
                       : ""
@@ -384,7 +387,7 @@ const OfficialQuiz = () => {
           </div>
 
           {quizSession?.quizzes && quizSession?.quizzes?.length > 0 && (
-            <div className="grid grid-cols-3 gap-5 mt-5">
+            <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-x-5 gap-y-5 mt-5">
               <div className="col-span-1 bg-white rounded-lg overflow-hidden flex items-center justify-center">
                 <img
                   className="rounded-md"
@@ -414,7 +417,10 @@ const OfficialQuiz = () => {
                           variant="medium"
                           className="text-secondaryText whitespace-nowrap"
                         >
-                          Remaining Time:
+                          <span className="hidden lg:inline-block">
+                            {" "}
+                            Remaining Time:
+                          </span>
                         </Typography.Body>
                         <span className="px-3 font-semibold whitespace-nowrap md:text-xl text-base py-1.5 rounded-sm bg-[#FEF3C7] flex items-center gap-2">
                           <ClockAlert size={20} /> {formatTime()}
@@ -464,14 +470,16 @@ const OfficialQuiz = () => {
                 className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center text-red-600 gap-2"
               >
                 <IoIosCloseCircleOutline className="text-xl" />
-                Close Quiz
+
+                <span className="hidden lg:inline-block">Close Quiz</span>
               </Link>
               <button
                 onClick={() => setIsSummary(true)}
                 className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 gap-2 font-medium"
               >
                 <AlignJustify className="w-4 h-4 mr-1" />
-                Summary
+
+                <span className="hidden lg:inline-block">Summary</span>
               </button>
             </div>
 
@@ -481,13 +489,14 @@ const OfficialQuiz = () => {
                 className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 font-medium"
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
-                Prev
+
+                <span className="hidden lg:inline-block">Prev</span>
               </button>
               <button
                 onClick={handleNext}
                 className="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center text-gray-600 font-medium"
               >
-                Next
+                <span className="hidden lg:inline-block">Next</span>
                 <ChevronRight className="w-4 h-4 ml-1" />
               </button>
 
@@ -500,7 +509,7 @@ const OfficialQuiz = () => {
                   <Spinner size={20} className="text-white" />
                 ) : (
                   <>
-                    Submit
+                    <span className="hidden lg:inline-block">Submit</span>
                     <MdDone className="w-4 h-4 ml-1" />
                   </>
                 )}

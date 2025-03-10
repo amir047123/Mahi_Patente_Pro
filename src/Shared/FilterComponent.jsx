@@ -79,7 +79,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                           if (!e) return;
                           setDate({
                             from: e.from,
-                            to: e.to || new Date(),
+                            to: e.to || e.from,
                           });
                         }}
                         numberOfMonths={2}

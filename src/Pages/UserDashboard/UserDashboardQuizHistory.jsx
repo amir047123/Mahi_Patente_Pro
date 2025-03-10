@@ -29,8 +29,6 @@ export default function UserDashboardQuizHistory() {
     toast.error(error?.message);
   }
 
-  console.log(response);
-
   return (
     <div>
       <DashboardBreadcrumb

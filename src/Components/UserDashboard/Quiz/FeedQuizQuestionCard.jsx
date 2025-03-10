@@ -16,13 +16,13 @@ const FeedQuizQuestionCard = ({ quiz, index, handleAnswer }) => {
         <div className="mt-5 flex space-x-4">
           <button
             onClick={() => handleAnswer(index, 0)}
-            className="w-1/2 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-green-500 hover:text-white transition-all duration-300 font-semibold"
+            className="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-green-500 hover:text-white transition-all duration-300 font-semibold"
           >
             True
           </button>
           <button
             onClick={() => handleAnswer(index, 1)}
-            className="w-1/2 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-red-500 hover:text-white transition-all duration-300 font-semibold"
+            className="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-red-500 hover:text-white transition-all duration-300 font-semibold"
           >
             False
           </button>

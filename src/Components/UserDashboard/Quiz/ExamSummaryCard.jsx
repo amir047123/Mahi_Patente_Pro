@@ -7,15 +7,15 @@ export default function ExamSummaryCard({ item }) {
   }%`;
 
   return (
-    <div className="px-8 py-6 text-[#333] bg-white border rounded-3xl w-full flex items-center gap-6">
+    <div className="px-8 py-6 text-[#333] bg-white border rounded-3xl w-full flex flex-wrap lg:flex-nowrap items-center gap-6">
       <div className="w-full">
-        <Typography.Heading4
-          className="text-primaryText leading-7  mt-1"
+        <Typography.Heading5
+          className="text-primaryText leading-7 whitespace-nowrap  mt-1"
           variant="semibold"
         >
           Exam Summary
-        </Typography.Heading4>
-        <Typography.Body variant="medium" className="text-secondaryText mt-1">
+        </Typography.Heading5>
+        <Typography.Body variant="normal" className="text-secondaryText mt-1">
           {new Date(item?.timeInfo?.end).toLocaleString()}
         </Typography.Body>
       </div>
@@ -29,7 +29,7 @@ export default function ExamSummaryCard({ item }) {
             style={{ width: progressWidth }}
           ></div>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex gap-2 items-center justify-between">
           <Typography.Base variant="medium" className="text-green-500">
             Correct: {item?.scoreInfo?.correctQuizzes || 0}
           </Typography.Base>

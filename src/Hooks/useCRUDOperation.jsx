@@ -44,6 +44,21 @@ export function useCrudOperations(endpoint) {
       ],
       queryFn: async () => {
         const queryParams = new URLSearchParams();
+        const adjustDateForQuery = (date, type) => {
+          const d = new Date(date);
+          const timezoneOffset = d.getTimezoneOffset();
+
+          d.setMinutes(d.getMinutes() - timezoneOffset);
+
+          if (type === "from") {
+            d.setUTCHours(0, 0, 0, 0);
+          } else if (type === "to") {
+            d.setUTCHours(23, 59, 59, 999);
+          }
+
+          return d.toISOString();
+        };
+
         if (filters?.currentPage)
           queryParams.append("page", filters?.currentPage.toString());
         if (filters?.itemPerPage)
@@ -51,16 +66,19 @@ export function useCrudOperations(endpoint) {
         if (filters?.searchText)
           queryParams.append("search", filters?.searchText);
         if (filters?.status) queryParams.append("status", filters?.status);
-        if (filters?.dateRange?.from)
+
+        if (filters?.dateRange?.from) {
           queryParams.append(
             "startDate",
-            new Date(filters?.dateRange?.from)?.toISOString()
+            adjustDateForQuery(filters.dateRange.from, "from")
           );
-        if (filters?.dateRange?.to)
+        }
+        if (filters?.dateRange?.to) {
           queryParams.append(
             "endDate",
-            new Date(filters?.dateRange?.to)?.toISOString()
+            adjustDateForQuery(filters.dateRange.to, "to")
           );
+        }
         if (filters?.quizType)
           queryParams.append("quizType", filters?.quizType);
         if (filters?.order) queryParams.append("order", filters?.order);

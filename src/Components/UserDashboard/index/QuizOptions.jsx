@@ -4,8 +4,8 @@ function QuizOptions() {
   const quizCardsData = [
     {
       id: 1,
-      title: "Official Quizzes",
-      description: "Official Quizzes",
+      title: "Official Quiz",
+      description: "Official Quiz",
       icon: "Building",
       time: "20 min",
       path: "official-quiz",
