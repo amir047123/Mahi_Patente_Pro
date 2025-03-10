@@ -23,6 +23,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/Components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -99,7 +100,7 @@ export function AdminDashboardSidebar() {
   const dropdownPath = pathname.split("/")[3];
   const { logout } = useAuthContext();
   const [quizManageDropdown, setQuizManageDropdown] = useState(false);
-
+ const { setOpenMobile } = useSidebar();
   return (
     <Sidebar>
       <SidebarContent className="bg-white">
@@ -155,7 +156,11 @@ export function AdminDashboardSidebar() {
                       <CollapsibleContent>
                         <SidebarMenuSub className="mt-2">
                           {item?.dropdownItem?.map((i, index) => (
-                            <Link key={index + 1} to={`${i?.url}`}>
+                            <Link
+                              onClick={() => setOpenMobile(false)}
+                              key={index + 1}
+                              to={`${i?.url}`}
+                            >
                               <SidebarMenuSubItem
                                 as={Link}
                                 className={`hover:bg-[#EBF2FB] py-1.5 px-1.5 rounded-sm text-secondaryText hover:text-secondary ${
@@ -177,7 +182,11 @@ export function AdminDashboardSidebar() {
                     </SidebarMenuItem>
                   </Collapsible>
                 ) : (
-                  <Link key={item.title} to={item.url}>
+                  <Link
+                    onClick={() => setOpenMobile(false)}
+                    key={item.title}
+                    to={item.url}
+                  >
                     <SidebarMenuItem
                       className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
                         currentPath === item.url.split("/")[2] &&

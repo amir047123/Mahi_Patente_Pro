@@ -10,7 +10,6 @@ import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/MinisterialCategoryCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
-import Classification from "@/Components/UserDashboard/Quiz/Classification";
 import Spinner from "@/Components/ui/Spinner";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import UserDashboardFeedQuizQuestion from "./UserDashboardFeedQuizQuestion";
@@ -132,24 +131,18 @@ const UserDashboardQuizLayout = () => {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="fastMania">
-          <div className="grid xl:grid-cols-5 lg:grid-cols-1 md:grid-cols-5 grid-cols-1 gap-5">
-            <div className="col-span-3">
-              <div className="flex items-center gap-4 mb-10">
-                {fastManiaCardsData?.map((item, index) => (
-                  <FastManiaCategoryCard key={index} item={item} />
-                ))}
-              </div>
-
-              <UserDashboardFeedQuizQuestion />
+          <div className="">
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 mb-10">
+              {fastManiaCardsData?.map((item, index) => (
+                <FastManiaCategoryCard key={index} item={item} />
+              ))}
             </div>
 
-            <div className="col-span-2">
-              <Classification />
-            </div>
+            <UserDashboardFeedQuizQuestion />
           </div>
         </Tabs.Content>
         <Tabs.Content value="ministrial">
-          <div className="flex items-center gap-4 mb-10">
+          <div className="grid xxl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4 mb-10">
             {ministerialCategoryData?.map((item, index) => (
               <Link key={index} to={`/user-dashboard/quiz/${item?.slug}`}>
                 <MinisterialCategoryCard item={item} />

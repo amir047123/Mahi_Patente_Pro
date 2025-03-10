@@ -245,7 +245,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
 
             {/* Search Input */}
             {field?.type === "search" && (
-              <div className="relative flex-grow">
+              <div className="relative flex-grow  -mx-4">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <Search size={18} className="text-gray-400" />
                 </div>

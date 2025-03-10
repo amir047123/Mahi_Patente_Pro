@@ -12,9 +12,6 @@ const AdminDashboardGuessTheSignalQuestions = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [item, setItem] = useState(null);
    const [filters, setFilters] = useState({});
-
-
-
   const { useFetchEntities } = useCrudOperations("quiz");
 
   const {
@@ -195,16 +192,15 @@ const AdminDashboardGuessTheSignalQuestions = () => {
           </tbody>
         </table>
 
-        <div className="flex justify-between mt-10">
-          <ItemPerPage />
-          <PaginationCompo />
-        </div>
-
         <AdminEditGuessTheSignalModal
           item={item}
           isOpen={isEditModalOpen}
           setIsOpen={setIsEditModalOpen}
         />
+      </div>
+      <div className="flex justify-between mt-5 mb-10 bg-white p-4 rounded-xl">
+        <ItemPerPage />
+        <PaginationCompo />
       </div>
     </>
   );

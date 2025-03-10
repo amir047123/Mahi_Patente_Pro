@@ -82,7 +82,7 @@ const UserDashboardSubjectDetails = () => {
       ) : (
         <>
           {response?.data?.subject && (
-            <div className="py-5 border-b mb-5 flex items-center justify-between">
+            <div className="py-5 border-b mb-5 flex sm:flex-row gap-5 flex-col md:items-center justify-between">
               <div className=" gap-4 flex items-center ">
                 <img
                   className="h-[100px] object-cover rounded-xl"
@@ -98,7 +98,7 @@ const UserDashboardSubjectDetails = () => {
                     {response?.data?.subject?.name}
                   </Typography.Heading3>
                   <p
-                    className={`font-medium rounded-full text-white py-1.5 px-6 w-fit text-sm mt-5 ${
+                    className={`font-medium  whitespace-nowrap rounded-full text-white py-1.5 px-6 w-fit text-sm mt-5 ${
                       response?.data?.subject?.isCompleted
                         ? "bg-[#2ACCB0]"
                         : "bg-blue-600"
@@ -115,7 +115,7 @@ const UserDashboardSubjectDetails = () => {
                 <button
                   disabled={updateEntity?.isPending}
                   onClick={markAsComplete}
-                  className={`bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 w-40 font-medium rounded-full text-white py-3 px-4 text-sm transition-all flex items-center justify-center ${
+                  className={` whitespace-nowrap bg-[#2ACCB0] hover:bg-[#2ACCB0]/80 w-40 font-medium rounded-full text-white py-3 px-4 text-sm transition-all flex items-center justify-center ${
                     response?.data?.subject?.isCompleted ? "hidden" : ""
                   }`}
                 >
@@ -127,7 +127,7 @@ const UserDashboardSubjectDetails = () => {
                 </button>
                 <Link
                   to={`/user-dashboard/theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}/official-quiz`}
-                  className="bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
+                  className=" whitespace-nowrap bg-secondary hover:bg-secondary/80 font-medium rounded-full text-white py-3 px-6  text-sm"
                 >
                   Start Quiz
                 </Link>

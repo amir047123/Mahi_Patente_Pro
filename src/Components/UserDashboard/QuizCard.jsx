@@ -79,8 +79,8 @@ const QuizCard = ({ question }) => {
   }, []);
 
   return (
-    <div className="md:grid grid-cols-3 flex items-center gap-4 bg-white rounded-lg p-5">
-      <div className="col-span-1 min-w-[150px]">
+    <div className="md:grid grid-cols-3 flex flex-wrap items-center gap-4 bg-white rounded-lg p-5">
+      <div className="col-span-1 min-w-[150px] max-w-[300px] object-cover">
         <img
           className="rounded-md"
           src={question?.media?.image || quizDemo}

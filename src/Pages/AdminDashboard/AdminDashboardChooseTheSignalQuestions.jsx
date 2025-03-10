@@ -206,10 +206,7 @@ const AdminDashboardChooseTheSignalQuestions = () => {
           </tbody>
         </table>
 
-        <div className="flex justify-between mt-10">
-          <ItemPerPage />
-          <PaginationCompo />
-        </div>
+     
 
         <AdminEditChooseTheSignalModal
           item={item}
@@ -217,6 +214,11 @@ const AdminDashboardChooseTheSignalQuestions = () => {
           setIsOpen={setIsEditModalOpen}
         />
       </div>
+
+      <div className="flex justify-between mt-5 mb-10 bg-white p-4 rounded-xl">
+              <ItemPerPage />
+              <PaginationCompo />
+            </div>
     </>
   );
 };
