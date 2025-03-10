@@ -66,7 +66,7 @@ const AdminAddSubjectModal = ({ children }) => {
           queryKey: ["subject/all"],
         });
         query.invalidateQueries({
-          queryKey: ["subject", formData?.chapter],
+          queryKey: [`subject/${chapter}`],
         });
         setResetUploadedFile(Math.random());
         setValue("image", "");

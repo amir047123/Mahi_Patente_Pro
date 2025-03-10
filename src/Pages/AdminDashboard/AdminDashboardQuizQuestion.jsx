@@ -1,16 +1,5 @@
 import Typography from "@/Components/Typography";
-import { Button } from "@/Components/ui/button";
-import { Calendar } from "@/Components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/Components/ui/popover";
-import { cn } from "@/lib/utils";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import HorizontalScroll from "@/Shared/HorizontalScroll";
-import { addDays, format } from "date-fns";
-import { CalendarIcon, ListFilter, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import img from "@/assets/UserDashboard/demo-chapeter-img.svg";
@@ -20,16 +9,12 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import AdminEditQuizQuestionModal from "./AdminEditQuizQuestionModal";
 import Spinner from "@/Components/ui/Spinner";
+import FilterComponent from "@/Shared/FilterComponent";
 
 const AdminDashboardQuizQuestion = () => {
+  const [filters, setFilters] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [item, setItem] = useState(null);
-  const [searchText, setSearchText] = useState("");
-
-  const [date, setDate] = useState({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
 
   const { subject } = useParams();
   const [breadCrumbData, setBreadCrumbData] = useState([
@@ -44,7 +29,7 @@ const AdminDashboardQuizQuestion = () => {
     error,
     isError,
     isLoading,
-  } = useFetchEntities({ subject: subject });
+  } = useFetchEntities({ ...filters, subject: subject });
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -109,78 +94,26 @@ const AdminDashboardQuizQuestion = () => {
         </Link>
       </div>
 
-      <HorizontalScroll className="flex gap-5 items-center justify-between w-full my-5 bg-white p-5 rounded-2xl border">
-        <div className="flex items-center gap-3">
-          {/* Date Range Button */}
+      <FilterComponent
+        filters={filters}
+        setFilters={setFilters}
+        fields={[
+          {
+            type: "date",
+            name: "date",
+          },
+          {
+            type: "order",
+            name: "order",
+            options: ["A-Z", "Z-A"],
+          },
 
-          <div className={cn("grid gap-2 ")}>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant="outline"
-                  className={cn(
-                    "w-[250px] justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon />
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, "LLL dd, y")} -{" "}
-                        {format(date.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(date.from, "LLL dd, y")
-                    )
-                  ) : (
-                    <span className="whitespace-nowrap">Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          {/* Sort Button */}
-          <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
-            <ListFilter size={18} />
-            <span className="text-sm font-medium whitespace-nowrap">
-              Sort by Level
-            </span>
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
-            <ListFilter size={18} />
-            <span className="text-sm font-medium whitespace-nowrap">
-              Quiz Type
-            </span>
-          </button>
-        </div>
-        <div className="flex items-center gap-3">
-          {/* Search Input */}
-          <div className="relative flex-grow mx-6">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Search size={18} className="text-gray-400" />
-            </div>
-            <input
-              type="text"
-              className="block min-w-[150px] max-w-xs w-full py-2 pl-8 pr-3 text-sm text-gray-700 bg-transparent  border border-gray-200 rounded-full  focus:outline-none "
-              placeholder="Find Quiz Question"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-          </div>
-        </div>
-      </HorizontalScroll>
+          {
+            type: "search",
+            name: "searchText",
+          },
+        ]}
+      />
 
       <div className="overflow-x-auto bg-white p-5 rounded-2xl">
         <table className="min-w-full bg-white rounded-lg overflow-hidden">

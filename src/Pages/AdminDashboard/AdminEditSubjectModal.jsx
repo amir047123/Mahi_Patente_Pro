@@ -39,7 +39,7 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
           queryKey: ["subject/all"],
         });
         query.invalidateQueries({
-          queryKey: ["subject", formData?.chapter],
+          queryKey: [`subject/${item?.chapter}`],
         });
       },
       onError: (error) => {

@@ -38,7 +38,6 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
     >
       {fields.map((field) => (
         <>
-          {" "}
           <div key={field?.name} className="flex items-center gap-3">
             <div className="flex items-center gap-3 ">
               {/* Date Range Button */}
@@ -80,7 +79,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                           if (!e) return;
                           setDate({
                             from: e.from,
-                            to: e.to || e.from,
+                            to: e.to || new Date(),
                           });
                         }}
                         numberOfMonths={2}
@@ -120,6 +119,9 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                       value={filters?.level}
                       onValueChange={(e) => handleInputChange(field?.name, e)}
                     >
+                      <DropdownMenuRadioItem value="">
+                        All Levels
+                      </DropdownMenuRadioItem>
                       {field?.options?.map((option) => (
                         <DropdownMenuRadioItem key={option} value={option}>
                           {option}
@@ -176,6 +178,9 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                       value={filters?.progress}
                       onValueChange={(e) => handleInputChange(field?.name, e)}
                     >
+                      <DropdownMenuRadioItem value="">
+                        All Progress
+                      </DropdownMenuRadioItem>
                       {field?.options?.map((option) => (
                         <DropdownMenuRadioItem key={option} value={option}>
                           {option}
@@ -204,6 +209,9 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                       value={filters?.quizType}
                       onValueChange={(e) => handleInputChange(field?.name, e)}
                     >
+                      <DropdownMenuRadioItem value="">
+                        All Quiz Type
+                      </DropdownMenuRadioItem>
                       {field?.options?.map((option) => (
                         <DropdownMenuRadioItem key={option} value={option}>
                           {option}
@@ -232,6 +240,9 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                       value={filters?.status}
                       onValueChange={(e) => handleInputChange(field?.name, e)}
                     >
+                      <DropdownMenuRadioItem value="">
+                        All Status
+                      </DropdownMenuRadioItem>
                       {field?.options?.map((option) => (
                         <DropdownMenuRadioItem key={option} value={option}>
                           {option}

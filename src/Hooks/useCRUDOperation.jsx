@@ -35,10 +35,10 @@ export function useCrudOperations(endpoint) {
         filters?.itemPerPage,
         filters?.searchText,
         filters?.status,
-        filters?.email,
-        filters?.userId,
-        filters?.withSubCategories,
-        filters?.id,
+        filters?.dateRange?.from,
+        filters?.dateRange?.to,
+        filters?.quizType,
+        filters?.order,
         filters?.subject,
         filters?.category,
       ],
@@ -51,11 +51,19 @@ export function useCrudOperations(endpoint) {
         if (filters?.searchText)
           queryParams.append("search", filters?.searchText);
         if (filters?.status) queryParams.append("status", filters?.status);
-        if (filters?.email) queryParams.append("email", filters?.email);
-        if (filters?.userId) queryParams.append("userId", filters?.userId);
-        if (filters?.withSubCategories)
-          queryParams.append("withSubCategories", filters?.withSubCategories);
-        if (filters?.id) queryParams.append("id", filters?.id);
+        if (filters?.dateRange?.from)
+          queryParams.append(
+            "startDate",
+            new Date(filters?.dateRange?.from)?.toISOString()
+          );
+        if (filters?.dateRange?.to)
+          queryParams.append(
+            "endDate",
+            new Date(filters?.dateRange?.to)?.toISOString()
+          );
+        if (filters?.quizType)
+          queryParams.append("quizType", filters?.quizType);
+        if (filters?.order) queryParams.append("order", filters?.order);
         if (filters?.subject) queryParams.append("subject", filters?.subject);
         if (filters?.category)
           queryParams.append("category", filters?.category);

@@ -8,14 +8,16 @@ import FilterComponent from "@/Shared/FilterComponent";
 
 export default function UserDashboardQuizHistory() {
   const { useFetchEntities } = useCrudOperations("quiz-session/user-sessions");
- const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({});
   const {
     data: response,
     isSuccess,
     error,
     isError,
     isLoading,
-  } = useFetchEntities();
+  } = useFetchEntities(filters);
+
+  console.log(filters);
 
   useEffect(() => {
     if (isSuccess && response?.success) {
@@ -27,8 +29,7 @@ export default function UserDashboardQuizHistory() {
     toast.error(error?.message);
   }
 
-
-console.log(response)
+  console.log(response);
 
   return (
     <div>
@@ -51,7 +52,6 @@ console.log(response)
               name: "quizType",
               options: [
                 "Official Quizzes",
-                "Selected Topic Quiz",
                 "Guess the Signal",
                 "Choose 4 to 1 Signal",
               ],
@@ -59,7 +59,7 @@ console.log(response)
             {
               type: "status",
               name: "status",
-              options: ["on Progress", "completed", "pending"],
+              options: ["In-progress", "Completed", "Expired"],
             },
           ]}
         />
