@@ -99,16 +99,16 @@ const OfficialQuiz = () => {
     }
   }, [isSuccess, response, quizSession, subject]);
 
-  // useEffect(() => {
-  //   if (quizSession?.quizzes?.length > 0) {
-  //     AntiCheating.init(submitAnswers);
-  //   }
+  useEffect(() => {
+    if (quizSession?.quizzes?.length > 0) {
+      AntiCheating.init(submitAnswers);
+    }
 
-  //   return () => {
-  //     AntiCheating.destroy();
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [quizSession, navigateUrl]);
+    return () => {
+      AntiCheating.destroy();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizSession, navigateUrl]);
 
   const getQuizzes = async () => {
     try {

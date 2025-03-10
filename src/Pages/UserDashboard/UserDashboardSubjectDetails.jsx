@@ -63,6 +63,9 @@ const UserDashboardSubjectDetails = () => {
           query.invalidateQueries({
             queryKey: ["quiz"],
           });
+          query.invalidateQueries({
+            queryKey: ["subject", response?.data?.chapter?._id],
+          });
         },
         onError: (error) => {
           toast.error(error?.message);
