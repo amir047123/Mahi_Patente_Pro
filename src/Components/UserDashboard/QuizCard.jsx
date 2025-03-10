@@ -1,12 +1,11 @@
 import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
 import { MdGTranslate, MdOutlineBook } from "react-icons/md";
-import { AiOutlineSound } from "react-icons/ai";
 import { LuMessageCircleMore } from "react-icons/lu";
 import textToSpeech from "@/lib/textToSpeech";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +16,7 @@ import languageCodes from "@/lib/languageCodes";
 import Spinner from "../ui/Spinner";
 import QuizExplanationModal from "./Quiz/QuizExplanationModal";
 import QuizNoteModal from "./Quiz/QuizNoteModal";
-import { BookMarked } from "lucide-react";
+import { BookMarked, Volume2, Volume1 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Tooltip,
@@ -30,6 +29,7 @@ const QuizCard = ({ question }) => {
   const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [translatedText, setTranslatedText] = useState();
   const [translatedLang, setTranslatedLang] = useState("en");
   const { createEntity: translate } = useCrudOperations("translate");
@@ -71,6 +71,12 @@ const QuizCard = ({ question }) => {
       }
     );
   };
+
+  useEffect(() => {
+    return () => {
+      speechSynthesis.cancel();
+    };
+  }, []);
 
   return (
     <div className="md:grid grid-cols-3 flex flex-wrap items-center gap-4 bg-white rounded-lg p-5">
@@ -152,10 +158,14 @@ const QuizCard = ({ question }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() => textToSpeech(question?.question)}
-                  className="bg-[#E3FAFF] p-2 border rounded-md"
+                  onClick={() =>
+                    textToSpeech(question?.question, setIsSpeaking)
+                  }
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    isSpeaking ? "text-secondary border-secondary" : ""
+                  }`}
                 >
-                  <AiOutlineSound className="text-lg" />
+                  {isSpeaking ? <Volume2 size={18} /> : <Volume1 size={18} />}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" align="center">

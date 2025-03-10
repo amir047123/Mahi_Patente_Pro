@@ -10,9 +10,9 @@ import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/MinisterialCategoryCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
-import FeedQuizQuestionCard from "@/Components/UserDashboard/Quiz/FeedQuizQuestionCard";
 import Spinner from "@/Components/ui/Spinner";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+import UserDashboardFeedQuizQuestion from "./UserDashboardFeedQuizQuestion";
 
 const UserDashboardQuizLayout = () => {
   const [selectedChapters, setSelectedChapters] = useState([]);
@@ -131,33 +131,15 @@ const UserDashboardQuizLayout = () => {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="fastMania">
-
-            <div className="">
-              <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 mb-10">
-                {fastManiaCardsData?.map((item, index) => (
-                  <FastManiaCategoryCard key={index} item={item} />
-                ))}
-              </div>
-              <div>
-                <Typography.Heading4
-                  variant="semibold"
-                  className="mt-4 text-primaryText"
-                >
-                  Feed Quiz Question
-                </Typography.Heading4>
-                <Typography.Body className="text-secondaryText mt-1">
-                  Earn a QuizCoin or lose a kW of charge. Are you up for the
-                  challenge?
-                </Typography.Body>
-              </div>
-
-              <div className="mt-5 space-y-4">
-                <FeedQuizQuestionCard />
-                <FeedQuizQuestionCard />
-                <FeedQuizQuestionCard />
-              </div>
+          <div className="">
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 mb-10">
+              {fastManiaCardsData?.map((item, index) => (
+                <FastManiaCategoryCard key={index} item={item} />
+              ))}
             </div>
 
+            <UserDashboardFeedQuizQuestion />
+          </div>
         </Tabs.Content>
         <Tabs.Content value="ministrial">
           <div className="grid xxl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4 mb-10">

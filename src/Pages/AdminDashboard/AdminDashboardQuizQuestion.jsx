@@ -231,8 +231,8 @@ const AdminDashboardQuizQuestion = () => {
                       className="h-10 w-full object-scale-down"
                     />
                   </td>
-                  <td className="py-4 px-4 text-sm text-secondaryText line-clamp-2">
-                    {quiz?.question}
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    <p className="line-clamp-2">{quiz?.question}</p>
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
                     {quiz?.meta?.difficulty}

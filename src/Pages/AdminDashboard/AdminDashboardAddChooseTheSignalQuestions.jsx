@@ -35,66 +35,65 @@ const AdminDashboardAddChooseTheSignalQuestions = () => {
   const { createEntity } = useCrudOperations("quiz/create");
 
   const onSubmit = (formData) => {
-    const options = formData?.quizs
-      ?.flatMap((item) => [
-        item?.answerA?.trim(),
-        item?.answerB?.trim(),
-        item?.answerC?.trim(),
-        item?.answerD?.trim(),
-      ])
-      .filter(Boolean);
-
-    if (options.length !== 4) {
-      toast.error("There must be exactly four options.");
+    if (!formData?.quizs || !Array.isArray(formData.quizs)) {
+      toast.error("Invalid quiz data.");
       return;
     }
 
-    const uniqueValues = new Set(options);
-
-    if (uniqueValues.size !== 4) {
-      toast.error("Quizzes must have unique options.");
-
-      formData.quizs.forEach((item, quizIndex) => {
-        const answers = [
-          item.answerA,
-          item.answerB,
-          item.answerC,
-          item.answerD,
-        ];
-        const seen = new Set();
-
-        answers.forEach((answer, idx) => {
-          if (seen.has(answer?.trim())) {
-            setError(
-              `quizs[${quizIndex}].answer${String.fromCharCode(65 + idx)}`,
-              {
-                type: "manual",
-                message: "Each option must be unique.",
-              }
-            );
-          } else {
-            seen.add(answer?.trim());
-          }
-        });
-      });
-
-      return;
-    }
+    let hasError = false;
 
     const updatedData = {
       category: "Choose 4 to 1 Signal",
-      bodyData: formData?.quizs?.map((item) => {
-        return {
-          question: item?.question,
-          correctAnswer: item?.correctAnswer,
-          options: [item?.answerA, item?.answerB, item?.answerC, item?.answerD],
-          meta: {
-            quizType: "image_selector",
-            difficulty: "Easy",
-          },
-        };
-      }),
+      bodyData: [],
     };
+
+    formData.quizs.forEach((quiz, quizIndex) => {
+      const answers = [
+        quiz?.answerA?.trim(),
+        quiz?.answerB?.trim(),
+        quiz?.answerC?.trim(),
+        quiz?.answerD?.trim(),
+      ].filter(Boolean);
+
+      if (answers.length !== 4) {
+        toast.error(`Quiz ${quizIndex + 1} must have exactly four options.`);
+        hasError = true;
+        return;
+      }
+
+      const uniqueAnswers = new Set(answers);
+      if (uniqueAnswers.size !== 4) {
+        toast.error(`Quiz ${quizIndex + 1} must have unique options.`);
+        hasError = true;
+
+        const seen = new Set();
+        ["A", "B", "C", "D"].forEach((label) => {
+          const answer = quiz[`answer${label}`]?.trim();
+          if (seen.has(answer)) {
+            setError(`quizs[${quizIndex}].answer${label}`, {
+              type: "manual",
+              message: "Each option must be unique.",
+            });
+          } else {
+            seen.add(answer);
+          }
+        });
+
+        return;
+      }
+
+      updatedData.bodyData.push({
+        question: quiz?.question,
+        correctAnswer: quiz?.correctAnswer,
+        options: [quiz?.answerA, quiz?.answerB, quiz?.answerC, quiz?.answerD],
+        meta: {
+          quizType: "image_selector",
+          difficulty: "Easy",
+        },
+      });
+    });
+
+    if (hasError) return;
 
     createEntity.mutate(updatedData, {
       onSuccess: (data) => {

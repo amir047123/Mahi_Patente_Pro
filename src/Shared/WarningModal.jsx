@@ -11,7 +11,7 @@ export default function WarningModal({
   msg,
   desc = "You are about to delete this item permanently.",
   success,
-  refetchData = () => console.log("Implement refetchData!"),
+  refetchData = () => {},
   closeSuccess,
 }) {
   return (
