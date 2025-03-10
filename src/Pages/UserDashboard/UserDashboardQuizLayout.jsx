@@ -28,18 +28,18 @@ const UserDashboardQuizLayout = () => {
       icon: "Signpost",
       time: "10 min",
       path: "guess-the-signal",
-      bgColor: "bg-red-500/50",
-      timeBGColor: "bg-red-400",
+      bgColor: "bg-[#FFB27D]",
+      timeBGColor: "bg-[#E8A477]",
     },
     {
       id: 2,
-      title: "Choose 4 Signal",
+      title: "Choose 4 to 1 Signal",
       description: "Choose 4 to 1 Signal",
       icon: "Grid2x2Check",
       time: "10 min",
       path: "choose-4-to-1-signal",
-      bgColor: "bg-green-500/50",
-      timeBGColor: "bg-green-400",
+      bgColor: "bg-[#91E0E0]",
+      timeBGColor: "bg-[#85CDD0]",
     },
     {
       id: 3,
@@ -100,7 +100,7 @@ const UserDashboardQuizLayout = () => {
         role="user"
         items={[{ name: "Quiz", path: "quiz" }]}
       />
-      <Tabs.Root value={tab} onValueChange={setTab}>
+      <Tabs.Root value={tab} onValueChange={setTab} className="mt-3">
         <Tabs.List
           aria-label="quiz tabs"
           className="flex items-center gap-10 mb-4 border-b border-slate-300"

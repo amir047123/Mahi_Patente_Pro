@@ -254,7 +254,11 @@ const AdminDashboardQuizQuestion = () => {
           <ItemPerPage
             itemPerPage={filters?.itemPerPage}
             onLimitChange={(newItemPerPage) =>
-              setFilters((prev) => ({ ...prev, itemPerPage: newItemPerPage }))
+              setFilters((prev) => ({
+                ...prev,
+                itemPerPage: newItemPerPage,
+                currentPage: 1,
+              }))
             }
           />
           <PaginationCompo

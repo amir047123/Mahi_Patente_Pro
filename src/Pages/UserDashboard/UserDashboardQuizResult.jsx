@@ -3,7 +3,7 @@ import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrum
 import incompleteQuiz from "@/assets/UserDashboard/quiz-result.svg";
 import failedQuiz from "@/assets/UserDashboard/quiz-result-failed.svg";
 import passedQuiz from "@/assets/UserDashboard/quiz-result-passed.svg";
-import coin from "@/assets/UserDashboard/coin.svg";
+// import coin from "@/assets/UserDashboard/coin.svg";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import QuizReviewModal from "@/Components/UserDashboard/Quiz/QuizReviewModal";
@@ -12,10 +12,8 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
 
-export default function UserDashboardQuizResult({
-  data = { progress: 120, total: 150 },
-}) {
-  const progressWidth = `${(data?.progress * 100) / data?.total}%`;
+export default function UserDashboardQuizResult() {
+  // const progressWidth = `${(data?.progress * 100) / data?.total}%`;
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [resultData, setResultData] = useState({});
   const { quizType, id, subject, chapter } = useParams();
@@ -76,24 +74,11 @@ export default function UserDashboardQuizResult({
               ? "Passed"
               : "Failed",
           description:
-            notSubmit > 0 ? (
-              <>
-                Almost there! You missed some quiz, but you still earned{" "}
-                <span className="text-orange-600 font-medium">120 Coins</span>.
-                Try again!
-              </>
-            ) : correctPercentage > 90 ? (
-              <>
-                Well done! You passed! Keep going for a perfect score. You
-                earned{" "}
-                <span className="text-orange-600 font-medium">120 Coins!</span>
-              </>
-            ) : (
-              <>
-                Almost there! Keep practicing and try again. You earned{" "}
-                <span className="text-orange-600 font-medium">120 Coins!</span>
-              </>
-            ),
+            notSubmit > 0
+              ? "Almost there! You missed some quiz. Try again!"
+              : correctPercentage > 90
+              ? "Well done! You passed! Keep going for a perfect score."
+              : "Almost there! Keep practicing and try again.",
         });
       } else if (response?.data?.category?.name === "Guess the Signal") {
         setResultData({
@@ -205,7 +190,7 @@ export default function UserDashboardQuizResult({
           <Spinner size={40} />
         </div>
       ) : response?.success ? (
-        <div className="p-4 bg-[#F7F7F7] rounded-md mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-16 items-center justify-center">
+        <div className="p-4 bg-[#F7F7F7] rounded-md mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-16 items-center justify-center">
           <img
             src={resultData?.resultImg}
             alt="img"
@@ -252,7 +237,7 @@ export default function UserDashboardQuizResult({
               </div>
             </div>
 
-            <div className="p-6 bg-white rounded-2xl mt-4 border">
+            {/* <div className="p-6 bg-white rounded-2xl mt-4 border">
               <Typography.Base variant="bold" className="text-left">
                 Your daily goal
               </Typography.Base>
@@ -275,7 +260,7 @@ export default function UserDashboardQuizResult({
                   style={{ width: progressWidth }}
                 ></div>
               </div>
-            </div>
+            </div> */}
 
             <Link
               to={resultData?.resultQuizLink}

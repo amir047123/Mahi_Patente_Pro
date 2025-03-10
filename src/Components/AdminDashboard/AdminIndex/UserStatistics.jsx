@@ -3,7 +3,7 @@ import totalUsers from "@/assets/AdminDashboard/icon/total-users.svg";
 import inactiveUsers from "@/assets/AdminDashboard/icon/inactive-users.svg";
 import subUsers from "@/assets/AdminDashboard/icon/sub-users.svg";
 import user from "@/assets/AdminDashboard/icon/user.svg";
-const UserStatistics = () => {
+const UserStatistics = ({ data }) => {
   return (
     <div className="bg-white rounded-2xl p-5 lg:col-span-3 col-span-5 md:mt-5 mt-3">
       <div className="flex flex-wrap gap-y-5 gap-x-2 justify-between">
@@ -18,7 +18,7 @@ const UserStatistics = () => {
           <div className="flex items-center gap-2 mt-3">
             <img src={totalUsers} alt="list" />
             <Typography.Heading4 variant="bold" className="text-primaryText">
-              27
+              {data?.userCountResult?.totalUser || 0}
             </Typography.Heading4>
           </div>
         </div>
@@ -28,13 +28,13 @@ const UserStatistics = () => {
             variant="medium"
             className="text-secondaryText whitespace-nowrap"
           >
-            Subscribe Users
+            Admin Users
           </Typography.Body>
 
           <div className="flex items-center gap-2 mt-3">
             <img src={subUsers} alt="list" />
             <Typography.Heading4 variant="bold" className="text-primaryText">
-              132
+              {data?.userCountResult?.rolesCount?.admin || 0}
             </Typography.Heading4>
           </div>
         </div>
@@ -50,7 +50,7 @@ const UserStatistics = () => {
           <div className="flex items-center gap-2 mt-3">
             <img src={user} alt="list" />
             <Typography.Heading4 variant="bold" className="text-primaryText">
-              1330
+              {data?.userCountResult?.rolesCount?.user || 0}
             </Typography.Heading4>
           </div>
         </div>
@@ -66,7 +66,7 @@ const UserStatistics = () => {
           <div className="flex items-center gap-2 mt-3">
             <img src={inactiveUsers} alt="list" />
             <Typography.Heading4 variant="bold" className="text-primaryText">
-              1330
+              {data?.userCountResult?.inactiveCount || 0}
             </Typography.Heading4>
           </div>
         </div>

@@ -24,13 +24,13 @@ const AdminChapterCard = ({
       <img className="h-full" src={item?.image || img} alt="img" />
 
       {/* Right section with text */}
-      <div className="flex-1 p-6 h-full">
+      <div className="flex-1 flex flex-col justify-between h-full p-6">
         <div className="flex justify-between items-start">
           <div>
             <p className="text-secondaryText text-sm mb-1">
               Chapter {item?.order}
             </p>
-            <h2 className="font-bold text-primaryText text-lg mb-1">
+            <h2 className="font-bold text-primaryText text-lg mb-1 line-clamp-2">
               {item?.name}
             </h2>
           </div>

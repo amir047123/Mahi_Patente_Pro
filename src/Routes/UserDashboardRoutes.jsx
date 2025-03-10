@@ -10,7 +10,7 @@ import UserDashboardSubjectDetails from "@/Pages/UserDashboard/UserDashboardSubj
 import UserDashboardTheory from "@/Pages/UserDashboard/UserDashboardTheory";
 import UserDashboardQuizResult from "@/Pages/UserDashboard/UserDashboardQuizResult";
 import UserDashboardQuizHistory from "@/Pages/UserDashboard/UserDashboardQuizHistory";
-import UserDashboardPreparationStatistics from "@/Pages/UserDashboard/UserDashboardPreparationStatistics";
+// import UserDashboardPreparationStatistics from "@/Pages/UserDashboard/UserDashboardPreparationStatistics";
 import UserDashboardErrorReviewQuestions from "@/Pages/UserDashboard/UserDashboardErrorReviewQuestions";
 
 const UserDashboardRoutes = [
@@ -38,10 +38,10 @@ const UserDashboardRoutes = [
   { path: "history", Component: UserDashboardQuizHistory },
   { path: "history/:id", Component: UserDashboardQuizResult },
 
-  {
-    path: "preparation-statistics",
-    Component: UserDashboardPreparationStatistics,
-  },
+  // {
+  //   path: "preparation-statistics",
+  //   Component: UserDashboardPreparationStatistics,
+  // },
 ];
 
 export default UserDashboardRoutes;

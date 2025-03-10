@@ -2,16 +2,16 @@ import Typography from "@/Components/Typography";
 import { Button } from "@/Components/ui/button";
 
 function Summary() {
-    const totalQuestions = 30;
-    const correct = 23;
-    const wrong = 7;
-    const skipped = 0;
+  const totalQuestions = 30;
+  const correct = 23;
+  const wrong = 7;
+  const skipped = 0;
 
-    const correctPercent = (correct / totalQuestions) * 100;
-    const wrongPercent = (wrong / totalQuestions) * 100;
-    const skippedPercent = (skipped / totalQuestions) * 100;
+  const correctPercent = (correct / totalQuestions) * 100;
+  const wrongPercent = (wrong / totalQuestions) * 100;
+  const skippedPercent = (skipped / totalQuestions) * 100;
   return (
-    <div className=" border-t pt-3">
+    <div className="">
       <Typography.Heading5 className="text-primaryText">
         Your State
       </Typography.Heading5>

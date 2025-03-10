@@ -75,8 +75,10 @@ export default function UserDashboardQuizHistory() {
               <tr className="text-secondary !font-normal text-nowrap bg-[#EAF2FA] text-sm">
                 <th className="p-2 rounded-l-full pl-4">End Time</th>
                 <th className="p-2">Quiz Type</th>
-                <th className="p-2 text-center">Score</th>
                 <th className="p-2 text-center">Difficulty</th>
+                <th className="p-2 text-center">Score</th>
+                <th className="p-2 text-center">Correct</th>
+                <th className="p-2 text-center">Total</th>
                 <th className="p-2 text-center">Status</th>
                 <th className="p-2 rounded-r-full text-center">Action</th>
               </tr>
@@ -84,7 +86,7 @@ export default function UserDashboardQuizHistory() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={5} className="py-6 text-center">
+                  <td colSpan={8} className="py-6 text-center">
                     <div className="flex items-center justify-center">
                       <Spinner size={40} />
                     </div>
@@ -94,7 +96,7 @@ export default function UserDashboardQuizHistory() {
                 response?.data?.sessions?.map((item, index) => (
                   <tr key={index} className="text-secondaryText border-b">
                     <td className="p-2 py-3 pl-4">
-                      <span className="block">
+                      <span className="text-nowrap block">
                         {new Date(item?.timeInfo?.end)?.toLocaleString(
                           "en-US",
                           {
@@ -104,7 +106,7 @@ export default function UserDashboardQuizHistory() {
                           }
                         )}
                       </span>
-                      <span>
+                      <span className="text-nowrap">
                         {new Date(item?.timeInfo?.end)?.toLocaleString(
                           "en-US",
                           {
@@ -116,10 +118,17 @@ export default function UserDashboardQuizHistory() {
                       </span>
                     </td>
                     <td className="p-2 py-3">{item?.category}</td>
+                    <td className="text-center p-2 py-3">{item?.difficulty}</td>
                     <td className="text-center p-2 py-3">
                       {item?.scoreInfo?.correctPercentage}%
                     </td>
-                    <td className="text-center p-2 py-3">{item?.difficulty}</td>
+                    <td className="text-center p-2 py-3">
+                      {item?.scoreInfo?.correctQuizzes || 0}
+                    </td>
+                    <td className="text-center p-2 py-3">
+                      {item?.scoreInfo?.totalQuizzes || 0}
+                    </td>
+
                     <td
                       className={`text-center p-2 py-3 ${
                         item?.status === "Completed"
@@ -156,7 +165,7 @@ export default function UserDashboardQuizHistory() {
                 ))
               ) : (
                 <tr className="">
-                  <td colSpan={5} className="py-4 text-center !text-sm">
+                  <td colSpan={8} className="py-4 text-center !text-sm">
                     No Session Found!
                   </td>
                 </tr>
@@ -168,7 +177,11 @@ export default function UserDashboardQuizHistory() {
             <ItemPerPage
               itemPerPage={filters?.itemPerPage}
               onLimitChange={(newItemPerPage) =>
-                setFilters((prev) => ({ ...prev, itemPerPage: newItemPerPage }))
+                setFilters((prev) => ({
+                  ...prev,
+                  itemPerPage: newItemPerPage,
+                  currentPage: 1,
+                }))
               }
             />
             <PaginationCompo

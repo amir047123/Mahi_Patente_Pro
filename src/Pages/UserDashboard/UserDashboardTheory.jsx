@@ -26,7 +26,7 @@ const UserDashboardTheory = () => {
           <Spinner size={40} />
         </div>
       ) : response?.data?.length > 0 ? (
-        <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5">
+        <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5 mt-5">
           {response?.data?.map((item, index) => (
             <Link key={index} to={`/user-dashboard/theory/${item?._id}`}>
               <ChapterCard item={item} />
