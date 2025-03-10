@@ -5,10 +5,16 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
 import FilterComponent from "@/Shared/FilterComponent";
+import ItemPerPage from "@/Shared/ItemPerPage";
+import PaginationCompo from "@/Shared/PaginationCompo";
 
 export default function UserDashboardQuizHistory() {
   const { useFetchEntities } = useCrudOperations("quiz-session/user-sessions");
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 10,
+    totalPages: 1,
+  });
   const {
     data: response,
     isSuccess,
@@ -17,11 +23,13 @@ export default function UserDashboardQuizHistory() {
     isLoading,
   } = useFetchEntities(filters);
 
-  console.log(filters);
-
   useEffect(() => {
     if (isSuccess && response?.success) {
-      console.log(response?.data);
+      setFilters((prev) => ({
+        ...prev,
+        totalPages:
+          response?.data?.totalPages === 0 ? 1 : response?.data?.totalPages,
+      }));
     }
   }, [isSuccess, response]);
 
@@ -155,6 +163,22 @@ export default function UserDashboardQuizHistory() {
               )}
             </tbody>
           </table>
+
+          <div className="flex justify-between mt-10">
+            <ItemPerPage
+              itemPerPage={filters?.itemPerPage}
+              onLimitChange={(newItemPerPage) =>
+                setFilters((prev) => ({ ...prev, itemPerPage: newItemPerPage }))
+              }
+            />
+            <PaginationCompo
+              currentPage={filters?.currentPage}
+              totalPages={filters?.totalPages}
+              onPageChange={(page) =>
+                setFilters((prev) => ({ ...prev, currentPage: page }))
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -12,7 +12,11 @@ import Spinner from "@/Components/ui/Spinner";
 import FilterComponent from "@/Shared/FilterComponent";
 
 const AdminDashboardQuizQuestion = () => {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 10,
+    totalPages: 1,
+  });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [item, setItem] = useState(null);
 
@@ -33,6 +37,11 @@ const AdminDashboardQuizQuestion = () => {
 
   useEffect(() => {
     if (isSuccess && response?.success) {
+      setFilters((prev) => ({
+        ...prev,
+        totalPages:
+          response?.data?.totalPages === 0 ? 1 : response?.data?.totalPages,
+      }));
       setBreadCrumbData([
         { name: "Chapters", path: "quiz-manage/chapters" },
         {
@@ -242,8 +251,19 @@ const AdminDashboardQuizQuestion = () => {
         </table>
 
         <div className="flex justify-between mt-10">
-          <ItemPerPage />
-          <PaginationCompo />
+          <ItemPerPage
+            itemPerPage={filters?.itemPerPage}
+            onLimitChange={(newItemPerPage) =>
+              setFilters((prev) => ({ ...prev, itemPerPage: newItemPerPage }))
+            }
+          />
+          <PaginationCompo
+            currentPage={filters?.currentPage}
+            totalPages={filters?.totalPages}
+            onPageChange={(page) =>
+              setFilters((prev) => ({ ...prev, currentPage: page }))
+            }
+          />
         </div>
 
         <AdminEditQuizQuestionModal

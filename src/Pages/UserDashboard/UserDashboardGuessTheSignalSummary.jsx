@@ -1,10 +1,5 @@
 import Typography from "@/Components/Typography";
-import {
-  CircleChevronDown,
-  CircleChevronUp,
-  CircleHelp,
-  ClockAlert,
-} from "lucide-react";
+import { CircleChevronDown, CircleChevronUp, ClockAlert } from "lucide-react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -165,10 +160,10 @@ const UserDashboardGuessTheSignalSummary = ({
             <IoIosCloseCircleOutline className="text-xl" />
             Close Quiz
           </Link>
-          <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center  gap-2 text-sm">
+          {/* <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center  gap-2 text-sm">
             <CircleHelp size={18} className="text-sm" />
             Start New Quiz
-          </button>
+          </button> */}
         </div>
 
         <div className="flex items-center gap-4">

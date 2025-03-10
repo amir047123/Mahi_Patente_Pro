@@ -11,7 +11,11 @@ import Spinner from "@/Components/ui/Spinner";
 import FilterComponent from "@/Shared/FilterComponent";
 
 const AdminDashboardUsersManage = () => {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 10,
+    totalPages: 1,
+  });
   const { useFetchEntities } = useCrudOperations("user/users");
 
   const {
@@ -20,11 +24,15 @@ const AdminDashboardUsersManage = () => {
     error,
     isError,
     isLoading,
-  } = useFetchEntities();
+  } = useFetchEntities(filters);
 
   useEffect(() => {
     if (isSuccess && response?.success) {
-      console.log(response?.data);
+      setFilters((prev) => ({
+        ...prev,
+        totalPages:
+          response?.data?.totalPages === 0 ? 1 : response?.data?.totalPages,
+      }));
     }
   }, [isSuccess, response]);
 
@@ -178,10 +186,22 @@ const AdminDashboardUsersManage = () => {
             )}
           </tbody>
         </table>
-      </div>
-      <div className="flex justify-between mt-5 mb-10 bg-white p-4 rounded-xl">
-        <ItemPerPage />
-        <PaginationCompo />
+
+        <div className="flex justify-between mt-10">
+          <ItemPerPage
+            itemPerPage={filters?.itemPerPage}
+            onLimitChange={(newItemPerPage) =>
+              setFilters((prev) => ({ ...prev, itemPerPage: newItemPerPage }))
+            }
+          />
+          <PaginationCompo
+            currentPage={filters?.currentPage}
+            totalPages={filters?.totalPages}
+            onPageChange={(page) =>
+              setFilters((prev) => ({ ...prev, currentPage: page }))
+            }
+          />
+        </div>
       </div>
     </>
   );

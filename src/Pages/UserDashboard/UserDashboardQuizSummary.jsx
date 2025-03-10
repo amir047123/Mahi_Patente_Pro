@@ -3,7 +3,6 @@ import {
   Check,
   CircleChevronDown,
   CircleChevronUp,
-  CircleHelp,
   ClockAlert,
   X,
 } from "lucide-react";
@@ -179,10 +178,10 @@ const UserDashboardQuizSummary = ({
             <IoIosCloseCircleOutline className="text-xl" />
             Close Quiz
           </Link>
-          <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center  gap-2 text-sm">
+          {/* <button className="bg-white rounded-lg px-4 py-2 font-medium shadow-sm flex items-center  gap-2 text-sm">
             <CircleHelp size={18} className="text-sm" />
             Start New Quiz
-          </button>
+          </button> */}
         </div>
 
         <div className="flex items-center gap-4">
