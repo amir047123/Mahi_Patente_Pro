@@ -1,19 +1,21 @@
 export default function textToSpeech(
   text,
+  setIsSpeaking,
   lang = "en-US",
   rate = 1,
   pitch = 1
 ) {
   if (!window.speechSynthesis) {
-    alert.error("Speech Synthesis API is not supported in this browser.");
+    alert("Speech Synthesis API is not supported in this browser.");
     return;
   }
 
+  const synth = window.speechSynthesis;
+
   const speakText = () => {
-    const voices = speechSynthesis.getVoices();
+    const voices = synth.getVoices();
     if (voices.length === 0) {
-      console.warn("No voices available for speech synthesis.");
-      // setTimeout(speakText, 500);
+      alert.warn("No voices available for speech synthesis.");
       return;
     }
 
@@ -23,17 +25,26 @@ export default function textToSpeech(
     utterance.pitch = pitch;
     utterance.voice = voices.find((v) => v.lang.startsWith(lang)) || voices[0];
 
-    window.speechSynthesis.speak(utterance);
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    synth.speak(utterance);
   };
 
-  if (speechSynthesis.getVoices().length === 0) {
-    speechSynthesis.onvoiceschanged = () => {
-      speechSynthesis.onvoiceschanged = null;
-      speechSynthesis.cancel();
-      speakText();
-    };
+  if (synth.speaking) {
+    synth.cancel();
+    setIsSpeaking(false);
   } else {
-    speechSynthesis.cancel();
-    speakText();
+    if (synth.getVoices().length === 0) {
+      synth.onvoiceschanged = () => {
+        synth.onvoiceschanged = null;
+        synth.cancel();
+        speakText();
+      };
+    } else {
+      synth.cancel();
+      speakText();
+    }
   }
 }

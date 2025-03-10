@@ -1,12 +1,18 @@
 import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
 import textToSpeech from "@/lib/textToSpeech";
-import { BookMarked, ThumbsDown, ThumbsUp, X } from "lucide-react";
-import { AiOutlineSound } from "react-icons/ai";
+import {
+  BookMarked,
+  ThumbsDown,
+  ThumbsUp,
+  Volume1,
+  Volume2,
+  X,
+} from "lucide-react";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { MdOutlineBook } from "react-icons/md";
 import QuizExplanationModal from "./QuizExplanationModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -22,6 +28,7 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
   const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const { updateEntity } = useCrudOperations("bookmark");
 
@@ -42,6 +49,12 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
     );
   };
 
+  useEffect(() => {
+    return () => {
+      speechSynthesis.cancel();
+    };
+  }, []);
+
   return (
     <div className="flex flex-col sm:flex-row w-full bg-white rounded-3xl p-4 border">
       <div className="">
@@ -57,10 +70,14 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() => textToSpeech(question?.question)}
-                  className="bg-[#E3FAFF] p-2 border rounded-md"
+                  onClick={() =>
+                    textToSpeech(question?.question, setIsSpeaking)
+                  }
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    isSpeaking ? "text-secondary border-secondary" : ""
+                  }`}
                 >
-                  <AiOutlineSound className="text-lg" />
+                  {isSpeaking ? <Volume2 size={18} /> : <Volume1 size={18} />}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" align="center">
