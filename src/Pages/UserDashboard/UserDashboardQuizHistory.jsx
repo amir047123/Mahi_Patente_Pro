@@ -28,8 +28,6 @@ export default function UserDashboardQuizHistory() {
   }
 
 
-console.log(response)
-
   return (
     <div>
       <DashboardBreadcrumb

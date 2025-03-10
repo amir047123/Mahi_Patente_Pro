@@ -64,7 +64,7 @@ const UserDashboardHeader = () => {
         <SidebarTrigger className="block md:hidden" />
 
         <div className="flex md:justify-between gap-x-5 justify-end items-center w-full ">
-          <div className="relative max-w-sm hidden md:block">
+          <div className="relative max-w-sm hidden md:block ">
             <label htmlFor="Search" className="sr-only">
               Search
             </label>

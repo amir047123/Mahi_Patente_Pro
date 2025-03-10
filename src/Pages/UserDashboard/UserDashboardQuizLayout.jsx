@@ -47,7 +47,7 @@ const UserDashboardQuizLayout = () => {
       description: "Comming Soon",
       icon: "Grid2x2Check",
       time: "10 min",
-      path: "comming-soon",
+      path: "",
       bgColor: "bg-[#E0E091]",
       timeBGColor: "bg-[#BDBD7D]",
     },
