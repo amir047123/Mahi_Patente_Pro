@@ -4,7 +4,7 @@ import { ListChecks, TimerReset } from "lucide-react";
 const MinisterialCategoryCard = ({ item }) => {
   return (
     <div
-      className="flex gap-4 rounded-lg sm:max-w-sm relative"
+      className="flex gap-4 rounded-lg  relative w-full"
       style={{ backgroundColor: item?.bgColor }}
     >
       <img

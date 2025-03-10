@@ -11,7 +11,6 @@ import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/Ministerial
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import FeedQuizQuestionCard from "@/Components/UserDashboard/Quiz/FeedQuizQuestionCard";
-import Classification from "@/Components/UserDashboard/Quiz/Classification";
 import Spinner from "@/Components/ui/Spinner";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 
@@ -132,9 +131,9 @@ const UserDashboardQuizLayout = () => {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="fastMania">
-          <div className="grid xl:grid-cols-5 lg:grid-cols-1 md:grid-cols-5 grid-cols-1 gap-5">
-            <div className="col-span-3">
-              <div className="flex items-center gap-4 mb-10">
+
+            <div className="">
+              <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 mb-10">
                 {fastManiaCardsData?.map((item, index) => (
                   <FastManiaCategoryCard key={index} item={item} />
                 ))}
@@ -159,13 +158,9 @@ const UserDashboardQuizLayout = () => {
               </div>
             </div>
 
-            <div className="col-span-2">
-              <Classification />
-            </div>
-          </div>
         </Tabs.Content>
         <Tabs.Content value="ministrial">
-          <div className="flex items-center gap-4 mb-10">
+          <div className="grid xxl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4 mb-10">
             {ministerialCategoryData?.map((item, index) => (
               <Link key={index} to={`/user-dashboard/quiz/${item?.slug}`}>
                 <MinisterialCategoryCard item={item} />

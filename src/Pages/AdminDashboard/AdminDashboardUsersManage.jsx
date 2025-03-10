@@ -1,5 +1,5 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import {  UserRoundPen } from "lucide-react";
+import { UserRoundPen } from "lucide-react";
 import { useEffect, useState } from "react";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
@@ -11,7 +11,7 @@ import Spinner from "@/Components/ui/Spinner";
 import FilterComponent from "@/Shared/FilterComponent";
 
 const AdminDashboardUsersManage = () => {
- const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({});
   const { useFetchEntities } = useCrudOperations("user/users");
 
   const {
@@ -31,7 +31,6 @@ const AdminDashboardUsersManage = () => {
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
-
 
   return (
     <>
@@ -179,11 +178,10 @@ const AdminDashboardUsersManage = () => {
             )}
           </tbody>
         </table>
-
-        <div className="flex justify-between mt-10">
-          <ItemPerPage />
-          <PaginationCompo />
-        </div>
+      </div>
+      <div className="flex justify-between mt-5 mb-10 bg-white p-4 rounded-xl">
+        <ItemPerPage />
+        <PaginationCompo />
       </div>
     </>
   );

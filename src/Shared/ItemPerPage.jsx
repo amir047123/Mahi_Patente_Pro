@@ -4,7 +4,7 @@ export default function ItemPerPage() {
 
   return (
 
-      <div className="relative w-[5rem]">
+      <div className="relative w-[5rem] hidden md:block">
         <Select>
           <SelectTrigger className="w-[130px]">
             <SelectValue placeholder="Item per page" />

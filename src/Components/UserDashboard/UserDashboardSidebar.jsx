@@ -13,6 +13,7 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
+  useSidebar,
 } from "@/Components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -47,6 +48,7 @@ export function UserDashboardSidebar() {
   const { pathname } = useLocation();
   const currentPath = pathname.split("/")[2];
   const { logout } = useAuthContext();
+   const { setOpenMobile } = useSidebar();
 
   return (
     <Sidebar>
@@ -72,7 +74,11 @@ export function UserDashboardSidebar() {
           <SidebarGroupContent className="mt-3 ">
             <SidebarMenu className="space-y-1">
               {items.map((item) => (
-                <Link key={item.title} to={item.url}>
+                <Link
+                  onClick={() => setOpenMobile(false)}
+                  key={item.title}
+                  to={item.url}
+                >
                   <SidebarMenuItem
                     className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
                       currentPath === item.url.split("/")[2] &&
