@@ -10,10 +10,10 @@ import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
 import MinisterialCategoryCard from "@/Components/UserDashboard/Quiz/MinisterialCategoryCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
-import FeedQuizQuestionCard from "@/Components/UserDashboard/Quiz/FeedQuizQuestionCard";
 import Classification from "@/Components/UserDashboard/Quiz/Classification";
 import Spinner from "@/Components/ui/Spinner";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+import UserDashboardFeedQuizQuestion from "./UserDashboardFeedQuizQuestion";
 
 const UserDashboardQuizLayout = () => {
   const [selectedChapters, setSelectedChapters] = useState([]);
@@ -139,24 +139,8 @@ const UserDashboardQuizLayout = () => {
                   <FastManiaCategoryCard key={index} item={item} />
                 ))}
               </div>
-              <div>
-                <Typography.Heading4
-                  variant="semibold"
-                  className="mt-4 text-primaryText"
-                >
-                  Feed Quiz Question
-                </Typography.Heading4>
-                <Typography.Body className="text-secondaryText mt-1">
-                  Earn a QuizCoin or lose a kW of charge. Are you up for the
-                  challenge?
-                </Typography.Body>
-              </div>
 
-              <div className="mt-5 space-y-4">
-                <FeedQuizQuestionCard />
-                <FeedQuizQuestionCard />
-                <FeedQuizQuestionCard />
-              </div>
+              <UserDashboardFeedQuizQuestion />
             </div>
 
             <div className="col-span-2">

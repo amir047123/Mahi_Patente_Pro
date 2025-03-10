@@ -56,7 +56,9 @@ const AdminSubjectCard = ({ subject }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <p className="text-secondaryText text-sm mt-2">500 Questions</p>
+        <p className="text-secondaryText text-sm mt-2">
+          {subject?.totalQuizes || 0} Questions added
+        </p>
       </div>
 
       <AdminEditSubjectModal

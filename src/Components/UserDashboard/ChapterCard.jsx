@@ -28,7 +28,8 @@ const ChapterCard = ({ item }) => {
 
         <div className="mt-2">
           <Typography.Body className="text-secondaryText">
-            {item?.count?.completedSubjects}/{item?.count?.totalSubjects}
+            {item?.count?.completedSubjects}/{item?.count?.totalSubjects}{" "}
+            Completed
           </Typography.Body>
           <div className="w-full bg-[#E1E1E1] rounded-full h-2.5">
             <div

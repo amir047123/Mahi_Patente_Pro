@@ -69,7 +69,7 @@ const AdminChapterCard = ({
           </DropdownMenu>
         </div>
         <p className="text-secondaryText text-sm mt-2">
-          5 Subject · 18 Questions added
+          {item?.count?.totalSubjects || 0} Subjects added
         </p>
       </div>
 
