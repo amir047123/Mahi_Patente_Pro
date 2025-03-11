@@ -186,26 +186,25 @@ const AdminDashboardUsersManage = () => {
             )}
           </tbody>
         </table>
-
-        <div className="flex justify-between mt-10">
-          <ItemPerPage
-            itemPerPage={filters?.itemPerPage}
-            onLimitChange={(newItemPerPage) =>
-              setFilters((prev) => ({
-                ...prev,
-                itemPerPage: newItemPerPage,
-                currentPage: 1,
-              }))
-            }
-          />
-          <PaginationCompo
-            currentPage={filters?.currentPage}
-            totalPages={filters?.totalPages}
-            onPageChange={(page) =>
-              setFilters((prev) => ({ ...prev, currentPage: page }))
-            }
-          />
-        </div>
+      </div>
+      <div className="flex justify-between mt-5 p-4 rounded-xl mb-10 bg-white">
+        <ItemPerPage
+          itemPerPage={filters?.itemPerPage}
+          onLimitChange={(newItemPerPage) =>
+            setFilters((prev) => ({
+              ...prev,
+              itemPerPage: newItemPerPage,
+              currentPage: 1,
+            }))
+          }
+        />
+        <PaginationCompo
+          currentPage={filters?.currentPage}
+          totalPages={filters?.totalPages}
+          onPageChange={(page) =>
+            setFilters((prev) => ({ ...prev, currentPage: page }))
+          }
+        />
       </div>
     </>
   );

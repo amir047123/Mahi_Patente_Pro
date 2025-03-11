@@ -1,4 +1,6 @@
 import {
+  BadgePercent,
+  BellRing,
   Captions,
   ChevronDown,
   CircleHelp,
@@ -92,6 +94,16 @@ const items = [
     url: "/admin-dashboard/quiz-configuration",
     icon: MonitorCog,
   },
+  {
+    title: "Notification Manage",
+    url: "/admin-dashboard/notification-manage",
+    icon: BellRing,
+  },
+  {
+    title: "Subscription Manage",
+    url: "/admin-dashboard/subscription-manage",
+    icon: BadgePercent,
+  },
 ];
 
 export function AdminDashboardSidebar() {
@@ -100,7 +112,7 @@ export function AdminDashboardSidebar() {
   const dropdownPath = pathname.split("/")[3];
   const { logout } = useAuthContext();
   const [quizManageDropdown, setQuizManageDropdown] = useState(false);
- const { setOpenMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   return (
     <Sidebar>
       <SidebarContent className="bg-white">

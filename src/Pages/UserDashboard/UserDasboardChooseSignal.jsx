@@ -36,6 +36,7 @@ const UserDasboardChooseSignal = () => {
     useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [hasTimer, setHasTimer] = useState(true);
+  const [difficulty, setDifficulty] = useState("Easy");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const UserDasboardChooseSignal = () => {
         },
         credentials: "include",
         body: JSON.stringify({
-          difficulty: "Easy",
+          difficulty,
           category: "Choose 4 to 1 Signal",
           hasTimer,
           showAnswer,
@@ -420,6 +421,8 @@ const UserDasboardChooseSignal = () => {
             getQuizzes={getQuizzes}
             isOpen={isQuickSettingsModalOpen}
             setIsOpen={setIsQuickSettingsModalOpen}
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
           />
         </>
       )}

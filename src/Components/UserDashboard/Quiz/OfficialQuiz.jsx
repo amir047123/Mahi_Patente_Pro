@@ -6,7 +6,7 @@ import {
   ClockAlert,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import demoImg from "@/assets/UserDashboard/quiz-img.svg";
+import demoImg from "@/assets/UserDashboard/no-prev.jpg";
 import Typography from "@/Components/Typography";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
@@ -42,6 +42,7 @@ const OfficialQuiz = () => {
     useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [hasTimer, setHasTimer] = useState(true);
+  const [difficulty, setDifficulty] = useState("Easy");
   const navigate = useNavigate();
   const [chapters, setChapters] = useState([]);
   const [subjects] = useState([]);
@@ -76,11 +77,11 @@ const OfficialQuiz = () => {
       setBreadCrumbData([
         { name: "Theory", path: "theory" },
         {
-          name: `${response?.data?.chapter?.name}`,
+          name: `Chapter`,
           path: `theory/${response?.data?.chapter?._id}`,
         },
         {
-          name: `${response?.data?.subject?.name}`,
+          name: `Subject`,
           path: `theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}`,
         },
         {
@@ -120,7 +121,7 @@ const OfficialQuiz = () => {
         },
         credentials: "include",
         body: JSON.stringify({
-          difficulty: "Easy",
+          difficulty,
           category: "Theory",
           hasTimer,
           showAnswer,
@@ -559,6 +560,8 @@ const OfficialQuiz = () => {
           getQuizzes={getQuizzes}
           isOpen={isQuickSettingsModalOpen}
           setIsOpen={setIsQuickSettingsModalOpen}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
         />
       </>
     </>

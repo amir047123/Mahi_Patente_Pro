@@ -4,6 +4,13 @@ import Typography from "@/Components/Typography";
 import * as Switch from "@radix-ui/react-switch";
 import { Link } from "react-router-dom";
 import Spinner from "@/Components/ui/Spinner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
 
 export default function QuickSettingsModal({
   isOpen,
@@ -14,6 +21,8 @@ export default function QuickSettingsModal({
   setShowAnswer,
   hasTimer,
   setHasTimer,
+  difficulty = "Easy",
+  setDifficulty,
 }) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -62,6 +71,37 @@ export default function QuickSettingsModal({
                   >
                     <Switch.Thumb className="block size-[21px] translate-x-0.5 rounded-full bg-white shadow-md transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
                   </Switch.Root>
+                </div>
+                <div className="flex items-center gap-4 justify-between mt-4">
+                  <Typography.Heading5 variant="semibold" className="">
+                    Set Dificulty Level
+                  </Typography.Heading5>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="flex items-center gap-2 px-4 py-1.5 text-secondary  border-secondary rounded-full border">
+                        <span className="text-base font-medium whitespace-nowrap">
+                          {difficulty || "Select Dificulty"}
+                        </span>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="max-w-56 text-secondaryText">
+                      <DropdownMenuRadioGroup
+                        value={difficulty}
+                        onValueChange={(e) => setDifficulty(e)}
+                      >
+                        <DropdownMenuRadioItem key="Easy" value="Easy">
+                          Easy
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem key="Medium" value="Medium">
+                          Medium
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem key="Hard" value="Hard">
+                          Hard
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
               <button

@@ -9,7 +9,7 @@ const ChapterCard = ({ item }) => {
   return (
     <div className="bg-white flex gap-4 rounded-lg sm:max-w-sm h-full">
       <img
-        className="max-w-[30%] rounded-xl object-cover"
+        className="max-w-[30%] h-full rounded-xl object-cover"
         src={item?.image || demoImg}
         alt="image"
       />

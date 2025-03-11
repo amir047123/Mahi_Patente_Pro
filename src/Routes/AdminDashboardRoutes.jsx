@@ -13,6 +13,8 @@ import AdminDashboardChooseTheSignalQuestions from "@/Pages/AdminDashboard/Admin
 import AdminDashboardUsersManage from "@/Pages/AdminDashboard/AdminDashboardUsersManage";
 import AdminDashboardUserProfile from "@/Pages/AdminDashboard/AdminDashboardUserProfile";
 import AdminDashboardQuizConfiguration from "@/Pages/AdminDashboard/AdminDashboardQuizConfiguration";
+import AdminDashboardNotificationManage from "@/Pages/AdminDashboard/AdminDashboardNotificationManage";
+import AdminDashboardSubscriptionManage from "@/Components/AdminDashboard/AdminDashboardSubscriptionManage";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -64,6 +66,15 @@ const AdminDashboardRoutes = [
   {
     path: "quiz-configuration",
     Component: AdminDashboardQuizConfiguration,
+  },
+
+  {
+    path: "notification-manage",
+    Component: AdminDashboardNotificationManage,
+  },
+  {
+    path: "subscription-manage",
+    Component: AdminDashboardSubscriptionManage,
   },
 ];
 
