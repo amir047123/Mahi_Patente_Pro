@@ -2,7 +2,7 @@ import Typography from "@/Components/Typography";
 import grow from "@/assets/UserDashboard/grow.svg";
 import SmallPieChart from "./SmallPieChart";
 
-function Preparation() {
+function Preparation({ data }) {
   return (
     <div>
       <Typography.Heading5 className="text-primaryText">
@@ -24,10 +24,10 @@ function Preparation() {
             <SmallPieChart
               primaryColor="#CB2A8A"
               secondaryColor="#CCD7E1"
-              value={81}
+              value={data?.overallPerformance?.preparationScore}
             />
             <Typography.Heading4 variant="bold" className="text-primaryText">
-              81%
+              {data?.overallPerformance?.preparationScore || 0}%
             </Typography.Heading4>
           </div>
           <div className="text-sm text-gray-500 line-clamp-5">

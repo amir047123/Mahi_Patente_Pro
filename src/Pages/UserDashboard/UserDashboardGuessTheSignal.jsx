@@ -150,6 +150,9 @@ const UserDashboardGuessTheSignal = () => {
         query.invalidateQueries({
           queryKey: ["quiz-session/user-sessions"],
         });
+        query.invalidateQueries({
+          queryKey: ["dashboard/user"],
+        });
         setQuizSession(data?.data);
         setIsSummary(true);
         navigate(`/user-dashboard/quiz/guess-the-signal/${quizSession?._id}`);

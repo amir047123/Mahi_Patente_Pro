@@ -10,15 +10,6 @@ import {
   LabelList,
 } from "recharts";
 
-const data = [
-  { name: "16/09", pv: 80 },
-  { name: "17/09", pv: 25 },
-  { name: "18/09", pv: 26 },
-  { name: "19/09", pv: 30 },
-  { name: "20/09", pv: 80 },
-  { name: "21/09", pv: 12 },
-];
-
 const getIntroOfPage = (label) => {
   const intros = {
     "16/09": "16/09 Date",
@@ -37,16 +28,23 @@ const CustomTooltip = ({ active, payload, label }) => {
       <div className="custom-tooltip p-2 bg-white border rounded shadow-md">
         <p className="label font-semibold">{`${label} : ${payload[0].value}%`}</p>
         <p className="intro text-sm text-gray-500">{getIntroOfPage(label)}</p>
-        <p className="desc text-xs text-gray-400">
-          Anything you want can be displayed here.
-        </p>
       </div>
     );
   }
   return null;
 };
 
-const DailyErrorRates = () => {
+const DailyErrorRates = ({ data }) => {
+  const updatedData = data?.map((item) => {
+    return {
+      date: new Date(item?.date || new Date()).toLocaleDateString("it-IT", {
+        day: "2-digit",
+        month: "2-digit",
+      }),
+      errorRate: item?.errorRate,
+    };
+  });
+
   return (
     <div>
       <Typography.Heading5 className="text-primaryText">
@@ -55,20 +53,20 @@ const DailyErrorRates = () => {
       <div className="p-6 flex flex-col justify-between bg-white rounded-2xl border mt-3 h-[273px]">
         <ResponsiveContainer width="100%" height={220}>
           <BarChart
-            data={data}
-            margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+            data={updatedData}
+            margin={{ top: 10, right: 0, left: 0, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" className="text-secondaryText text-sm" />
+            <XAxis dataKey="date" className="text-secondaryText text-sm" />
             <YAxis
               domain={[0, 100]}
               tickFormatter={(value) => `${value}%`}
               className="text-secondaryText text-sm"
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="pv" barSize={10} fill="#CB2A8A">
+            <Bar dataKey="errorRate" barSize={10} fill="#CB2A8A">
               <LabelList
-                dataKey="pv"
+                dataKey="errorRate"
                 position="top"
                 formatter={(value) => `${value}%`}
                 fill="#333"

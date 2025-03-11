@@ -6,7 +6,7 @@ function Subscribe() {
   return (
     <div className="bg-white w-full h-full rounded-2xl p-5 flex flex-col justify-between relative">
       <Typography.Heading5 className="text-primaryText mb-3">
-        Switch to Quiz Patente PRO
+        Switch to Mahi Patente PRO
       </Typography.Heading5>
       <div className="flex flex-col justify-between gap-5 z-10">
         <ul className="list-disc pl-5 text-secondaryText">

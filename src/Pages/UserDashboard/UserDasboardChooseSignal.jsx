@@ -154,6 +154,9 @@ const UserDasboardChooseSignal = () => {
         query.invalidateQueries({
           queryKey: ["quiz-session/user-sessions"],
         });
+        query.invalidateQueries({
+          queryKey: ["dashboard/user"],
+        });
         setQuizSession(data?.data);
         setIsSummary(true);
         navigate(

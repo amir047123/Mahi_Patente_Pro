@@ -1,7 +1,7 @@
 import Typography from "@/Components/Typography";
 import { ChartNoAxesColumn, MessageCircleQuestion } from "lucide-react";
 
-export default function SimulationStatistics() {
+export default function SimulationStatistics({ data }) {
   return (
     <div>
       <Typography.Heading5 className="text-primaryText">
@@ -10,25 +10,31 @@ export default function SimulationStatistics() {
       <div className="p-6 flex flex-col justify-between bg-white rounded-2xl border mt-3 h-[180px]">
         <div className=" grid grid-cols-2 gap-16">
           <div>
-            <div className="flex items-center justify-between">
-              <Typography.Base variant="regular" className="text-secondaryText">
-                Completed cards
+            <div className="flex justify-between">
+              <Typography.Base
+                variant="regular"
+                className="text-secondaryText line-clamp-2 break-all"
+              >
+                Total simulations
               </Typography.Base>
-              <MessageCircleQuestion className="text-blue-500" />
+              <MessageCircleQuestion className="text-blue-500 min-w-6 min-h-6" />
             </div>
             <Typography.Heading3 className="text-left mt-3">
-              2
+              {data?.overallPerformance?.totalSessions || 0}
             </Typography.Heading3>
           </div>
           <div>
-            <div className="flex items-center justify-between">
-              <Typography.Base variant="regular" className="text-secondaryText">
+            <div className="flex justify-between">
+              <Typography.Base
+                variant="regular"
+                className="text-secondaryText line-clamp-2 break-all"
+              >
                 Average errors
               </Typography.Base>
-              <ChartNoAxesColumn className="text-red-500" />
+              <ChartNoAxesColumn className="text-red-500 min-w-6 min-h-6" />
             </div>
             <Typography.Heading3 className="text-left mt-3">
-              16
+              {data?.errorAnalysis?.averageErrorRate || 0}%
             </Typography.Heading3>
           </div>
         </div>{" "}

@@ -1,7 +1,7 @@
 import Typography from "@/Components/Typography";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 
-export default function TotalAnswer() {
+export default function TotalAnswer({ data }) {
   return (
     <div>
       <Typography.Heading5 className="text-primaryText">
@@ -17,7 +17,7 @@ export default function TotalAnswer() {
               <ThumbsDown className="text-red-500" />
             </div>
             <Typography.Heading3 className="text-left mt-3">
-              3
+              {data?.overallPerformance?.totalIncorrect}
             </Typography.Heading3>
           </div>
           <div>
@@ -28,7 +28,7 @@ export default function TotalAnswer() {
               <ThumbsUp className="text-green-500" />
             </div>
             <Typography.Heading3 className="text-left mt-3">
-              4
+              {data?.overallPerformance?.totalCorrect}
             </Typography.Heading3>
           </div>
         </div>{" "}
