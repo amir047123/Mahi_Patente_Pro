@@ -76,11 +76,11 @@ const OfficialQuiz = () => {
       setBreadCrumbData([
         { name: "Theory", path: "theory" },
         {
-          name: `${response?.data?.chapter?.name}`,
+          name: `Chapter`,
           path: `theory/${response?.data?.chapter?._id}`,
         },
         {
-          name: `${response?.data?.subject?.name}`,
+          name: `Subject`,
           path: `theory/${response?.data?.chapter?._id}/${response?.data?.subject?._id}`,
         },
         {

@@ -29,7 +29,7 @@ const UserDashboardChapterDetails = () => {
       setBreadCrumbData([
         { name: "Theory", path: "theory" },
         {
-          name: response?.data?.chapter?.name,
+          name: "Chapter",
           path: `theory/${chapter}`,
         },
       ]);
