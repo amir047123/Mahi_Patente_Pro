@@ -78,9 +78,9 @@ const CustomSelect = ({
           {...register(name, {
             required: required ? `${label} is required` : false,
           })}
-          className={`appearance-none ${
+          className={`appearance-none cursor-pointer ${
             isEditable
-              ? " border bg-white focus:outline-none focus:shadow-outline"
+              ? "border bg-white focus:outline-none focus:shadow-outline cursor-pointer"
               : "bg-slate-100 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
           } ${
             errorMessage
