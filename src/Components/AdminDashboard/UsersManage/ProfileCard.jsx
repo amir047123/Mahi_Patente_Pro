@@ -31,7 +31,7 @@ const ProfileCard = ({ user }) => {
             </div>
 
             <div className="flex-1">
-              <Typography.Heading6 className="font-semibold text-black break-all mr-8">
+              <Typography.Heading6 className="font-semibold text-black break-all line-clamp-2 mr-8">
                 {user?.profile?.name || "N/A"}
               </Typography.Heading6>
               <Typography.Body className="text-teal-500 !text-[14px]">
@@ -59,12 +59,12 @@ const ProfileCard = ({ user }) => {
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <span className="bg-orange-500 px-2 flex items-center h-5 rounded-3xl text-[9px] text-white">
+            <div className="flex flex-col gap-2">
+              <span className="bg-orange-500 px-2 py-1 rounded-3xl text-[9px] text-white text-center">
                 PRO
               </span>
               <span
-                className={`px-2 flex items-center h-5 rounded-3xl text-[9px] ${
+                className={`px-2 py-1 rounded-3xl text-[9px] ${
                   user?.profile?.status === "Active"
                     ? "text-green-500 bg-green-100"
                     : "text-red-500 bg-red-100"

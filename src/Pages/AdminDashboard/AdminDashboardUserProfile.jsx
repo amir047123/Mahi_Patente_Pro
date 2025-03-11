@@ -39,9 +39,9 @@ const AdminDashboardUserProfile = () => {
       />
 
       <div className="mt-5">
-        <div className="grid lg:grid-cols-3 grid-cols-1 h-fit gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 md:grid-cols-1 h-fit gap-6 mb-6">
           <ProfileCard user={response?.data?.userData} />
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2 md:col-span-1 lg:col-span-2">
             <CategoryStatistics
               data={response?.data?.categoryPerformance?.categories}
             />

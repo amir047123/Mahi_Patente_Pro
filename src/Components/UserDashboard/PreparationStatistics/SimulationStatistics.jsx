@@ -8,7 +8,7 @@ export default function SimulationStatistics({ data }) {
         Test simulation statistics
       </Typography.Heading5>
       <div className="p-6 flex flex-col justify-between bg-white rounded-2xl border mt-3 h-[180px]">
-        <div className=" grid grid-cols-2 gap-16">
+        <div className=" grid grid-cols-2 gap-4 sm:gap-8 lg:gap-16">
           <div>
             <div className="flex justify-between">
               <Typography.Base

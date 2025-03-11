@@ -4,14 +4,14 @@ import { ChartNoAxesColumn, MessageCircleQuestion } from "lucide-react";
 export default function TestSimulationStatistics() {
   return (
     <div>
-       <Typography.Heading6 variant="bold" className="text-primaryText">
+      <Typography.Heading6 variant="bold" className="text-primaryText">
         Test simulation statistics
       </Typography.Heading6>
       <div className="p-6 flex flex-col justify-between bg-white rounded-2xl mt-3 h-[165px]">
-        <div className=" grid grid-cols-2 gap-16">
+        <div className=" grid grid-cols-2 gap-4 sm:gap-8 lg:gap-16">
           <div>
             <div className="flex items-center justify-between">
-               <Typography.Body
+              <Typography.Body
                 variant="medium"
                 className="text-secondaryText whitespace-nowrap"
               >
@@ -25,7 +25,7 @@ export default function TestSimulationStatistics() {
           </div>
           <div>
             <div className="flex items-center justify-between">
-               <Typography.Body
+              <Typography.Body
                 variant="medium"
                 className="text-secondaryText whitespace-nowrap"
               >

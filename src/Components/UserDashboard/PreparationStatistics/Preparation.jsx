@@ -19,7 +19,7 @@ function Preparation({ data }) {
           <img src={grow} alt="icon" />
         </div>
 
-        <div className="flex items-center justify-between gap-16">
+        <div className="flex items-center justify-between gap-4 sm:gap-8 lg:gap-16">
           <div className="flex items-center gap-2">
             <SmallPieChart
               primaryColor="#CB2A8A"

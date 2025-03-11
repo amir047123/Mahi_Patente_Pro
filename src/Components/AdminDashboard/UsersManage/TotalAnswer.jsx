@@ -8,7 +8,7 @@ export default function TotalAnswer() {
         Total Answer
       </Typography.Heading6>
       <div className="p-6 flex flex-col justify-between bg-white rounded-2xl  mt-3 h-[165px]">
-        <div className=" grid grid-cols-2 gap-16">
+        <div className=" grid grid-cols-2 gap-4 sm:gap-8 lg:gap-16">
           <div>
             <div className="flex items-center justify-between">
               <Typography.Body

@@ -4,11 +4,11 @@ import { ChartNoAxesColumn, MessageCircleQuestion } from "lucide-react";
 export default function QuizzesSolved() {
   return (
     <div>
-       <Typography.Heading6 variant="bold" className="text-primaryText">
+      <Typography.Heading6 variant="bold" className="text-primaryText">
         Quizzes solved and percentage of errors
       </Typography.Heading6>
       <div className="p-6 flex flex-col justify-between bg-white rounded-2xl mt-3 h-[165px]">
-        <div className=" grid grid-cols-2 gap-16">
+        <div className=" grid grid-cols-2 gap-4 sm:gap-8 lg:gap-16">
           <div>
             <div className="flex items-center justify-between">
               <Typography.Body
