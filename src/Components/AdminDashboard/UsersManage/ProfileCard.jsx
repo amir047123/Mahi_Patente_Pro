@@ -34,10 +34,18 @@ const ProfileCard = ({ user }) => {
               <Typography.Heading6 className="font-semibold text-black break-all line-clamp-2 mr-8">
                 {user?.profile?.name || "N/A"}
               </Typography.Heading6>
-              <Typography.Body className="text-teal-500 !text-[14px]">
-                {user?.profile?.username
-                  ? `@${user?.profile?.username}`
-                  : "N/A"}
+              <Typography.Body className="text-teal-500 !text-[14px] break-all">
+                Join On:{" "}
+                <span className="text-nowrap">
+                  {new Date(user?.createdAt || new Date())?.toLocaleString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    }
+                  ) || "N/A"}
+                </span>
               </Typography.Body>
             </div>
           </div>
@@ -53,7 +61,7 @@ const ProfileCard = ({ user }) => {
               </div>
               <div className="flex items-center gap-2 text-gray-600 dark:text-white/70">
                 <MdOutlinePhonePaused className="min-w-3 min-h-3" />
-                <Typography.Body className="!text-[13px]">
+                <Typography.Body className="!text-[13px] break-all">
                   {user?.auth?.phone || "N/A"}
                 </Typography.Body>
               </div>
