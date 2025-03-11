@@ -1,38 +1,33 @@
-import DailyErrorRates from "@/Components/AdminDashboard/UsersManage/DailyErrorRates";
+import CategoryStatistics from "@/Components/AdminDashboard/UsersManage/CategoryStatistics";
 import ProfileCard from "@/Components/AdminDashboard/UsersManage/ProfileCard";
-import QuizzesSolved from "@/Components/AdminDashboard/UsersManage/QuizzesSolved";
-import Ranking from "@/Components/AdminDashboard/UsersManage/Ranking";
-import State from "@/Components/AdminDashboard/UsersManage/State";
-import TestSimulationStatistics from "@/Components/AdminDashboard/UsersManage/TestSimulationStatistics";
-import TotalAnswer from "@/Components/AdminDashboard/UsersManage/TotalAnswer";
-import TotalProgress from "@/Components/AdminDashboard/UsersManage/TotalProgress";
+import DailyErrorRates from "@/Components/UserDashboard/PreparationStatistics/DailyErrorRates";
+import Preparation from "@/Components/UserDashboard/PreparationStatistics/Preparation";
+import SimulationStatistics from "@/Components/UserDashboard/PreparationStatistics/SimulationStatistics";
+import SolvedErrorsPercentage from "@/Components/UserDashboard/PreparationStatistics/SolvedErrorsPercentage";
+import TotalAnswer from "@/Components/UserDashboard/PreparationStatistics/TotalAnswer";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 const AdminDashboardUserProfile = () => {
   const { id } = useParams();
-  const { useEntityById } = useCrudOperations("user");
-
+  const { useFetchEntities } = useCrudOperations("dashboard/user");
   const {
     data: response,
-    isSuccess,
     error,
     isError,
     isLoading,
-  } = useEntityById(id);
-
-  useEffect(() => {
-    if (isSuccess && response?.success) {
-      console.log(response?.data);
-    }
-  }, [isSuccess, response]);
+  } = useFetchEntities({ userId: id });
 
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
+
+  /*
+
+*/
+
   return (
     <>
       <DashboardBreadcrumb
@@ -44,19 +39,24 @@ const AdminDashboardUserProfile = () => {
       />
 
       <div className="mt-5">
-        {/* Top Section */}
-        <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 h-fit gap-4 mb-5">
-          <ProfileCard user={response?.data} />
-          <Ranking />
-          <State />
+        <div className="grid lg:grid-cols-3 grid-cols-1 h-fit gap-6 mb-6">
+          <ProfileCard user={response?.data?.userData} />
+          <div className="lg:col-span-2">
+            <CategoryStatistics
+              data={response?.data?.categoryPerformance?.categories}
+            />
+          </div>
         </div>
-        <div className="rounded-md mt-4 lg:grid lg:grid-cols-2 space-y-5 lg:space-y-0 gap-x-4 gap-y-6  border-t pt-4">
-          <TotalProgress />
-          <TotalAnswer />
-          <QuizzesSolved />
-          <TestSimulationStatistics />
-          <div className="col-span-2">
-            <DailyErrorRates />
+
+        <div className="rounded-md grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-6 items-center justify-center">
+          <Preparation data={response?.data} />
+          <TotalAnswer data={response?.data} />
+          <SolvedErrorsPercentage data={response?.data} />
+          <SimulationStatistics data={response?.data} />
+          <div className="sm:col-span-2 md:col-span-1 lg:col-span-2">
+            <DailyErrorRates
+              data={response?.data?.errorAnalysis?.lastSevenDays}
+            />
           </div>
         </div>
       </div>

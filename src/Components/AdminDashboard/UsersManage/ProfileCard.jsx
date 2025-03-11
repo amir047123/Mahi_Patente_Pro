@@ -12,7 +12,7 @@ const ProfileCard = ({ user }) => {
         Profile Details
       </Typography.Heading6>
 
-      <div className="bg-white dark:bg-darkCardBg rounded-2xl  p-4 relative w-full mt-3 h-[190px]">
+      <div className="bg-white dark:bg-darkCardBg rounded-2xl  p-4 relative w-full mt-3 h-[180px]">
         <BsInfoCircle className="absolute top-4 right-5" />
         <div className="flex flex-col justify-between  h-full">
           {/* Header with Avatar and Name */}
@@ -25,11 +25,13 @@ const ProfileCard = ({ user }) => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+              {user?.profile?.isOnline && (
+                <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+              )}
             </div>
 
             <div className="flex-1">
-              <Typography.Heading6 className="font-semibold text-black">
+              <Typography.Heading6 className="font-semibold text-black break-all mr-8">
                 {user?.profile?.name || "N/A"}
               </Typography.Heading6>
               <Typography.Body className="text-teal-500 !text-[14px]">
@@ -44,13 +46,13 @@ const ProfileCard = ({ user }) => {
           <div className="flex items-baseline gap-2 mt-2 justify-between">
             <div className="space-y-1 mt-3">
               <div className="flex items-center gap-2 text-gray-600 dark:text-white/70">
-                <CiMail className="w-3 h-3" />
-                <Typography.Body className="!text-[13px]">
+                <CiMail className="min-w-3 min-h-3" />
+                <Typography.Body className="!text-[13px] break-all">
                   {user?.auth?.email || "N/A"}
                 </Typography.Body>
               </div>
               <div className="flex items-center gap-2 text-gray-600 dark:text-white/70">
-                <MdOutlinePhonePaused className="w-3 h-3" />
+                <MdOutlinePhonePaused className="min-w-3 min-h-3" />
                 <Typography.Body className="!text-[13px]">
                   {user?.auth?.phone || "N/A"}
                 </Typography.Body>
@@ -61,7 +63,13 @@ const ProfileCard = ({ user }) => {
               <span className="bg-orange-500 px-2 flex items-center h-5 rounded-3xl text-[9px] text-white">
                 PRO
               </span>
-              <span className="bg-green-100 px-2 flex items-center h-5 rounded-3xl text-[9px] text-green-500">
+              <span
+                className={`px-2 flex items-center h-5 rounded-3xl text-[9px] ${
+                  user?.profile?.status === "Active"
+                    ? "text-green-500 bg-green-100"
+                    : "text-red-500 bg-red-100"
+                }`}
+              >
                 {user?.profile?.status || "N/A"}
               </span>
             </div>

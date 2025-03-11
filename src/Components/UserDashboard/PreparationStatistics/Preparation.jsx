@@ -6,7 +6,7 @@ function Preparation({ data }) {
   return (
     <div>
       <Typography.Heading5 className="text-primaryText">
-        Your Preparation
+        Preparation
       </Typography.Heading5>
       <div className=" bg-white mt-3 w-full h-[180px] rounded-2xl p-6 flex flex-col justify-between">
         <div className="flex items-center gap-2 justify-between">

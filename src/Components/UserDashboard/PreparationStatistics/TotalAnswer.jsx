@@ -17,7 +17,7 @@ export default function TotalAnswer({ data }) {
               <ThumbsDown className="text-red-500" />
             </div>
             <Typography.Heading3 className="text-left mt-3">
-              {data?.overallPerformance?.totalIncorrect}
+              {data?.overallPerformance?.totalIncorrect || 0}
             </Typography.Heading3>
           </div>
           <div>
@@ -28,7 +28,7 @@ export default function TotalAnswer({ data }) {
               <ThumbsUp className="text-green-500" />
             </div>
             <Typography.Heading3 className="text-left mt-3">
-              {data?.overallPerformance?.totalCorrect}
+              {data?.overallPerformance?.totalCorrect || 0}
             </Typography.Heading3>
           </div>
         </div>{" "}
