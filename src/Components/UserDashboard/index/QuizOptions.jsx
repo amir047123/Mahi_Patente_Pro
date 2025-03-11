@@ -1,4 +1,6 @@
+import Typography from "@/Components/Typography";
 import FastManiaCategoryCard from "../Quiz/FastManiaCategoryCard";
+import Subscribe from "./Subscribe";
 
 function QuizOptions() {
   const quizCardsData = [
@@ -45,13 +47,19 @@ function QuizOptions() {
   ];
 
   return (
-    <>
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4">
+    <div className="my-6">
+      <Typography.Heading5 className="text-primaryText mb-3">
+        Quizzes
+      </Typography.Heading5>
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {quizCardsData?.map((item, index) => (
           <FastManiaCategoryCard key={index} item={item} />
         ))}
+        <div className="sm:col-span-3 lg:col-span-2">
+          <Subscribe />
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

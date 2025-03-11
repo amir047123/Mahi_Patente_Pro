@@ -1,4 +1,3 @@
-import Typography from "@/Components/Typography";
 import QuizOptions from "@/Components/UserDashboard/index/QuizOptions";
 import Summary from "@/Components/UserDashboard/index/Summary";
 import DailyErrorRates from "@/Components/UserDashboard/PreparationStatistics/DailyErrorRates";
@@ -26,13 +25,8 @@ const UserDashboardIndex = () => {
       </div> */}
 
       {/* Quiz Options */}
+      <QuizOptions />
 
-      <div className="my-6">
-        <Typography.Heading5 className="text-primaryText mb-3">
-          Quizzes
-        </Typography.Heading5>
-        <QuizOptions />
-      </div>
       {/* Last 5 Quiz Summary */}
       <Summary />
     </div>
