@@ -19,6 +19,7 @@ import QuestionLeftModal from "@/Components/UserDashboard/Quiz/QuestionLeftModal
 import TimeLeftModal from "@/Components/UserDashboard/Quiz/TimeLeftModal";
 import QuickSettingsModal from "@/Components/UserDashboard/Quiz/QuickSettingsModal";
 import { AntiCheating } from "@/lib/antiCheating";
+import demoImg from '@/assets/UserDashboard/no-prev.jpg'
 
 const UserDashboardGuessTheSignal = () => {
   const query = useQueryClient();
@@ -268,7 +269,7 @@ const UserDashboardGuessTheSignal = () => {
                 <div className="bg-white rounded-2xl p-5 col-span-1">
                   <img
                     className="w-full"
-                    src={currentQuiz?.media?.image}
+                    src={currentQuiz?.media?.image||demoImg}
                     alt="image"
                   />
                 </div>

@@ -6,7 +6,7 @@ import {
   ClockAlert,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import demoImg from "@/assets/UserDashboard/quiz-img.svg";
+import demoImg from "@/assets/UserDashboard/no-prev.jpg";
 import Typography from "@/Components/Typography";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoIosCloseCircleOutline } from "react-icons/io";
