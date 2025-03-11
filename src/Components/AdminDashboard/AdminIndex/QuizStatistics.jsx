@@ -61,7 +61,7 @@ const QuizStatistics = ({ data }) => {
             <div className="flex items-center gap-2 mt-3">
               <img src={question} alt="list" />
               <Typography.Heading4 variant="bold" className="text-primaryText">
-                127
+                {data?.categoryCountsObject?.Theory || 0}
               </Typography.Heading4>
             </div>
           </div>
@@ -88,7 +88,7 @@ const QuizStatistics = ({ data }) => {
             <div className="flex items-center gap-2 mt-3">
               <img src={list} alt="list" />
               <Typography.Heading4 variant="bold" className="text-primaryText">
-                27
+                {data?.categoryCountsObject?.["Guess the Signal"] || 0}
               </Typography.Heading4>
             </div>
           </div>
@@ -107,7 +107,7 @@ const QuizStatistics = ({ data }) => {
             <div className="flex items-center gap-2 mt-3">
               <img src={book} alt="book" />
               <Typography.Heading4 variant="bold" className="text-primaryText">
-                139
+                {data?.categoryCountsObject?.["Choose 4 to 1 Signal"] || 0}
               </Typography.Heading4>
             </div>
           </div>
