@@ -7,6 +7,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import ForgottenPasswordModal from "./ForgottenPasswordModal";
 
 const AccountSettings = ({ user }) => {
   const [isForgottenPassword, setIsForgottenPassword] = useState(false);
@@ -177,13 +178,22 @@ const AccountSettings = ({ user }) => {
                       )}
                     </button>
 
-                    <button type="button" className="w-fit text-sm">
+                    <button
+                      onClick={() => setIsForgottenPassword(true)}
+                      type="button"
+                      className="w-fit text-sm"
+                    >
                       Forgotten Password
                     </button>
                   </div>
                 </div>
               </form>
             </FormProvider>
+
+            <ForgottenPasswordModal
+              isOpen={isForgottenPassword}
+              setIsOpen={setIsForgottenPassword}
+            />
           </div>
         </CardContent>
       </Card>
