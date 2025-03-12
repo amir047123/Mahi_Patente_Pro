@@ -53,11 +53,11 @@ function Heading3({ children, variant = "semibold", className }) {
   );
 }
 
-function Heading4({ children, variant = "bold", className }) {
+function Heading4({ children, variant = "semibold", className }) {
   return (
     <h4
       className={cn(
-        "text-2xl", //24px
+        "xl:text-[24px] lg:text-[22px] md:text-[20px] text-[18px]", //24px
         variant === "bold" && "font-bold",
         variant === "semibold" && "font-semibold",
         variant === "medium" && "font-medium",
@@ -74,7 +74,7 @@ function Heading5({ children, variant = "bold", className }) {
   return (
     <h5
       className={cn(
-        "text-[1.375rem]", // 22px
+        "xl:text-[20px] text-[18px]", // 22px
         variant === "bold" && "font-bold",
         variant === "semibold" && "font-semibold",
         variant === "medium" && "font-medium",
@@ -87,11 +87,11 @@ function Heading5({ children, variant = "bold", className }) {
   );
 }
 
-function Heading6({ children, variant = "bold", className }) {
+function Heading6({ children, variant = "semibold", className }) {
   return (
     <h6
       className={cn(
-        "text-[1.25rem]", //20px
+        "xl:text-[18px] text-[16px]", //18px
         variant === "bold" && "font-bold",
         variant === "semibold" && "font-semibold",
         variant === "medium" && "font-medium",
