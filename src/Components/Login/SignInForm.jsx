@@ -67,6 +67,14 @@ const SignInForm = () => {
         setIsLoading(false);
       }
     } else {
+      if (data?.password?.length < 6) {
+        setError("password", {
+          type: "manual",
+          message: "Passwords must be at least 6 characters",
+        });
+        return;
+      }
+
       try {
         setIsLoading(true);
 
