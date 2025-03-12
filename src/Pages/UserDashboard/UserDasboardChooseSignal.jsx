@@ -50,6 +50,14 @@ const UserDasboardChooseSignal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizSession]);
 
+  useEffect(() => {
+    return () => {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error exiting full screen:", err);
+      });
+    };
+  }, []);
+
   const getQuizzes = async () => {
     try {
       setIsLoading(true);

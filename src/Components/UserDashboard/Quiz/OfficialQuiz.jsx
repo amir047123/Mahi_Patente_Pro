@@ -111,6 +111,14 @@ const OfficialQuiz = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizSession, navigateUrl]);
 
+  useEffect(() => {
+    return () => {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error exiting full screen:", err);
+      });
+    };
+  }, []);
+
   const getQuizzes = async () => {
     try {
       setIsLoading(true);

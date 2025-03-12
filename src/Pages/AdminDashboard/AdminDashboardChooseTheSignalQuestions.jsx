@@ -11,7 +11,7 @@ import FilterComponent from "@/Shared/FilterComponent";
 const AdminDashboardChooseTheSignalQuestions = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [item, setItem] = useState(null);
- const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({});
   const { useFetchEntities } = useCrudOperations("quiz");
 
   const {
@@ -37,7 +37,6 @@ const AdminDashboardChooseTheSignalQuestions = () => {
       setItem(null);
     }
   }, [isEditModalOpen]);
-
 
   return (
     <>
@@ -138,7 +137,7 @@ const AdminDashboardChooseTheSignalQuestions = () => {
                       ))}
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-sm text-secondaryText">
+                  <td className="py-4 px-4 text-sm text-secondaryText text-nowrap">
                     <span className="block">
                       {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
                         year: "numeric",
@@ -206,8 +205,6 @@ const AdminDashboardChooseTheSignalQuestions = () => {
           </tbody>
         </table>
 
-     
-
         <AdminEditChooseTheSignalModal
           item={item}
           isOpen={isEditModalOpen}
@@ -216,9 +213,9 @@ const AdminDashboardChooseTheSignalQuestions = () => {
       </div>
 
       <div className="flex justify-between mt-5 mb-10 bg-white p-4 rounded-xl">
-              <ItemPerPage />
-              <PaginationCompo />
-            </div>
+        <ItemPerPage />
+        <PaginationCompo />
+      </div>
     </>
   );
 };

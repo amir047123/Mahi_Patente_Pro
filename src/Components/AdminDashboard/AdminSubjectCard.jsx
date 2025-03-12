@@ -16,8 +16,11 @@ const AdminSubjectCard = ({ subject }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex items-start w-full">
       {/* Left section with car icon */}
-      <img className="h-full" src={subject?.image || img} alt="img" />
-
+      <img
+        className=" max-w-[30%] rounded-xl object-cover"
+        src={subject?.image || img}
+        alt="image"
+      />
       {/* Right section with text */}
       <div className="flex-1 flex flex-col justify-between h-full p-6">
         <div className="flex justify-between items-start">
