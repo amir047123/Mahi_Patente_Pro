@@ -16,43 +16,41 @@ import {
   SelectValue,
 } from "../ui/select";
 import { ArrowLeft, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Controller, useForm } from "react-hook-form";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useQueryClient } from "@tanstack/react-query";
 import Spinner from "../ui/Spinner";
 
-const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
+const AdminDashboardEditSubscriptionModal = ({ isOpen, setIsOpen, item }) => {
   const query = useQueryClient();
   const [features, setFeatures] = useState([]);
   const [feature, setFeature] = useState("");
   const methods = useForm();
   const {
     handleSubmit,
-    reset,
     register,
     control,
     formState: { errors },
+    reset,
   } = methods;
 
-  const { createEntity } = useCrudOperations("package/create");
+  const { updateEntity } = useCrudOperations("package");
 
   const onSubmit = async (data) => {
     if (features?.length === 0) {
       toast.error("Please add at least one feature");
       return;
     }
-    const updatedData = { ...data, features };
+    const updatedData = { ...data, features, _id: item?._id };
 
-    createEntity.mutate(updatedData, {
+    updateEntity.mutate(updatedData, {
       onSuccess: (data) => {
         toast.success(data?.message);
         query.invalidateQueries({
           queryKey: ["package"],
         });
-        setFeatures([]);
-        reset();
       },
       onError: (error) => {
         toast.error(error?.message);
@@ -65,7 +63,6 @@ const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
       return toast.error("Type feature first");
     }
     setFeatures([...features, feature]);
-    console.log("hey", feature);
     setFeature("");
   };
 
@@ -79,6 +76,27 @@ const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
     const errorMsg = errors[name]?.message;
     return <p className="text-red-500 text-xs mt-2">{errorMsg}</p>;
   };
+
+  useEffect(() => {
+    if (isOpen && item) {
+      reset({
+        name: item?.name,
+        price: item?.price,
+        duration: String(item?.duration),
+        features: item?.features,
+        status: item?.status,
+      });
+      setFeatures(item?.features);
+    } else {
+      reset({
+        name: "",
+        price: "",
+        duration: "90",
+        features: [],
+        status: "Active",
+      });
+    }
+  }, [isOpen, item, reset]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -130,7 +148,6 @@ const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
               <Controller
                 name="duration"
                 control={control}
-                defaultValue="90"
                 rules={{ required: "Duration is required" }}
                 render={({ field, fieldState }) => (
                   <div>
@@ -247,14 +264,14 @@ const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
 
         <DialogFooter className="flex gap-5 items-center">
           <button
-            disabled={createEntity?.isPending}
+            disabled={updateEntity?.isPending}
             onClick={handleSubmit(onSubmit)}
             className="bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-medium text-white rounded-full w-full flex items-center justify-center"
           >
-            {createEntity?.isPending ? (
+            {updateEntity?.isPending ? (
               <Spinner size={20} className="text-white" />
             ) : (
-              "Create"
+              "Save"
             )}
           </button>
           <DialogClose asChild>
@@ -268,4 +285,4 @@ const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
   );
 };
 
-export default AdminDashboardCreateSubscriptionModal;
+export default AdminDashboardEditSubscriptionModal;

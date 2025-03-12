@@ -1,62 +1,48 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import { UserRoundPen } from "lucide-react";
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
 import FilterComponent from "@/Shared/FilterComponent";
 import AdminDashboardCreateSubscriptionModal from "./AdminDashboardCreateSubscriptionModal";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import toast from "react-hot-toast";
+import Spinner from "../ui/Spinner";
+import AdminDashboardEditSubscriptionModal from "./AdminDashboardEditSubscriptionModal";
 
 const AdminDashboardSubscriptionManage = () => {
   const [filters, setFilters] = useState({
+    status: "",
     currentPage: 1,
     itemPerPage: 10,
     totalPages: 1,
   });
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [item, setItem] = useState(null);
 
-const plans = [
-  {
-    planId: "#001",
-    planName: "Standard Plan",
-    price: "€19.99",
-    duration: "Monthly",
-    features: "Limited Lessons, Mock Tests, Free Resources",
-    status: "Active",
-  },
-  {
-    planId: "#002",
-    planName: "Basic Plan",
-    price: "€9.99",
-    duration: "Monthly",
-    features: "Limited Lessons, No Mock Tests, Free Resources",
-    status: "Active",
-  },
-  {
-    planId: "#003",
-    planName: "Premium Plan",
-    price: "€29.99",
-    duration: "Monthly",
-    features: "Unlimited Lessons, Mock Tests, Premium Support",
-    status: "Active",
-  },
-  {
-    planId: "#004",
-    planName: "Pro Plan",
-    price: "€49.99",
-    duration: "Yearly",
-    features: "All Premium Features, Personalized Coaching",
-    status: "Inactive",
-  },
-  {
-    planId: "#005",
-    planName: "Enterprise Plan",
-    price: "€99.99",
-    duration: "Yearly",
-    features: "Custom Features, Dedicated Support, Team Access",
-    status: "Active",
-  },
-];
+  const { useFetchEntities } = useCrudOperations("package");
+  const {
+    data: response,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+  } = useFetchEntities(filters);
 
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      setFilters((prev) => ({
+        ...prev,
+        totalPages:
+          response?.data?.totalPages === 0 ? 1 : response?.data?.totalPages,
+      }));
+    }
+  }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
 
   return (
     <>
@@ -72,7 +58,7 @@ const plans = [
           {
             type: "status",
             name: "status",
-            options: ["Active", "inactive"],
+            options: ["Active", "Inactive"],
           },
 
           {
@@ -84,7 +70,7 @@ const plans = [
             compo: (
               <button
                 onClick={() => {
-                  setIsEditModalOpen(true);
+                  setIsCreateModalOpen(true);
                 }}
               >
                 <span className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
@@ -124,42 +110,72 @@ const plans = [
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {plans.map((n) => (
-              <tr key={n?.planId} className="hover:bg-gray-50 border-b">
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {n?.planId}
-                </td>
-
-                <td className="py-4 px-4 text-sm text-secondaryText ">
-                  {n?.planName}
-                </td>
-                <td className="py-4 px-4 text-sm text-green-600 ">
-                  {n?.price}
-                </td>
-
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {n?.duration}
-                </td>
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {n?.features}
-                </td>
-
-                <td className="py-4 px-4 text-sm text-secondaryText">
-                  {n?.status}
-                </td>
-
-                <td className="py-4 px-4 text-sm text-blue-600 flex justify-center gap-2">
-                  <button
-                    className="flex gap-2 items-center"
-                    onClick={() => {
-                      setIsEditModalOpen(true);
-                    }}
-                  >
-                    <UserRoundPen size={20} /> Edit
-                  </button>
+            {isLoading ? (
+              <tr>
+                <td colSpan={8} className="py-6 text-center">
+                  <div className="flex items-center justify-center">
+                    <Spinner size={40} />
+                  </div>
                 </td>
               </tr>
-            ))}
+            ) : response?.data?.data?.length > 0 ? (
+              response?.data?.data?.map((item, index) => (
+                <tr key={index} className="hover:bg-gray-50 border-b">
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {index + 1}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {item?.name || "N/A"}
+                  </td>
+
+                  <td className="py-4 px-4 text-sm text-green-600 ">
+                    €{item?.price || 0}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {item?.duration === 30
+                      ? "1 Month"
+                      : item?.duration === 90
+                      ? "3 Month"
+                      : item?.duration === 180
+                      ? "6 Month"
+                      : item?.duration === 365
+                      ? "1 Year"
+                      : `${item?.duration || 0} days`}
+                  </td>
+
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {item?.features?.join(", ") || "N/A"}
+                  </td>
+
+                  <td
+                    className={`p-2 py-3 ${
+                      item?.status === "Active"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {item?.status}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-blue-600 ">
+                    <button
+                      className="flex gap-2 items-center"
+                      onClick={() => {
+                        setItem(item);
+                        setIsEditModalOpen(true);
+                      }}
+                    >
+                      <UserRoundPen size={20} /> Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="">
+                <td colSpan={8} className="py-4 text-center !text-sm">
+                  No Package Found!
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -183,8 +199,14 @@ const plans = [
         />
       </div>
       <AdminDashboardCreateSubscriptionModal
+        isOpen={isCreateModalOpen}
+        setIsOpen={setIsCreateModalOpen}
+      />
+
+      <AdminDashboardEditSubscriptionModal
         isOpen={isEditModalOpen}
         setIsOpen={setIsEditModalOpen}
+        item={item}
       />
     </>
   );
