@@ -15,6 +15,7 @@ import AdminDashboardUserProfile from "@/Pages/AdminDashboard/AdminDashboardUser
 import AdminDashboardQuizConfiguration from "@/Pages/AdminDashboard/AdminDashboardQuizConfiguration";
 import AdminDashboardNotificationManage from "@/Pages/AdminDashboard/AdminDashboardNotificationManage";
 import AdminDashboardSubscriptionManage from "@/Components/AdminDashboard/AdminDashboardSubscriptionManage";
+import DashboardUserSettings from "@/Shared/DashboardUserSettings";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -75,6 +76,10 @@ const AdminDashboardRoutes = [
   {
     path: "subscription-manage",
     Component: AdminDashboardSubscriptionManage,
+  },
+  {
+    path: "settings",
+    Component: DashboardUserSettings,
   },
 ];
 

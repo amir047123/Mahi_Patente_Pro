@@ -10,13 +10,27 @@ import Typography from "../Typography";
 import notificationSound from "/audio/notification.mp3";
 import NotificationComponent from "@/Shared/NotificationComponent";
 import { useNotificationsContext } from "@/Context/NotificationsContext";
+import toast from "react-hot-toast";
+import useImageUploader from "@/Hooks/useImageUploader";
+import { baseURL } from "@/Config";
+import { useQueryClient } from "@tanstack/react-query";
+import { FaCamera } from "react-icons/fa6";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 const UserDashboardHeader = () => {
-  const { user, backupUser } = useAuthContext();
+  const query = useQueryClient();
+  const { user, backupUser, setBackupUser, logout } = useAuthContext();
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
   const { fetchNotifications, unreadCount } = useNotificationsContext();
   const notiAudio = new Audio(notificationSound);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (user?._id) {
@@ -57,6 +71,70 @@ const UserDashboardHeader = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const { uploadImage } = useImageUploader();
+  const [profilePic, setProfilePic] = useState(
+    backupUser?.profile?.profilePicture || demoUser
+  );
+  const [isHovered, setIsHovered] = useState(false);
+  const handleFileChangeDirectly = async (file) => {
+    const toastId = toast.loading("Uploading profile picture...");
+    try {
+      const uploadedFileUrl = await uploadImage(file);
+      if (uploadedFileUrl) {
+        setProfilePic(uploadedFileUrl);
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${baseURL}/user/update`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            profile: { profilePicture: uploadedFileUrl },
+          }),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+
+        setBackupUser((prev) => {
+          return {
+            ...prev,
+            profile: {
+              ...prev?.profile,
+              profilePicture: uploadedFileUrl,
+            },
+          };
+        });
+
+        toast.success(responseData?.message);
+        query.invalidateQueries({
+          queryKey: ["user/users"],
+        });
+      } else {
+        toast.error("Failed to upload file. Please try again.");
+      }
+    } catch (error) {
+      toast.error(
+        `An error occurred while uploading: ${
+          error instanceof Error ? error.message : error
+        }`
+      );
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await handleFileChangeDirectly(file);
+    }
+  };
 
   return (
     <header className=" w-full border-b bg-white">
@@ -102,10 +180,10 @@ const UserDashboardHeader = () => {
             <div ref={notificationRef}>
               <div
                 onClick={() => setShowNotification(!showNotification)}
-                className="flex relative cursor-pointer gap-1 justify-center items-center flex-col xl:flex-row"
+                className="flex relative cursor-pointer justify-center items-center flex-col xl:flex-row"
               >
                 <IoNotificationsOutline className="text-2xl text-primaryText" />
-                <span className="absolute text-[11px] -top-1 -right-2 bg-secondary/20 text-secondary rounded-full px-1.5 font-medium">
+                <span className="absolute text-[11px] -top-1 -right-2.5 bg-secondary/20 text-secondary rounded-full px-1.5 font-medium">
                   {unreadCount}
                 </span>
                 <Typography.Body
@@ -128,11 +206,40 @@ const UserDashboardHeader = () => {
             </button>
 
             <div className="flex items-center sm:gap-2.5 gap-1">
-              <img
-                className="w-9 rounded-full border"
-                src={backupUser?.profile?.profilePicture || demoUser}
-                alt="user img"
+              <label htmlFor="profilePicture" className="cursor-pointer">
+                <div
+                  className={`relative object-cover rounded-full cursor-pointer group`}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  <img
+                    className="w-9 rounded-full border"
+                    src={
+                      profilePic ||
+                      backupUser?.profile?.profilePicture ||
+                      demoUser
+                    }
+                    alt="user img"
+                  />
+
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center bg-black/50 rounded-full transition-opacity duration-300 ${
+                      isHovered ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <FaCamera className="text-white w-4 h-4 opacity-80" />
+                  </div>
+                </div>
+              </label>
+
+              <input
+                id={"profilePicture"}
+                type="file"
+                accept="image/*, application/pdf"
+                className="hidden"
+                onChange={handleFileChange}
               />
+
               <div className="hidden sm:block">
                 <p className="text-[12px] font-medium text-primaryText">
                   {backupUser?.profile?.name}
@@ -141,7 +248,26 @@ const UserDashboardHeader = () => {
                   {backupUser?.auth?.email}
                 </p>
               </div>
-              <ChevronDown size={24} className="text-secondaryText" />
+              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild>
+                  <button className="">
+                    <ChevronDown size={24} className="text-secondaryText" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-w-56 text-secondaryText">
+                  <DropdownMenuItem onClick={() => setIsOpen(false)}>
+                    <Link to="/user-dashboard/settings" className="w-full">
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => setIsOpen(false)}
+                    onClick={logout}
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>

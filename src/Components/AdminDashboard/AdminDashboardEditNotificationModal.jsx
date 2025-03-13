@@ -183,7 +183,7 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
         },
         sendOption: item?.sendOption || "sendNow",
         time: item?.time ? formatToLocalDateTime(item?.time) : "",
-        priority: item?.priority || "user",
+        priority: item?.isAdmin === true ? "admin" : "user",
       });
     } else {
       setSelectedUser(null);
@@ -407,7 +407,6 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
                           <Controller
                             name="priority"
                             control={control}
-                            defaultValue="user"
                             rules={{ required: "Priority is required" }}
                             render={({ field, fieldState }) => (
                               <div>

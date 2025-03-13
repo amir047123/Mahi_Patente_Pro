@@ -23,11 +23,11 @@ const NotificationComponent = () => {
           </h2>
           <button
             type="button"
-            className="flex gap-2 text-primaryText text-xs"
+            className="flex gap-2 text-primary hover:text-primary/80 text-xs"
             onClick={markAllAsRead}
           >
             <CheckCheck size={16} />
-            <div>Mark all as read</div>
+            <span>Mark all as read</span>
           </button>
         </div>
         <div className="max-h-[450px] overflow-y-auto">

@@ -15,7 +15,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
   const [newPasswordShown, setNewPasswordShown] = useState(false);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const methods = useForm();
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, setValue } = methods;
 
   const passwordMethods = useForm();
   const {
@@ -72,11 +72,9 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
   };
 
   useEffect(() => {
-    reset({
-      email: user?.auth?.email,
-      username: user?.profile?.username,
-    });
-  }, [user, reset]);
+    setValue("profile.username", user?.profile?.username);
+    setValue("auth.email", user?.auth?.email);
+  }, [user, setValue]);
 
   return (
     <TabsContent value="account" className="pt-6">
@@ -91,7 +89,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
                 <div className="space-y-6">
                   <CustomInput
                     type="email"
-                    name="email"
+                    name="auth.email"
                     label="Email"
                     placeholder="Your email address"
                     isEditable={false}
@@ -99,18 +97,19 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
 
                   <CustomInput
                     type="text"
-                    name="username"
+                    name="profile.username"
                     label="Username"
                     placeholder="Enter your username"
+                    isEditable={user?.profile?.username ? false : true}
                   />
 
                   <div className="col-span-2 flex justify-center">
                     <button
                       type="submit"
-                      className="mt-6 px-4 py-1.5 sm:py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 disabled:cursor-not-allowed w-fit rounded-full text-white font-semibold flex items-center justify-center"
-                      disabled={isPasswordLoading}
+                      className="px-4 py-1.5 sm:py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 disabled:cursor-not-allowed w-fit rounded-full text-white font-semibold flex items-center justify-center"
+                      disabled={isLoading}
                     >
-                      {isPasswordLoading ? (
+                      {isLoading ? (
                         <Spinner size={24} className="text-white" />
                       ) : (
                         "Update Username"

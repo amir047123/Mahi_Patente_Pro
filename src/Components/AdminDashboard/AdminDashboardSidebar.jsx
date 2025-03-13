@@ -221,27 +221,30 @@ export function AdminDashboardSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-        <SidebarMenuItem
-          className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary"
-          key="Settings"
+        <Link
+          className="flex items-center gap-2 w="
+          to="/admin-dashboard/settings"
         >
-          <Link className="flex items-center gap-2" to="settings">
-            <IoSettingsOutline className="" />
-            <span className="text-[16px] ml-1.5 font-medium ">Settings</span>
-          </Link>
-        </SidebarMenuItem>
-        <SidebarMenuItem
-          className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary"
-          key="Logout"
-        >
-          <button
-            onClick={logout}
-            className="flex items-center gap-2"
-            to="logout"
+          <SidebarMenuItem
+            className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary w-full"
+            key="Settings"
           >
+            <div className="flex items-center gap-2">
+              <IoSettingsOutline className="" />
+              <span className="text-[16px] ml-1.5 font-medium ">Settings</span>
+            </div>
+          </SidebarMenuItem>
+        </Link>
+        <SidebarMenuItem
+          className="hover:bg-[#EBF2FB]  py-2.5 px-3  flex rounded-sm text-secondaryText hover:text-secondary cursor-pointer"
+          key="Logout"
+          onClick={logout}
+          tabIndex={0}
+        >
+          <div className="flex items-center gap-2">
             <MdOutlineLogout />
             <span className="text-[16px] ml-1.5 font-medium ">Logout</span>
-          </button>
+          </div>
         </SidebarMenuItem>
       </div>
     </Sidebar>
