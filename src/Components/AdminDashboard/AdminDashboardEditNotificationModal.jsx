@@ -55,6 +55,7 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
           : null,
       isAdmin: data?.priority === "admin" ? true : false,
       time: data?.sendOption === "sendNow" ? null : data?.time,
+      read: false,
 
       selectedUser: undefined,
       priority: undefined,

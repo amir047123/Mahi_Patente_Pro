@@ -59,11 +59,11 @@ const AdminDashboardNotificationManage = () => {
             type: "date",
             name: "date",
           },
-          {
-            type: "status",
-            name: "status",
-            options: ["Delivered", "Seen", "Scheduled", "Failed"],
-          },
+          // {
+          //   type: "status",
+          //   name: "status",
+          //   options: ["Delivered", "Seen", "Scheduled", "Failed"],
+          // },
 
           {
             type: "search",
@@ -104,7 +104,7 @@ const AdminDashboardNotificationManage = () => {
                 Scheduled For
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Creted on
+                Created on
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
                 Action
