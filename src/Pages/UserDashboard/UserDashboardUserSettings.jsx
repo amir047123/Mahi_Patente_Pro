@@ -6,10 +6,72 @@ import ProfileSettings from "./UserSettings/ProfileSettings";
 import { useAuthContext } from "@/Context/AuthContext";
 import AddressSettings from "./UserSettings/AddressSettings";
 import AccountSettings from "./UserSettings/AccountSettings";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { baseURL } from "@/Config";
+
+/*
+{
+    "auth": {
+        "email": "techdevshimul@gmail.com",
+        "phone": "01798406411"
+    },
+    "profile": {
+        "name": "Shimul Hossain",
+        "role": "user",
+        "isOnline": false
+    },
+    "_id": "67baebb0359fbd8c03e15475",
+    "additionalInfo": [],
+    "createdAt": "2025-02-23T09:34:40.374Z",
+    "updatedAt": "2025-03-13T11:30:20.160Z",
+    "__v": 0,
+    "id": "67baebb0359fbd8c03e15475"
+}
+*/
 
 const UserDashboardUserSettings = () => {
+  const query = useQueryClient();
   const [activeTab, setActiveTab] = useState("profile");
-  const { user } = useAuthContext();
+  const { backupUser, setBackupUser } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    console.log(backupUser);
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${baseURL}/user/update`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData.message);
+      }
+
+      setBackupUser((prev) => {
+        return { ...prev, ...data };
+      });
+
+      toast.success(responseData?.message);
+      query.invalidateQueries({
+        queryKey: ["user/users"],
+      });
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <DashboardBreadcrumb
@@ -59,9 +121,13 @@ const UserDashboardUserSettings = () => {
             </TabsList>
           </HorizontalScroll>
 
-          <ProfileSettings user={user} />
-          <AddressSettings user={user} />
-          <AccountSettings user={user} />
+          <ProfileSettings
+            user={backupUser}
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+          />
+          <AddressSettings user={backupUser} />
+          <AccountSettings user={backupUser} />
         </Tabs>
       </div>
     </>

@@ -12,7 +12,7 @@ import NotificationComponent from "@/Shared/NotificationComponent";
 import { useNotificationsContext } from "@/Context/NotificationsContext";
 
 const UserDashboardHeader = () => {
-  const { user } = useAuthContext();
+  const { user, backupUser } = useAuthContext();
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
   const { fetchNotifications, unreadCount } = useNotificationsContext();
@@ -130,15 +130,15 @@ const UserDashboardHeader = () => {
             <div className="flex items-center sm:gap-2.5 gap-1">
               <img
                 className="w-9 rounded-full border"
-                src={user?.profile?.profilePicture || demoUser}
+                src={backupUser?.profile?.profilePicture || demoUser}
                 alt="user img"
               />
               <div className="hidden sm:block">
                 <p className="text-[12px] font-medium text-primaryText">
-                  {user?.profile?.name}
+                  {backupUser?.profile?.name}
                 </p>
                 <p className="text-secondaryText text-[12px]">
-                  {user?.auth?.email}
+                  {backupUser?.auth?.email}
                 </p>
               </div>
               <ChevronDown size={24} className="text-secondaryText" />

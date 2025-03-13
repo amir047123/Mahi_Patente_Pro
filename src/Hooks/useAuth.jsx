@@ -7,6 +7,7 @@ import { baseURL } from "@/Config";
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
+  const [backupUser, setBackupUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
@@ -45,12 +46,15 @@ export const useAuth = () => {
     if (!token) {
       setLoading(false);
       setUser(null);
+      setBackupUser(null);
+
       return null;
     }
 
     try {
       const response = await fetchuserData(token);
       setUser(response.data?.data?.user);
+      setBackupUser(response.data?.data?.user);
       // fetchGlobalContents();
     } catch (err) {
       setError(
@@ -103,6 +107,7 @@ export const useAuth = () => {
 
       localStorage.setItem("token", response?.data?.data?.token);
       setUser(response?.data?.data?.user);
+      setBackupUser(response?.data?.data?.user);
       toast.success("Login successful!");
       // fetchGlobalContents();
     } catch (err) {
@@ -123,6 +128,7 @@ export const useAuth = () => {
 
       localStorage.setItem("token", response?.data?.data?.token);
       setUser(response?.data?.data?.user);
+      setBackupUser(response?.data?.data?.user);
       toast.success("Login successful!");
       // fetchGlobalContents();
     } catch (err) {
@@ -152,6 +158,7 @@ export const useAuth = () => {
       await axios.get(`${baseURL}/user/logout`, { withCredentials: true });
       // for user dashboard popup
       setUser(null);
+      setBackupUser(null);
       toast.success("Logged out successfully.");
       localStorage.removeItem("token");
       localStorage.removeItem("popupShown");
@@ -160,6 +167,7 @@ export const useAuth = () => {
       console.error("Logout error:", err);
     } finally {
       setUser(null);
+      setBackupUser(null);
       setLoading(false);
       setError(null);
       setOtpSent(false);
@@ -180,5 +188,7 @@ export const useAuth = () => {
     logout,
     fetchAuthenticatedUser,
     createUser,
+    backupUser,
+    setBackupUser,
   };
 };
