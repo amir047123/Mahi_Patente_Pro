@@ -133,13 +133,13 @@ const AdminDashboardSubscriptionManage = () => {
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
                     {item?.duration === 30
-                      ? "1 Month"
+                      ? "month"
                       : item?.duration === 90
-                      ? "3 Month"
+                      ? "3 month"
                       : item?.duration === 180
-                      ? "6 Month"
+                      ? "6 month"
                       : item?.duration === 365
-                      ? "1 Year"
+                      ? "1 year"
                       : `${item?.duration || 0} days`}
                   </td>
 
