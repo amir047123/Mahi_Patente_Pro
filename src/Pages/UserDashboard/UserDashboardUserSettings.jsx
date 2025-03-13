@@ -126,8 +126,16 @@ const UserDashboardUserSettings = () => {
             onSubmit={onSubmit}
             isLoading={isLoading}
           />
-          <AddressSettings user={backupUser} />
-          <AccountSettings user={backupUser} />
+          <AddressSettings
+            user={backupUser}
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+          />
+          <AccountSettings
+            user={backupUser}
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+          />
         </Tabs>
       </div>
     </>

@@ -1,23 +1,23 @@
 import { Card, CardContent } from "@/Components/ui/card";
+import Spinner from "@/Components/ui/Spinner";
 import { TabsContent } from "@/Components/ui/tabs";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-const AddressSettings = ({ user }) => {
+const AddressSettings = ({ user, isLoading, onSubmit }) => {
   const methods = useForm();
-  const { handleSubmit, reset } = methods;
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const { handleSubmit, setValue } = methods;
 
   useEffect(() => {
-    reset({
-      name: user?.profile?.name,
-      phone: user?.auth?.phone,
-    });
-  }, [user, reset]);
+    setValue("address.street", user?.address?.street);
+    setValue("address.city", user?.address?.city);
+    setValue("address.state", user?.address?.state);
+    setValue("address.postalCode", user?.address?.postalCode);
+    setValue("address.country", user?.address?.country);
+    setValue("address.countryCode", user?.address?.countryCode);
+  }, [user, setValue]);
 
   return (
     <TabsContent value="address" className="pt-6">
@@ -27,7 +27,7 @@ const AddressSettings = ({ user }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-6">
                 <CustomSelect
-                  name="country"
+                  name="address.country"
                   label="Country"
                   placeholder="Select your country"
                   options={[
@@ -41,36 +41,47 @@ const AddressSettings = ({ user }) => {
                 />
                 <CustomInput
                   type="text"
-                  name="countryCode"
+                  name="address.countryCode"
                   label="Country Code"
                   placeholder="Enter your country code"
                 />
                 <CustomInput
                   type="text"
-                  name="state"
+                  name="address.state"
                   label="State"
                   placeholder="Enter your state"
                 />
                 <CustomInput
                   type="text"
-                  name="postalCode"
+                  name="address.postalCode"
                   label="Postal Code"
                   placeholder="Enter your postal code"
                 />
                 <CustomInput
                   type="text"
-                  name="city"
+                  name="address.city"
                   label="City"
                   placeholder="Enter your city"
                 />
 
                 <CustomInput
                   type="text"
-                  name="street"
+                  name="address.street"
                   label="Street"
                   placeholder="Enter your street address"
                 />
               </div>
+              <button
+                type="submit"
+                className="mt-6 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Spinner size={24} className="text-white" />
+                ) : (
+                  "Save"
+                )}
+              </button>
             </form>
           </FormProvider>
         </CardContent>

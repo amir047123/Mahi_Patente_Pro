@@ -78,7 +78,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
 
               <button
                 type="submit"
-                className="mt-6 px-4 py-2 sm:py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                className="mt-6 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
                 disabled={isLoading}
               >
                 {isLoading ? (

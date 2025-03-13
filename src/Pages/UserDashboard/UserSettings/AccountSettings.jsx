@@ -9,16 +9,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import ForgottenPasswordModal from "./ForgottenPasswordModal";
 
-const AccountSettings = ({ user }) => {
+const AccountSettings = ({ user, isLoading, onSubmit }) => {
   const [isForgottenPassword, setIsForgottenPassword] = useState(false);
   const [oldPasswordShown, setOldPasswordShown] = useState(false);
   const [newPasswordShown, setNewPasswordShown] = useState(false);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const methods = useForm();
   const { handleSubmit, reset } = methods;
-  const onSubmit = (data) => {
-    console.log(data);
-  };
 
   const passwordMethods = useForm();
   const {
@@ -107,12 +104,17 @@ const AccountSettings = ({ user }) => {
                     placeholder="Enter your username"
                   />
 
-                  <div className="col-span-2 text-center">
+                  <div className="col-span-2 flex justify-center">
                     <button
                       type="submit"
-                      className="px-5 py-2.5 w-fit bg-primary rounded-full text-white font-semibold text-center hover:bg-primary/80 duration-500"
+                      className="mt-6 px-4 py-1.5 sm:py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 disabled:cursor-not-allowed w-fit rounded-full text-white font-semibold flex items-center justify-center"
+                      disabled={isPasswordLoading}
                     >
-                      Update Username
+                      {isPasswordLoading ? (
+                        <Spinner size={24} className="text-white" />
+                      ) : (
+                        "Update Username"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -169,10 +171,11 @@ const AccountSettings = ({ user }) => {
                   <div className="col-span-2 flex flex-col items-center justify-between gap-4">
                     <button
                       type="submit"
-                      className="px-5 py-2.5 w-full bg-secondary rounded-full text-white font-semibold hover:bg-secondary/80 duration-500 flex items-center justify-center"
+                      className="mt-6 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                      disabled={isPasswordLoading}
                     >
                       {isPasswordLoading ? (
-                        <Spinner size={24} className="!text-white" />
+                        <Spinner size={24} className="text-white" />
                       ) : (
                         "Update Password"
                       )}
