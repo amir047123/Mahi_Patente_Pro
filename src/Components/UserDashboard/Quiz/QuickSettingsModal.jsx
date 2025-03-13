@@ -11,6 +11,13 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import { Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/Components/ui/tooltip";
 
 export default function QuickSettingsModal({
   isOpen,
@@ -37,10 +44,10 @@ export default function QuickSettingsModal({
             <Dialog.Title className="text-secondary !text-xl font-semibold">
               Quick Settings
             </Dialog.Title>
-            <div className="flex flex-col items-center justify-center text-center mt-8">
-              <img src={settings} alt="settings" className="mb-10" />
+            <div className="flex flex-col items-center justify-center text-center">
+              <img src={settings} alt="settings" className="my-6" />
 
-              <div className="w-full mb-10 md:px-8 text-primaryText">
+              <div className="w-full mb-6 md:px-8 text-primaryText">
                 <div className="flex items-center gap-4 justify-between">
                   <Typography.Heading5 variant="semibold" className="">
                     Show answers{" "}
@@ -103,6 +110,44 @@ export default function QuickSettingsModal({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 justify-center mt-6 text-secondaryText hover:text-secondaryText/60 duration-500 text-sm cursor-pointer">
+                        <Info size={16} />
+                        <Typography.Base variant="semibold">
+                          Read the instructions{" "}
+                          {/* <span className="hidden sm:inline">
+                            before starting the quiz
+                          </span> */}
+                        </Typography.Base>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="center">
+                      <div className="space-y-4 p-6">
+                        <Typography.Heading6 variant="semibold">
+                          After starting the quiz:
+                        </Typography.Heading6>
+                        <Typography.Body>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>All shortcuts will be disabled.</li>
+                            <li>
+                              Switching to another window or tab will submit the
+                              quiz.
+                            </li>
+                            <li>You cannot copy or paste any text.</li>
+                            <li>You cannot right-click anywhere.</li>
+                            <li>
+                              Pressing the Escape button twice will stop the
+                              quiz.
+                            </li>
+                          </ul>
+                        </Typography.Body>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <button
                 onClick={getQuizzes}
