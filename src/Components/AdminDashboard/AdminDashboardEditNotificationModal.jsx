@@ -27,9 +27,9 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useQueryClient } from "@tanstack/react-query";
 import Spinner from "../ui/Spinner";
 
-const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
+const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
   const methods = useForm();
-  const { createEntity } = useCrudOperations("notification/create");
+  const { updateEntity } = useCrudOperations("notification");
   const query = useQueryClient();
 
   const {
@@ -46,6 +46,7 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
   const onSubmit = async (data) => {
     const updatedData = {
       ...data,
+      _id: item?._id,
       userId:
         data?.target === "specific" ? data?.selectedUser?.fullData?._id : null,
       userEmail:
@@ -59,13 +60,12 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
       priority: undefined,
     };
 
-    createEntity.mutate(updatedData, {
+    updateEntity.mutate(updatedData, {
       onSuccess: (data) => {
         toast.success(data?.message);
         query.invalidateQueries({
           queryKey: ["notification/all"],
         });
-        reset();
       },
       onError: (error) => {
         toast.error(error?.message);
@@ -148,6 +148,55 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
       clearErrors("time");
     }
   }, [setValue, target, clearErrors, sendOption]);
+
+  const formatToLocalDateTime = (date) => {
+    if (!date) return "";
+
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  useEffect(() => {
+    if (isOpen && item) {
+      setSelectedUser({
+        value: item?.userId?._id,
+        label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
+        logo: item?.userId?.profile?.profilePicture,
+        fullData: item?.userId,
+      });
+      reset({
+        title: item?.title || "",
+        message: item?.message || "",
+        target: item?.target || "all",
+        selectedUser: {
+          value: item?.userId?._id,
+          label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
+          logo: item?.userId?.profile?.profilePicture,
+          fullData: item?.userId,
+        },
+        sendOption: item?.sendOption || "sendNow",
+        time: item?.time ? formatToLocalDateTime(item?.time) : "",
+        priority: item?.priority || "user",
+      });
+    } else {
+      setSelectedUser(null);
+      reset({
+        title: "",
+        message: "",
+        target: "all",
+        selectedUser: null,
+        sendOption: "sendNow",
+        time: "",
+        priority: "user",
+      });
+    }
+  }, [isOpen, item, reset]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -397,14 +446,14 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
         </FormProvider>
         <DialogFooter className="flex gap-5 items-center">
           <button
-            disabled={createEntity?.isPending}
+            disabled={updateEntity?.isPending}
             onClick={handleSubmit(onSubmit)}
             className="bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-medium text-white rounded-full w-full flex items-center justify-center"
           >
-            {createEntity?.isPending ? (
+            {updateEntity?.isPending ? (
               <Spinner size={20} className="text-white" />
             ) : (
-              "Create"
+              "Save"
             )}
           </button>
           <DialogClose asChild>
@@ -418,4 +467,4 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
   );
 };
 
-export default AdminDashboardAddNotificationModal;
+export default AdminDashboardEditNotificationModal;
