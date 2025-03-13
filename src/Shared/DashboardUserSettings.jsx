@@ -27,7 +27,10 @@ const DashboardUserSettings = () => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          auth: { ...data?.auth, email: undefined },
+        }),
       });
 
       const responseData = await response.json();

@@ -103,10 +103,14 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
                     isEditable={user?.profile?.username ? false : true}
                   />
 
-                  <div className="col-span-2 flex justify-center">
+                  <div
+                    className={`col-span-2 flex justify-center ${
+                      user?.profile?.username ? "hidden" : ""
+                    }`}
+                  >
                     <button
                       type="submit"
-                      className="px-4 py-1.5 sm:py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 disabled:cursor-not-allowed w-fit rounded-full text-white font-semibold flex items-center justify-center"
+                      className="px-4 py-1.5 sm:py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 disabled:cursor-not-allowed w-fit rounded-full text-white font-semibold flex items-center justify-center min-w-[180px]"
                       disabled={isLoading}
                     >
                       {isLoading ? (
