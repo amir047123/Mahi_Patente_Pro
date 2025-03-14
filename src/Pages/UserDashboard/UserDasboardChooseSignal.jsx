@@ -38,6 +38,7 @@ const UserDasboardChooseSignal = () => {
   const [hasTimer, setHasTimer] = useState(true);
   const [difficulty, setDifficulty] = useState("Easy");
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (quizSession?.quizzes?.length > 0) {
@@ -64,6 +65,7 @@ const UserDasboardChooseSignal = () => {
       const response = await fetch(`${baseURL}/quiz-session/create`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         credentials: "include",
@@ -151,6 +153,7 @@ const UserDasboardChooseSignal = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
