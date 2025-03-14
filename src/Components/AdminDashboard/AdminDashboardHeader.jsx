@@ -180,10 +180,10 @@ const AdminDashboardHeader = () => {
             <div ref={notificationRef}>
               <div
                 onClick={() => setShowNotification(!showNotification)}
-                className="flex relative cursor-pointer gap-1 justify-center items-center flex-col xl:flex-row"
+                className="flex relative cursor-pointer justify-center items-center flex-col xl:flex-row"
               >
                 <IoNotificationsOutline className="text-2xl text-primaryText" />
-                <span className="absolute text-[11px] -top-1 -right-2 bg-secondary/20 text-secondary rounded-full px-1.5 font-medium">
+                <span className="absolute text-[11px] -top-1 -right-2.5 bg-secondary/20 text-secondary rounded-full px-1.5 font-medium">
                   {unreadCount}
                 </span>
                 <Typography.Body

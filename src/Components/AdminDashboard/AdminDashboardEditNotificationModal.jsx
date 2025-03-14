@@ -32,6 +32,14 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
   const { updateEntity } = useCrudOperations("notification");
   const query = useQueryClient();
 
+  const [search, setSearch] = useState("");
+  const [isSearchDisabled, setIsSearchDisabled] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [usersForSelection, setUsersForSelection] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterPriority, setFilterPriority] = useState("user");
+
   const {
     handleSubmit,
     register,
@@ -43,19 +51,24 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
     reset,
   } = methods;
 
+  const target = watch("target");
+  const sendOption = watch("sendOption");
+  const priority = watch("priority");
+
   const onSubmit = async (data) => {
     const updatedData = {
-      ...data,
       _id: item?._id,
+      ...data,
       userId:
-        data?.target === "specific" ? data?.selectedUser?.fullData?._id : null,
+        data?.target === "specific"
+          ? data?.selectedUser?.fullData?._id
+          : undefined,
       userEmail:
         data?.target === "specific"
           ? data?.selectedUser?.fullData?.auth?.email
-          : null,
+          : undefined,
       isAdmin: data?.priority === "admin" ? true : false,
-      time: data?.sendOption === "sendNow" ? null : data?.time,
-      read: false,
+      time: data?.sendOption === "sendNow" ? undefined : data?.time,
 
       selectedUser: undefined,
       priority: undefined,
@@ -79,13 +92,6 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
     return <p className="text-red-500 text-xs mt-2">{errorMsg}</p>;
   };
 
-  const [search, setSearch] = useState("");
-  const [isSearchDisabled, setIsSearchDisabled] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [usersForSelection, setUsersForSelection] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
   const fetchUsers = async (pageNumber = 1) => {
     setIsLoading(true);
     try {
@@ -103,15 +109,16 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
         withCredentials: true,
       });
 
-      const selectUsersOptions = response?.data?.data?.map((item) => {
-        return {
-          value: item._id,
-          label: `${item?.auth?.email} • ${item?.profile?.name}`,
-          logo: item?.profile?.profilePicture,
-          fullData: item,
-        };
-      });
-
+      const selectUsersOptions = response?.data?.data
+        ?.filter((item) => item?.profile?.role === filterPriority)
+        ?.map((item) => {
+          return {
+            value: item._id,
+            label: `${item?.auth?.email} • ${item?.profile?.name}`,
+            logo: item?.profile?.profilePicture,
+            fullData: item,
+          };
+        });
       if (pageNumber === 1) {
         setUsersForSelection(selectUsersOptions);
       } else {
@@ -132,9 +139,6 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
     }
   };
 
-  const target = watch("target");
-  const sendOption = watch("sendOption");
-
   useEffect(() => {
     if (target !== "specific") {
       setSelectedUser(null);
@@ -147,8 +151,23 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
     }
     if (sendOption !== "scheduleLater") {
       clearErrors("time");
+      setValue("time", "");
     }
   }, [setValue, target, clearErrors, sendOption]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setFilterPriority(priority);
+    setSelectedUser(null);
+    setValue("selectedUser", "");
+  }, [priority, setValue]);
+
+  useEffect(() => {
+    if (isOpen && item) {
+      fetchUsers(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterPriority]);
 
   const formatToLocalDateTime = (date) => {
     if (!date) return "";
@@ -165,26 +184,39 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
 
   useEffect(() => {
     if (isOpen && item) {
-      setSelectedUser({
-        value: item?.userId?._id,
-        label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
-        logo: item?.userId?.profile?.profilePicture,
-        fullData: item?.userId,
-      });
-      reset({
-        title: item?.title || "",
-        message: item?.message || "",
-        target: item?.target || "all",
-        selectedUser: {
+      if (item?.userId?._id) {
+        setSelectedUser({
           value: item?.userId?._id,
           label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
           logo: item?.userId?.profile?.profilePicture,
           fullData: item?.userId,
-        },
-        sendOption: item?.sendOption || "sendNow",
-        time: item?.time ? formatToLocalDateTime(item?.time) : "",
-        priority: item?.isAdmin === true ? "admin" : "user",
-      });
+        });
+
+        reset({
+          title: item?.title || "",
+          message: item?.message || "",
+          target: item?.target || "all",
+          sendOption: item?.sendOption || "sendNow",
+          time: item?.time ? formatToLocalDateTime(item?.time) : "",
+          priority: item?.isAdmin === true ? "admin" : "user",
+          selectedUser: {
+            value: item?.userId?._id,
+            label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
+            logo: item?.userId?.profile?.profilePicture,
+            fullData: item?.userId,
+          },
+        });
+      } else {
+        reset({
+          title: item?.title || "",
+          message: item?.message || "",
+          target: item?.target || "all",
+          sendOption: item?.sendOption || "sendNow",
+          time: item?.time ? formatToLocalDateTime(item?.time) : "",
+          priority: item?.isAdmin === true ? "admin" : "user",
+          selectedUser: "",
+        });
+      }
     } else {
       setSelectedUser(null);
       reset({
@@ -197,7 +229,7 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
         priority: "user",
       });
     }
-  }, [isOpen, item, reset]);
+  }, [isOpen, item, reset, usersForSelection]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -252,67 +284,100 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
                   <p className="text-sm font-medium text-pink-500 mb-3">
                     Target Audience
                   </p>
-                  <Controller
-                    name="target"
-                    control={control}
-                    defaultValue={"all"}
-                    render={({ field }) => (
-                      <RadioGroup.Root
-                        {...field}
-                        className="flex lg:gap-5 gap-3 items-start flex-wrap md:flex-nowrap"
-                        onValueChange={(value) => field.onChange(value)}
-                      >
-                        <div className="flex flex-wrap lg:gap-5 gap-3 items-center w-full">
-                          {["all", "active", "specific"].map((option) => (
-                            <div
-                              key={option}
-                              className="flex items-center space-x-2 mt-3"
-                            >
-                              <RadioGroup.Item
-                                value={option}
-                                id={option}
-                                className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white cursor-pointer"
-                              >
-                                <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
-                              </RadioGroup.Item>
-                              <label
-                                htmlFor={option}
-                                className="text-sm whitespace-nowrap cursor-pointer"
-                              >
-                                {option === "all"
-                                  ? "All Users"
-                                  : option === "active"
-                                  ? "Active Users"
-                                  : "Specific Users"}
-                              </label>
-                            </div>
-                          ))}
-                        </div>
 
-                        <div
-                          className={`${
-                            isSearchDisabled ? "hidden" : "w-full"
-                          }`}
-                        >
-                          <CustomSearchableSelect
-                            name="selectedUser"
-                            label="User"
-                            labelShown={false}
-                            options={usersForSelection}
-                            isLoading={isLoading}
-                            setSelectedItem={setSelectedUser}
-                            selectedItem={selectedUser}
-                            setSearchText={setSearch}
-                            refetchData={fetchUsers}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            placeholder="Select An User"
-                            required={watch("target") === "specific"}
-                          />
-                        </div>
-                      </RadioGroup.Root>
-                    )}
-                  />
+                  <div className="flex sm:flex-row flex-col gap-5">
+                    <div className="w-fit flex items-center gap-4">
+                      <Controller
+                        name="priority"
+                        control={control}
+                        defaultValue="user"
+                        rules={{ required: "Priority is required" }}
+                        render={({ field, fieldState }) => (
+                          <div>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="w-24">
+                                <SelectValue placeholder="Select priority" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectItem value="user">User</SelectItem>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+
+                            {fieldState?.error && (
+                              <span className="text-red-500 text-xs block mt-2">
+                                {fieldState.error.message}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      />
+                      <Controller
+                        name="target"
+                        control={control}
+                        defaultValue={"all"}
+                        render={({ field }) => (
+                          <RadioGroup.Root
+                            {...field}
+                            className="flex lg:gap-5 gap-3 items-start flex-wrap md:flex-nowrap"
+                            onValueChange={(value) => field.onChange(value)}
+                          >
+                            <div className="flex lg:gap-5 gap-3 items-center w-full">
+                              {["all", "specific"].map((option) => (
+                                <div
+                                  key={option}
+                                  className="flex items-center space-x-2"
+                                >
+                                  <RadioGroup.Item
+                                    value={option}
+                                    id={option}
+                                    className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white cursor-pointer"
+                                  >
+                                    <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
+                                  </RadioGroup.Item>
+                                  <label
+                                    htmlFor={option}
+                                    className="text-sm whitespace-nowrap cursor-pointer"
+                                  >
+                                    {option === "all"
+                                      ? "All Users"
+                                      : option === "active"
+                                      ? "Active Users"
+                                      : "Specific Users"}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </RadioGroup.Root>
+                        )}
+                      />
+                    </div>
+
+                    <div
+                      className={`${isSearchDisabled ? "hidden" : "w-full"}`}
+                    >
+                      <CustomSearchableSelect
+                        name="selectedUser"
+                        label="User"
+                        labelShown={false}
+                        options={usersForSelection}
+                        isLoading={isLoading}
+                        setSelectedItem={setSelectedUser}
+                        selectedItem={selectedUser}
+                        setSearchText={setSearch}
+                        refetchData={fetchUsers}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        placeholder="Select An User"
+                        required={watch("target") === "specific"}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Scheduling Options and Priority Level */}
@@ -366,76 +431,41 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
                         )}
                       />
 
-                      <div className="flex flex-wrap sm:flex-nowrap lg:gap-5 gap-3 ">
-                        <div className="flex lg:gap-5 gap-3 ">
-                          <Controller
-                            name="time"
-                            control={control}
-                            defaultValue=""
-                            rules={{
-                              required:
-                                watch("sendOption") === "scheduleLater" &&
-                                "Date & Time is required",
-                            }}
-                            render={({ field, fieldState }) => (
-                              <div>
-                                <input
-                                  type="datetime-local"
-                                  className="text-sm pl-3 h-9 border-gray-200 rounded-md border px-3 py-1 cursor-pointer"
-                                  placeholder="Pick a time"
-                                  {...field}
-                                  disabled={
-                                    watch("sendOption") === "scheduleLater"
-                                      ? false
-                                      : true
-                                  }
-                                />
-                                {fieldState?.error && (
-                                  <span className="text-red-500 text-xs block mt-2">
-                                    {fieldState.error.message}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                          />
-                        </div>
-
-                        <div className="sm:-mt-7">
-                          <p className="text-sm font-medium text-gray-600 mb-2">
-                            Priority Level
-                          </p>
-                          <Controller
-                            name="priority"
-                            control={control}
-                            rules={{ required: "Priority is required" }}
-                            render={({ field, fieldState }) => (
-                              <div>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <SelectTrigger className="lg:w-[180px] w-[200px]">
-                                    <SelectValue placeholder="Select priority" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                      <SelectItem value="user">User</SelectItem>
-                                      <SelectItem value="admin">
-                                        Admin
-                                      </SelectItem>
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select>
-
-                                {fieldState?.error && (
-                                  <span className="text-red-500 text-xs block mt-2">
-                                    {fieldState.error.message}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                          />
-                        </div>
+                      <div
+                        className={`flex lg:gap-5 gap-3 ${
+                          sendOption === "scheduleLater" ? "" : "hidden"
+                        }`}
+                      >
+                        <Controller
+                          name="time"
+                          control={control}
+                          defaultValue=""
+                          rules={{
+                            required:
+                              watch("sendOption") === "scheduleLater" &&
+                              "Date & Time is required",
+                          }}
+                          render={({ field, fieldState }) => (
+                            <div>
+                              <input
+                                type="datetime-local"
+                                className="text-sm pl-3 h-9 border-gray-200 rounded-md border px-3 py-1 cursor-pointer"
+                                placeholder="Pick a time"
+                                {...field}
+                                disabled={
+                                  watch("sendOption") === "scheduleLater"
+                                    ? false
+                                    : true
+                                }
+                              />
+                              {fieldState?.error && (
+                                <span className="text-red-500 text-xs block mt-2">
+                                  {fieldState.error.message}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        />
                       </div>
                     </div>
                   </div>
