@@ -16,7 +16,10 @@ export default function WarningModal({
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className=" overflow-y-auto max-h-screen  w-[400px] bg-[#ECF2F8] ">
+      <DialogContent
+        className=" overflow-y-auto max-h-screen  w-[400px] bg-[#ECF2F8]"
+        hideCloseButton={true}
+      >
         {!success ? (
           <>
             <div className="py-6 space-y-4 text-center">

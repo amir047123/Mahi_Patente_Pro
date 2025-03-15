@@ -27,9 +27,9 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useQueryClient } from "@tanstack/react-query";
 import Spinner from "../ui/Spinner";
 
-const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
+const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
   const methods = useForm();
-  const { createEntity } = useCrudOperations("notification/create");
+  const { updateEntity } = useCrudOperations("notification");
   const query = useQueryClient();
 
   const [search, setSearch] = useState("");
@@ -57,6 +57,7 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
 
   const onSubmit = async (data) => {
     const updatedData = {
+      _id: item?._id,
       ...data,
       userId:
         data?.target === "specific"
@@ -67,19 +68,18 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
           ? data?.selectedUser?.fullData?.auth?.email
           : undefined,
       isAdmin: data?.priority === "admin" ? true : false,
-      time: data?.sendOption === "sendNow" ? undefined : data?.time,
+      time: data?.sendOption === "sendNow" ? null : data?.time,
 
       selectedUser: undefined,
       priority: undefined,
     };
 
-    createEntity.mutate(updatedData, {
+    updateEntity.mutate(updatedData, {
       onSuccess: (data) => {
         toast.success(data?.message);
         query.invalidateQueries({
           queryKey: ["notification/all"],
         });
-        reset();
       },
       onError: (error) => {
         toast.error(error?.message);
@@ -119,7 +119,6 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
             fullData: item,
           };
         });
-
       if (pageNumber === 1) {
         setUsersForSelection(selectUsersOptions);
       } else {
@@ -164,9 +163,73 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
   }, [priority, setValue]);
 
   useEffect(() => {
-    fetchUsers(1);
+    if (isOpen && item) {
+      fetchUsers(1);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterPriority]);
+
+  const formatToLocalDateTime = (date) => {
+    if (!date) return "";
+
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  useEffect(() => {
+    if (isOpen && item) {
+      if (item?.userId?._id) {
+        setSelectedUser({
+          value: item?.userId?._id,
+          label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
+          logo: item?.userId?.profile?.profilePicture,
+          fullData: item?.userId,
+        });
+
+        reset({
+          title: item?.title || "",
+          message: item?.message || "",
+          target: item?.target || "all",
+          sendOption: item?.sendOption || "sendNow",
+          time: item?.time ? formatToLocalDateTime(item?.time) : "",
+          priority: item?.isAdmin === true ? "admin" : "user",
+          selectedUser: {
+            value: item?.userId?._id,
+            label: `${item?.userId?.auth?.email} • ${item?.userId?.profile?.name}`,
+            logo: item?.userId?.profile?.profilePicture,
+            fullData: item?.userId,
+          },
+        });
+      } else {
+        reset({
+          title: item?.title || "",
+          message: item?.message || "",
+          target: item?.target || "all",
+          sendOption: item?.sendOption || "sendNow",
+          time: item?.time ? formatToLocalDateTime(item?.time) : "",
+          priority: item?.isAdmin === true ? "admin" : "user",
+          selectedUser: "",
+        });
+      }
+    } else {
+      setSelectedUser(null);
+      reset({
+        title: "",
+        message: "",
+        target: "all",
+        selectedUser: null,
+        sendOption: "sendNow",
+        time: "",
+        priority: "user",
+      });
+    }
+  }, [isOpen, item, reset, usersForSelection]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -414,14 +477,14 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
         </FormProvider>
         <DialogFooter className="flex gap-5 items-center">
           <button
-            disabled={createEntity?.isPending}
+            disabled={updateEntity?.isPending}
             onClick={handleSubmit(onSubmit)}
             className="bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-medium text-white rounded-full w-full flex items-center justify-center"
           >
-            {createEntity?.isPending ? (
+            {updateEntity?.isPending ? (
               <Spinner size={20} className="text-white" />
             ) : (
-              "Create"
+              "Save"
             )}
           </button>
           <DialogClose asChild>
@@ -435,4 +498,4 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
   );
 };
 
-export default AdminDashboardAddNotificationModal;
+export default AdminDashboardEditNotificationModal;

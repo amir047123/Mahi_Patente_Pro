@@ -235,6 +235,7 @@ const AdminDashboardEditSubscriptionModal = ({ isOpen, setIsOpen, item }) => {
                   </svg>
                   {f}{" "}
                   <button
+                    type="button"
                     onClick={() => removeFeature(i)}
                     className="text-red-500 ml-1"
                   >

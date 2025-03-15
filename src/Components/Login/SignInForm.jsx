@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { useAuthContext } from "@/Context/AuthContext";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import Spinner from "../ui/Spinner";
+import ForgottenPasswordModal from "@/Pages/UserDashboard/UserSettings/ForgottenPasswordModal";
 
 const SignInForm = () => {
   const {
@@ -23,6 +24,7 @@ const SignInForm = () => {
     setError: setAuthError,
     loading,
   } = useAuthContext();
+  const [isForgottenPassword, setIsForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -254,9 +256,13 @@ const SignInForm = () => {
               <Checkbox className=""></Checkbox>
               <span className=""> Remember me</span>
             </div>
-            <Link to="/forgotPassword" className="hover:underline">
+            <button
+              type="button"
+              onClick={() => setIsForgottenPassword(true)}
+              className="hover:underline"
+            >
               Forgot Password?
-            </Link>
+            </button>
           </div>
         </div>
       ) : (
@@ -359,6 +365,12 @@ const SignInForm = () => {
           Create an account
         </Link>
       </div>
+
+      <ForgottenPasswordModal
+        isOpen={isForgottenPassword}
+        setIsOpen={setIsForgottenPassword}
+        type="signin"
+      />
     </form>
   );
 };

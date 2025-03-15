@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-const ForgottenPasswordModal = ({ isOpen, setIsOpen }) => {
+const ForgottenPasswordModal = ({ isOpen, setIsOpen, type = "" }) => {
   const { user } = useAuthContext();
   const [step, setStep] = useState("sendOTP");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,9 @@ const ForgottenPasswordModal = ({ isOpen, setIsOpen }) => {
   const { handleSubmit, setValue, setError, reset } = methods;
 
   const onSubmit = async (formData) => {
-    let updatedData = { email: user?.auth?.email };
+    let updatedData = {
+      email: type === "signin" ? formData?.email : user?.auth?.email,
+    };
 
     let url = `${baseURL}/user/sendOTP`;
 
@@ -32,7 +34,10 @@ const ForgottenPasswordModal = ({ isOpen, setIsOpen }) => {
       url = `${baseURL}/user/send-otp-for-forget-password`;
     } else if (step === "OTPSent") {
       url = `${baseURL}/user/verify-otp-for-security`;
-      updatedData = { otp: formData?.otp, email: user?.auth?.email };
+      updatedData = {
+        otp: formData?.otp,
+        email: type === "signin" ? formData?.email : user?.auth?.email,
+      };
 
       if (formData?.otp?.length !== 6) {
         toast.error("OTP Must Be At least 6 Digits");
@@ -46,7 +51,7 @@ const ForgottenPasswordModal = ({ isOpen, setIsOpen }) => {
     } else {
       url = `${baseURL}/user/reset-password-by-forgot-password`;
       updatedData = {
-        email: user?.auth?.email,
+        email: type === "signin" ? formData?.email : user?.auth?.email,
         newPassword: formData?.newPassword,
       };
       if (formData?.newPassword?.length < 6) {
@@ -125,7 +130,7 @@ const ForgottenPasswordModal = ({ isOpen, setIsOpen }) => {
                   name="email"
                   placeholder="Your Email"
                   label="Your Email"
-                  isEditable={false}
+                  isEditable={type === "signin" ? true : false}
                   required={false}
                 />
               </div>
