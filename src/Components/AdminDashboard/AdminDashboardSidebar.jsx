@@ -1,13 +1,13 @@
 import {
   BadgePercent,
   BellRing,
-  Captions,
+  // Captions,
   ChevronDown,
   CircleHelp,
   Grid2x2Check,
   LayoutDashboard,
   List,
-  ListTodo,
+  // ListTodo,
   MessageCircleQuestion,
   MonitorCog,
   Signpost,
@@ -45,11 +45,11 @@ const items = [
     url: "/admin-dashboard",
     icon: LayoutDashboard,
   },
-  {
-    title: "Categories",
-    url: "/admin-dashboard/categories",
-    icon: ListTodo,
-  },
+  // {
+  //   title: "Categories",
+  //   url: "/admin-dashboard/categories",
+  //   icon: ListTodo,
+  // },
 
   {
     title: "Quiz Manage",
@@ -77,11 +77,11 @@ const items = [
         url: "/admin-dashboard/quiz-manage/choose-4-to-1",
         icon: Grid2x2Check,
       },
-      {
-        title: "Subjects",
-        url: "/admin-dashboard/quiz-manage/subjects",
-        icon: Captions,
-      },
+      // {
+      //   title: "Subjects",
+      //   url: "/admin-dashboard/quiz-manage/subjects",
+      //   icon: Captions,
+      // },
     ],
   },
   {
