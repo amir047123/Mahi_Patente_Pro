@@ -14,8 +14,8 @@ export default function SuccessModal({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent
-        onInteractOutside={(e) => e.preventDefault()}
-        className=" overflow-y-auto max-h-screen  w-[400px] bg-[#ECF2F8] "
+        className=" overflow-y-auto max-h-screen  w-[400px] bg-[#ECF2F8]"
+        hideCloseButton={true}
       >
         <>
           <div className="space-y-4 text-center">
