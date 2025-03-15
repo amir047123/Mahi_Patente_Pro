@@ -57,7 +57,7 @@ export default function QuickSettingsModal({
                   </Typography.Heading5>
 
                   <Switch.Root
-                    className="relative h-[25px] w-[42px] cursor-default rounded-full bg-slate-300/70 shadow-md outline-none transition-all data-[state=checked]:bg-secondary"
+                    className="relative h-[25px] w-[42px] cursor-pointer rounded-full bg-slate-300/70 shadow-md outline-none transition-all data-[state=checked]:bg-secondary"
                     id="showAnswer"
                     checked={showAnswer}
                     onCheckedChange={setShowAnswer}
@@ -71,7 +71,7 @@ export default function QuickSettingsModal({
                   </Typography.Heading5>
 
                   <Switch.Root
-                    className="relative h-[25px] w-[42px] cursor-default rounded-full bg-slate-300/70 shadow-md outline-none transition-all data-[state=checked]:bg-secondary"
+                    className="relative h-[25px] w-[42px] cursor-pointer rounded-full bg-slate-300/70 shadow-md outline-none transition-all data-[state=checked]:bg-secondary"
                     id="hasTimer"
                     checked={hasTimer}
                     onCheckedChange={setHasTimer}
