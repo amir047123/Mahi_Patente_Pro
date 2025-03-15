@@ -97,7 +97,7 @@ const NotificationComponent = () => {
                         </p>
                         <p className="text-xs text-secondary mt-1">
                           <time>
-                            {new Date(notification?.createdAt).toLocaleString(
+                            {new Date(notification?.updatedAt).toLocaleString(
                               "en-GB",
                               {
                                 timeZone: "Europe/Rome",
@@ -109,7 +109,7 @@ const NotificationComponent = () => {
                           </time>
                           ,{" "}
                           <time>
-                            {new Date(notification?.createdAt).toLocaleString(
+                            {new Date(notification?.updatedAt).toLocaleString(
                               "en-GB",
                               {
                                 timeZone: "Europe/Rome",

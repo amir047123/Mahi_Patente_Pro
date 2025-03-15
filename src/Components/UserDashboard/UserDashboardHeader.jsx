@@ -6,7 +6,6 @@ import { ChevronDown } from "lucide-react";
 import socket from "@/socket";
 import { useEffect, useRef, useState } from "react";
 import { useAuthContext } from "@/Context/AuthContext";
-import Typography from "../Typography";
 import notificationSound from "/audio/notification.mp3";
 import NotificationComponent from "@/Shared/NotificationComponent";
 import { useNotificationsContext } from "@/Context/NotificationsContext";
@@ -183,27 +182,22 @@ const UserDashboardHeader = () => {
           </div>
 
           <div className="flex items-center md:gap-x-8 gap-x-6">
-            <div ref={notificationRef}>
-              <div
+            <div ref={notificationRef} className="relative">
+              <button
                 onClick={() => setShowNotification(!showNotification)}
-                className="flex relative cursor-default justify-center items-center flex-col xl:flex-row"
+                className="flex relative cursor-pointer justify-center items-center flex-col xl:flex-row"
               >
                 <IoNotificationsOutline className="text-2xl text-primaryText" />
                 <span className="absolute text-[11px] -top-1 -right-2.5 bg-secondary/20 text-secondary rounded-full px-1.5 font-medium">
                   {unreadCount}
                 </span>
-                <Typography.Body
-                  variant="medium"
-                  className="text-xs xl:text-sm text-sec_text"
-                ></Typography.Body>
-                {/* <AnimatePresence> */}
-                {showNotification && (
-                  <div key="notification">
-                    <NotificationComponent />
-                  </div>
-                )}
-                {/* </AnimatePresence> */}
-              </div>
+              </button>
+
+              {showNotification && (
+                <div key="notification">
+                  <NotificationComponent />
+                </div>
+              )}
             </div>
 
             <button className="flex items-center md:gap-2.5 gap-1.5">
