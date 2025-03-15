@@ -124,11 +124,11 @@ const AdminDashboardNotificationManage = () => {
               response?.data?.data?.map((n, i) => (
                 <tr key={i} className="hover:bg-gray-50 border-b">
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {n?._id}
+                    {n?._id?.slice(0, 6)}
                   </td>
 
                   <td className="py-4 px-4 text-sm text-secondaryText ">
-                    {n?.title}
+                    <span className="line-clamp-1"> {n?.title}</span>
                   </td>
                   <td className="py-4 px-4 text-sm text-green-600 capitalize">
                     {n?.target} user
@@ -173,9 +173,14 @@ const AdminDashboardNotificationManage = () => {
                     </span>
                   </td>
 
-                  <td className="py-4 px-4 text-sm text-blue-600 flex justify-center gap-2">
+                  <td className="py-4 px-4 text-sm flex justify-center gap-2">
                     <button
-                      className="flex gap-2 items-center"
+                      disabled={
+                        !n?.time || n?.time <= new Date().toISOString()
+                          ? true
+                          : false
+                      }
+                      className="flex gap-2 items-center disabled:text-blue-600/50 text-blue-600"
                       onClick={() => {
                         setItem(n);
                         setIsEditModalOpen(true);

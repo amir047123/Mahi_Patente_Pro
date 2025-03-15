@@ -68,7 +68,7 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
           ? data?.selectedUser?.fullData?.auth?.email
           : undefined,
       isAdmin: data?.priority === "admin" ? true : false,
-      time: data?.sendOption === "sendNow" ? undefined : data?.time,
+      time: data?.sendOption === "sendNow" ? null : data?.time,
 
       selectedUser: undefined,
       priority: undefined,
@@ -452,6 +452,7 @@ const AdminDashboardEditNotificationModal = ({ isOpen, setIsOpen, item }) => {
                                 className="text-sm pl-3 h-9 border-gray-200 rounded-md border px-3 py-1 cursor-pointer"
                                 placeholder="Pick a time"
                                 {...field}
+                                min={new Date().toISOString().slice(0, 16)}
                                 disabled={
                                   watch("sendOption") === "scheduleLater"
                                     ? false

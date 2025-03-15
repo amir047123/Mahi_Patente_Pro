@@ -389,6 +389,7 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
                                 className="text-sm pl-3 h-9 border-gray-200 rounded-md border px-3 py-1 cursor-pointer"
                                 placeholder="Pick a time"
                                 {...field}
+                                min={new Date().toISOString().slice(0, 16)}
                                 disabled={
                                   watch("sendOption") === "scheduleLater"
                                     ? false
