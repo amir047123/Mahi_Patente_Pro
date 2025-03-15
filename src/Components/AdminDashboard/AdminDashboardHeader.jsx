@@ -40,17 +40,22 @@ const AdminDashboardHeader = () => {
   }, [user?._id]);
 
   useEffect(() => {
-    socket.on("newNotification", (notification) => {
-      if (notification?.type === "quiz") {
-        console.log(notification);
-      }
-
+    const handleNotifications = (notification) => {
+      console.log(notification);
       notiAudio.play();
       fetchNotifications(1);
-    });
+    };
+
+    socket.on("newNotification", (notification) =>
+      handleNotifications(notification)
+    );
+    socket.on("adminNotification", (notification) =>
+      handleNotifications(notification)
+    );
 
     return () => {
-      socket.off("newNotification");
+      socket.off("newNotification", handleNotifications);
+      socket.off("adminNotification", handleNotifications);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
