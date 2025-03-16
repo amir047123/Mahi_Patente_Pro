@@ -13,6 +13,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
   const [isForgottenPassword, setIsForgottenPassword] = useState(false);
   const [oldPasswordShown, setOldPasswordShown] = useState(false);
   const [newPasswordShown, setNewPasswordShown] = useState(false);
+  const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const methods = useForm();
   const { handleSubmit, setValue } = methods;
@@ -39,7 +40,20 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
       toast.error("New Password must be at least 6 characters");
       setError("newPassword", {
         type: "manual",
-        message: "Password must be at least 6 characters",
+        message: "New Password must be at least 6 characters",
+      });
+      return;
+    }
+
+    if (data?.newPassword !== data?.confirmPassword) {
+      toast.error("New Password and Confirm Password must match");
+      setError("newPassword", {
+        type: "manual",
+        message: "New Password and Confirm Password must match",
+      });
+      setError("confirmPassword", {
+        type: "manual",
+        message: "New Password and Confirm Password must match",
       });
       return;
     }
@@ -79,8 +93,8 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
   return (
     <TabsContent value="account" className="pt-6">
       <Card className="border-0 shadow-none">
-        <CardContent className="p-0 space-y-6">
-          <div className="grid grid-cols-2">
+        <CardContent className="p-0">
+          <div className="grid grid-cols-2 px-28">
             <FormProvider {...methods}>
               <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -88,19 +102,19 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
               >
                 <div className="space-y-6">
                   <CustomInput
-                    type="email"
-                    name="auth.email"
-                    label="Email"
-                    placeholder="Your email address"
-                    isEditable={false}
+                    type="text"
+                    name="profile.username"
+                    label="Account Username"
+                    placeholder="Enter your username"
+                    isEditable={user?.profile?.username ? false : true}
                   />
 
                   <CustomInput
-                    type="text"
-                    name="profile.username"
-                    label="Username"
-                    placeholder="Enter your username"
-                    isEditable={user?.profile?.username ? false : true}
+                    type="email"
+                    name="auth.email"
+                    label="Account Email"
+                    placeholder="Your email address"
+                    isEditable={false}
                   />
 
                   <div
@@ -128,26 +142,38 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
                 onSubmit={handlePasswordSubmit(onSubmitPassword)}
                 className="pl-6"
               >
-                <div className="space-y-6">
-                  <div className="relative">
-                    <CustomInput
-                      type={oldPasswordShown ? "text" : "password"}
-                      name="oldPassword"
-                      label="Old Password"
-                      placeholder="Enter your old password"
-                      iconType="password"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-[42px] text-secondaryText"
-                      onClick={() => setOldPasswordShown((prev) => !prev)}
-                    >
-                      {oldPasswordShown ? (
-                        <Eye size={20} />
-                      ) : (
-                        <EyeOff size={20} />
-                      )}
-                    </button>
+                <div className="space-y-4">
+                  <div>
+                    <div className="relative">
+                      <CustomInput
+                        type={oldPasswordShown ? "text" : "password"}
+                        name="oldPassword"
+                        label="Old Password"
+                        placeholder="Enter your old password"
+                        iconType="password"
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-[42px] text-secondaryText"
+                        onClick={() => setOldPasswordShown((prev) => !prev)}
+                      >
+                        {oldPasswordShown ? (
+                          <Eye size={20} />
+                        ) : (
+                          <EyeOff size={20} />
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="flex justify-end mt-3">
+                      <button
+                        onClick={() => setIsForgottenPassword(true)}
+                        type="button"
+                        className="w-fit text-sm text-secondary"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
                   </div>
 
                   <div className="relative">
@@ -155,7 +181,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
                       type={newPasswordShown ? "text" : "password"}
                       name="newPassword"
                       label="New Password"
-                      placeholder="Enter your new password"
+                      placeholder="Set New Password"
                       iconType="password"
                     />
                     <button
@@ -171,10 +197,30 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
                     </button>
                   </div>
 
-                  <div className="col-span-2 flex flex-col items-center justify-between gap-4">
+                  <div className="relative">
+                    <CustomInput
+                      type={confirmPasswordShown ? "text" : "password"}
+                      name="confirmPassword"
+                      label="Confirm Password"
+                      placeholder="Confirm Password"
+                      iconType="password"
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-[42px] text-secondaryText"
+                      onClick={() => setConfirmPasswordShown((prev) => !prev)}
+                    >
+                      {confirmPasswordShown ? (
+                        <Eye size={20} />
+                      ) : (
+                        <EyeOff size={20} />
+                      )}
+                    </button>
+                  </div>
+                  {!user?.profile?.username && (
                     <button
                       type="submit"
-                      className="mt-6 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                      className="mt-8 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
                       disabled={isPasswordLoading}
                     >
                       {isPasswordLoading ? (
@@ -183,15 +229,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
                         "Update Password"
                       )}
                     </button>
-
-                    <button
-                      onClick={() => setIsForgottenPassword(true)}
-                      type="button"
-                      className="w-fit text-sm"
-                    >
-                      Forgotten Password
-                    </button>
-                  </div>
+                  )}
                 </div>
               </form>
             </FormProvider>
@@ -201,6 +239,20 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
               setIsOpen={setIsForgottenPassword}
             />
           </div>
+
+          {user?.profile?.username && (
+            <button
+              onClick={handlePasswordSubmit(onSubmitPassword)}
+              className="col-span-2 mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+              disabled={isPasswordLoading}
+            >
+              {isPasswordLoading ? (
+                <Spinner size={24} className="text-white" />
+              ) : (
+                "Save"
+              )}
+            </button>
+          )}
         </CardContent>
       </Card>
     </TabsContent>

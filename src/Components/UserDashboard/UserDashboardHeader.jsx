@@ -134,6 +134,10 @@ const UserDashboardHeader = () => {
     }
   };
 
+  useEffect(() => {
+    setProfilePic(backupUser?.profile?.profilePicture || demoUser);
+  }, [backupUser]);
+
   const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
     if (file) {

@@ -9,6 +9,7 @@ import AccountSettings from "../Pages/UserDashboard/UserSettings/AccountSettings
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { baseURL } from "@/Config";
+import SubscriptionSettings from "@/Pages/UserDashboard/UserSettings/SubscriptionSettings";
 
 const DashboardUserSettings = () => {
   const query = useQueryClient();
@@ -92,17 +93,17 @@ const DashboardUserSettings = () => {
                 value="profile"
                 className={`flex-1 py-2 font-medium text-sm ${
                   activeTab === "profile"
-                    ? "text-secondary border-b-2 border-secondary !rounded-none"
+                    ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
                     : "text-gray-600"
                 }`}
               >
-                Profile
+                Profile Settings
               </TabsTrigger>
               <TabsTrigger
                 value="address"
                 className={`flex-1 py-2 font-medium text-sm ${
                   activeTab === "address"
-                    ? "text-secondary border-b-2 border-secondary !rounded-none"
+                    ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
                     : "text-gray-600"
                 }`}
               >
@@ -112,11 +113,21 @@ const DashboardUserSettings = () => {
                 value="account"
                 className={`flex-1 py-2 font-medium text-sm ${
                   activeTab === "account"
-                    ? "text-secondary border-b-2 border-secondary !rounded-none"
+                    ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
                     : "text-gray-600"
                 }`}
               >
                 Account
+              </TabsTrigger>
+              <TabsTrigger
+                value="subscription"
+                className={`flex-1 py-2 font-medium text-sm ${
+                  activeTab === "subscription"
+                    ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
+                    : "text-gray-600"
+                }`}
+              >
+                Subscription Manage
               </TabsTrigger>
             </TabsList>
           </HorizontalScroll>
@@ -136,6 +147,7 @@ const DashboardUserSettings = () => {
             onSubmit={onSubmit}
             isLoading={isLoading}
           />
+          <SubscriptionSettings />
         </Tabs>
       </div>
     </>
