@@ -17,8 +17,8 @@ export default function PurchaseHistory() {
     currentPage: 1,
     itemPerPage: 10,
     totalPages: 1,
-    subType: "",
-    userId: user?.auth?.email || user?.profile?.phone,
+    package: "",
+    userId: user?._id || user?.auth?.email || user?.profile?.phone,
   });
 
   const {
@@ -63,14 +63,14 @@ export default function PurchaseHistory() {
               name: "date",
             },
             {
-              type: "subType",
-              name: "subType",
+              type: "package",
+              name: "package",
               options: ["Basic", "Premium", "Pro", "Business", "Enterprise"],
             },
             {
               type: "status",
               name: "status",
-              options: ["In-progress", "Completed", "Expired"],
+              options: ["Active", "Used", "Expired", "Cancelled"],
             },
           ]}
         />
@@ -101,24 +101,18 @@ export default function PurchaseHistory() {
                     <td className="p-2 py-3">{item?._id?.slice(0, 8)}</td>
                     <td className="p-2 py-3 pl-4">
                       <span className="text-nowrap block">
-                        {new Date(item?.timeInfo?.end)?.toLocaleString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}
+                        {new Date(item?.startDate)?.toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
                       </span>
                       <span className="text-nowrap">
-                        {new Date(item?.timeInfo?.end)?.toLocaleString(
-                          "en-US",
-                          {
-                            hour: "numeric",
-                            minute: "numeric",
-                            second: "numeric",
-                          }
-                        )}
+                        {new Date(item?.startDate)?.toLocaleString("en-US", {
+                          hour: "numeric",
+                          minute: "numeric",
+                          second: "numeric",
+                        })}
                       </span>
                     </td>
                     <td className="text-center p-2 py-3">

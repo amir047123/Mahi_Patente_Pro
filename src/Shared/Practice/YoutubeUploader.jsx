@@ -84,7 +84,7 @@ const YoutubeUploader = () => {
           )}
 
           {statusMessage && (
-            <p className="text-center mt-4 text-gray-700">{statusMessage}</p>
+            <p className="text-center mt-4 text-red-500">{statusMessage}</p>
           )}
         </>
       )}

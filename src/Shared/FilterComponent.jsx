@@ -9,7 +9,7 @@ import { Button } from "@/Components/ui/button";
 import { CalendarIcon, ListFilter, Search, X } from "lucide-react";
 import { Calendar } from "@/Components/ui/calendar";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { format, subMonths } from "date-fns";
 import {
   DropdownMenu,
@@ -36,8 +36,8 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
     <HorizontalScroll
       className={`flex gap-5 items-center w-full my-5 bg-white p-5 rounded-2xl border `}
     >
-      {fields.map((field) => (
-        <>
+      {fields.map((field, i) => (
+        <Fragment key={i}>
           <div key={field?.name} className="flex items-center gap-3">
             <div className="flex items-center gap-3 ">
               {/* Date Range Button */}
@@ -253,13 +253,13 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                 </DropdownMenu>
               )}
 
-              {field?.type === "subType" && (
+              {field?.type === "package" && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-2 px-4 py-2 text-gray-500  border-gray-200 rounded-full border">
                       <ListFilter size={18} />
                       <span className="text-sm font-medium whitespace-nowrap">
-                        {filters?.subType || "Sort By Subscription"}
+                        {filters?.package || "Sort By Subscription"}
                       </span>
                     </button>
                   </DropdownMenuTrigger>
@@ -267,7 +267,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
                     <DropdownMenuLabel>Sort By Subscription</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuRadioGroup
-                      value={filters?.subType}
+                      value={filters?.package}
                       onValueChange={(e) => handleInputChange(field?.name, e)}
                     >
                       <DropdownMenuRadioItem value="">
@@ -327,7 +327,7 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
           {field?.type === "button" && (
             <div className="w-fit ml-auto">{field?.compo}</div>
           )}
-        </>
+        </Fragment>
       ))}
     </HorizontalScroll>
   );

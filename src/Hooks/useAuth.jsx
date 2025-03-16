@@ -45,6 +45,7 @@ export const useAuth = () => {
   const fetchAuthenticatedUser = async () => {
     const token = localStorage.getItem("token");
     const savedYoutubeToken = localStorage.getItem("youtubeToken");
+    const youtubeRefreshToken = localStorage.getItem("youtubeRefreshToken");
 
     if (savedYoutubeToken) {
       setYoutubeToken(savedYoutubeToken);
@@ -60,6 +61,7 @@ export const useAuth = () => {
     }
 
     try {
+      if (youtubeRefreshToken) refreshYoutubeAccessToken();
       const response = await fetchuserData(token);
       setUser(response.data?.data?.user);
       setBackupUser(response.data?.data?.user);
@@ -173,6 +175,7 @@ export const useAuth = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("popupShown");
       localStorage.removeItem("youtubeToken");
+      localStorage.removeItem("youtubeRefreshToken");
       navigate("/", { replace: true });
     } catch (err) {
       console.error("Logout error:", err);
@@ -189,20 +192,63 @@ export const useAuth = () => {
 
   const ytLogin = useGoogleLogin({
     onSuccess: (response) => {
-      setYoutubeToken(response.access_token);
-      localStorage.setItem("youtubeToken", response.access_token);
+      exchangeCodeForToken(response.code);
     },
     onError: (error) => {
       toast.error("Authentication failed");
       console.error(error);
     },
     scope: "https://www.googleapis.com/auth/youtube.upload",
+    flow: "auth-code",
+    access_type: "offline",
+    prompt: "consent",
   });
 
   const ytLogout = () => {
     googleLogout();
     setYoutubeToken(null);
     localStorage.removeItem("youtubeToken");
+    localStorage.removeItem("youtubeRefreshToken");
+  };
+
+  const refreshYoutubeAccessToken = async () => {
+    const refreshToken = localStorage.getItem("youtubeRefreshToken");
+    if (!refreshToken) return;
+
+    try {
+      const response = await axios.post("https://oauth2.googleapis.com/token", {
+        client_id: import.meta.env.VITE_YOUTUBE_CLIENT_ID,
+        client_secret: import.meta.env.VITE_YOUTUBE_CLIENT_SECRET,
+        refresh_token: refreshToken,
+        grant_type: "refresh_token",
+      });
+
+      const newAccessToken = response?.data?.access_token;
+      setYoutubeToken(newAccessToken);
+      localStorage.setItem("youtubeToken", response?.data?.access_token);
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+    }
+  };
+
+  const exchangeCodeForToken = async (code) => {
+    try {
+      const res = await axios.post("https://oauth2.googleapis.com/token", {
+        code,
+        client_id: import.meta.env.VITE_YOUTUBE_CLIENT_ID,
+        client_secret: import.meta.env.VITE_YOUTUBE_CLIENT_SECRET,
+        redirect_uri: "http://localhost:5173",
+        grant_type: "authorization_code",
+      });
+
+      setYoutubeToken(res.data.access_token);
+      localStorage.setItem("youtubeToken", res.data.access_token);
+      localStorage.setItem("youtubeRefreshToken", res.data.refresh_token);
+
+      return res.data;
+    } catch (error) {
+      toast.error("Token exchange failed:", error.response?.data || error);
+    }
   };
 
   return {
@@ -224,5 +270,6 @@ export const useAuth = () => {
     setYoutubeToken,
     ytLogin,
     ytLogout,
+    refreshYoutubeAccessToken,
   };
 };
