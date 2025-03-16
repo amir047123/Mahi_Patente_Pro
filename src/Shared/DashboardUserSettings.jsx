@@ -16,6 +16,7 @@ const DashboardUserSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { backupUser, setBackupUser } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuthContext();
 
   const onSubmit = async (data) => {
     try {
@@ -119,16 +120,18 @@ const DashboardUserSettings = () => {
               >
                 Account
               </TabsTrigger>
-              <TabsTrigger
-                value="subscription"
-                className={`flex-1 py-2 font-medium text-sm ${
-                  activeTab === "subscription"
-                    ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
-                    : "text-gray-600"
-                }`}
-              >
-                Subscription Manage
-              </TabsTrigger>
+              {user?.profile?.role !== "admin" && (
+                <TabsTrigger
+                  value="subscription"
+                  className={`flex-1 py-2 font-medium text-sm ${
+                    activeTab === "subscription"
+                      ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
+                      : "text-gray-600"
+                  }`}
+                >
+                  Subscription Manage
+                </TabsTrigger>
+              )}
             </TabsList>
           </HorizontalScroll>
 

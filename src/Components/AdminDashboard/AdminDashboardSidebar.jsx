@@ -89,20 +89,20 @@ const items = [
     url: "/admin-dashboard/users-manage",
     icon: UserCog,
   },
+  // {
+  //   title: "Quiz Configuration",
+  //   url: "/admin-dashboard/quiz-configuration",
+  //   icon: MonitorCog,
+  // },
   {
-    title: "Quiz Configuration",
-    url: "/admin-dashboard/quiz-configuration",
-    icon: MonitorCog,
+    title: "Subscription Manage",
+    url: "/admin-dashboard/subscription-manage",
+    icon: BadgePercent,
   },
   {
     title: "Notification Manage",
     url: "/admin-dashboard/notification-manage",
     icon: BellRing,
-  },
-  {
-    title: "Subscription Manage",
-    url: "/admin-dashboard/subscription-manage",
-    icon: BadgePercent,
   },
 ];
 
