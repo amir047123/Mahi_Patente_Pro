@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import fetchuserData from "./globalUserDataFetching";
 import { baseURL } from "@/Config";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -43,11 +44,17 @@ export const useAuth = () => {
 
   const fetchAuthenticatedUser = async () => {
     const token = localStorage.getItem("token");
+    const savedYoutubeToken = localStorage.getItem("youtubeToken");
+
+    if (savedYoutubeToken) {
+      setYoutubeToken(savedYoutubeToken);
+    }
 
     if (!token) {
       setLoading(false);
       setUser(null);
       setBackupUser(null);
+      setYoutubeToken(null);
 
       return null;
     }
@@ -109,6 +116,7 @@ export const useAuth = () => {
       localStorage.setItem("token", response?.data?.data?.token);
       setUser(response?.data?.data?.user);
       setBackupUser(response?.data?.data?.user);
+      setYoutubeToken(null);
       toast.success("Login successful!");
       // fetchGlobalContents();
     } catch (err) {
@@ -130,6 +138,7 @@ export const useAuth = () => {
       localStorage.setItem("token", response?.data?.data?.token);
       setUser(response?.data?.data?.user);
       setBackupUser(response?.data?.data?.user);
+      setYoutubeToken(null);
       toast.success("Login successful!");
       // fetchGlobalContents();
     } catch (err) {
@@ -163,17 +172,37 @@ export const useAuth = () => {
       toast.success("Logged out successfully.");
       localStorage.removeItem("token");
       localStorage.removeItem("popupShown");
+      localStorage.removeItem("youtubeToken");
       navigate("/", { replace: true });
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
       setUser(null);
       setBackupUser(null);
+      setYoutubeToken(null);
       setLoading(false);
       setError(null);
       setOtpSent(false);
       localStorage.removeItem("token");
     }
+  };
+
+  const ytLogin = useGoogleLogin({
+    onSuccess: (response) => {
+      setYoutubeToken(response.access_token);
+      localStorage.setItem("youtubeToken", response.access_token);
+    },
+    onError: (error) => {
+      toast.error("Authentication failed");
+      console.error(error);
+    },
+    scope: "https://www.googleapis.com/auth/youtube.upload",
+  });
+
+  const ytLogout = () => {
+    googleLogout();
+    setYoutubeToken(null);
+    localStorage.removeItem("youtubeToken");
   };
 
   return {
@@ -193,5 +222,7 @@ export const useAuth = () => {
     setBackupUser,
     youtubeToken,
     setYoutubeToken,
+    ytLogin,
+    ytLogout,
   };
 };

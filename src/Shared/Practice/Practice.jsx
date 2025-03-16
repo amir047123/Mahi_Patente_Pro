@@ -1,12 +1,12 @@
 import CRUDOperations from "./CRUDOperations";
-import LoginToGoogle from "./LoginToGoogle";
 import ModalPractice from "./ModalPractice";
+import YoutubeUploader from "./YoutubeUploader";
 
 export default function Practice() {
   return (
     <div>
       <ModalPractice />
-      <LoginToGoogle />
+      <YoutubeUploader />
       <CRUDOperations />
     </div>
   );

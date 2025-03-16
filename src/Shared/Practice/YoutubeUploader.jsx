@@ -1,97 +1,36 @@
-import { useState } from "react";
-import axios from "axios";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { useAuthContext } from "@/Context/AuthContext";
+import useVideoUploader from "@/Hooks/useVideoUploader";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
-const YoutubeUploader = ({ setVideoId, onError }) => {
-  const { youtubeToken, setYoutubeToken } = useAuthContext();
+const YoutubeUploader = () => {
+  const { youtubeToken, ytLogin, ytLogout } = useAuthContext();
+  const { uploadVideo, uploadProgress, statusMessage } = useVideoUploader();
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [uploadedVideoId, setUploadedVideoId] = useState(null);
 
-  // Google Login
-  const login = useGoogleLogin({
-    onSuccess: (response) => {
-      setYoutubeToken(response.access_token);
-    },
-    onError: () => {
-      setStatusMessage("Authentication failed");
-    },
-    scope: "https://www.googleapis.com/auth/youtube.upload",
-  });
-
-  // Logout
-  const logout = () => {
-    googleLogout();
-    setYoutubeToken(null);
-  };
-
-  // Handle File Selection
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    setUploadProgress(0);
-    setStatusMessage("");
   };
 
-  // Upload Video to YouTube
-  const uploadVideo = async () => {
-    if (!file || !youtubeToken) {
-      setStatusMessage("Please select a file and login first.");
+  const handleUpload = async () => {
+    if (!file) {
+      toast.error("Please select a file first.");
       return;
     }
 
-    setStatusMessage("Uploading...");
-    setUploadProgress(0);
-
-    const metadata = {
-      snippet: { title, description },
-      status: { privacyStatus: "unlisted" },
-    };
-
-    const formData = new FormData();
-    formData.append(
-      "snippet",
-      new Blob([JSON.stringify(metadata)], { type: "application/json" })
-    );
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post(
-        "https://www.googleapis.com/upload/youtube/v3/videos?part=snippet,status",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${youtubeToken}` },
-          onUploadProgress: (event) => {
-            if (event.total) {
-              const percent = Math.round((event.loaded / event.total) * 100);
-              setUploadProgress(percent);
-            }
-          },
-        }
-      );
-
-      if (response.data.id) {
-        setStatusMessage("Upload successful!");
-        setUploadProgress(100);
-        setVideoId && setVideoId(response.data.id);
-      } else {
-        setStatusMessage(response.data.error?.message || "Upload failed");
-        onError && onError(response.data.error?.message);
-      }
-    } catch (error) {
-      setStatusMessage("Error uploading video");
-      onError && onError(error?.message || "Upload failed");
-    }
+    await uploadVideo(file, title, description, setUploadedVideoId);
   };
 
+  console.log(uploadedVideoId);
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg my-10">
       {!youtubeToken ? (
         <button
           className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
-          onClick={login}
+          onClick={ytLogin}
         >
           Login with Google
         </button>
@@ -99,17 +38,11 @@ const YoutubeUploader = ({ setVideoId, onError }) => {
         <>
           <button
             className="w-full bg-gray-500 text-white py-2 px-4 rounded-lg mb-4 hover:bg-gray-600 transition"
-            onClick={logout}
+            onClick={ytLogout}
           >
             Logout
           </button>
 
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleFileChange}
-            className="w-full border rounded-lg p-2 mb-4"
-          />
           <input
             type="text"
             placeholder="Title"
@@ -124,9 +57,16 @@ const YoutubeUploader = ({ setVideoId, onError }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border rounded-lg p-2 mb-4"
           />
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileChange}
+            className="w-full border rounded-lg p-2 mb-4"
+            placeholder="Upload Video"
+          />
           <button
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-            onClick={uploadVideo}
+            onClick={handleUpload}
           >
             Upload Video
           </button>
