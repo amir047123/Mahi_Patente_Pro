@@ -13,6 +13,7 @@ export const useAuth = () => {
   const [otpSent, setOtpSent] = useState(false);
   const navigate = useNavigate();
   const { setGlobalContents } = useState();
+  const [youtubeToken, setYoutubeToken] = useState(null);
 
   useEffect(() => {
     fetchAuthenticatedUser();
@@ -190,5 +191,7 @@ export const useAuth = () => {
     createUser,
     backupUser,
     setBackupUser,
+    youtubeToken,
+    setYoutubeToken,
   };
 };
