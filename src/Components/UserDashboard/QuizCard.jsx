@@ -16,7 +16,7 @@ import languageCodes from "@/lib/languageCodes";
 import Spinner from "../ui/Spinner";
 import QuizExplanationModal from "./Quiz/QuizExplanationModal";
 import QuizNoteModal from "./Quiz/QuizNoteModal";
-import { BookMarked, Volume2, Volume1 } from "lucide-react";
+import { BookMarked, Volume2, Volume1, Headset } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Tooltip,
@@ -235,6 +235,25 @@ const QuizCard = ({ question }) => {
               </TooltipTrigger>
               <TooltipContent side="top" align="center">
                 View/Add Notes
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    question?.note
+                      ? "hover:text-[#b1b1b1]"
+                      : "text-[#b1b1b1] hover:text-gray-600"
+                  }`}
+                >
+                  <Headset size={20} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                Support
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
