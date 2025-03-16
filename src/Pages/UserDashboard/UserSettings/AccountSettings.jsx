@@ -94,11 +94,11 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
     <TabsContent value="account" className="pt-6">
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
-          <div className="grid grid-cols-2 px-28">
+          <div className="grid grid-cols-1 min-[500px]:grid-cols-2 sm:px-4 lg:px-8 xl:px-36 gap-6 min-[500px]:gap-0">
             <FormProvider {...methods}>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="border-r-2 pr-6"
+                className="min-[500px]:border-r-2 min-[500px]:pr-6"
               >
                 <div className="space-y-6">
                   <CustomInput
@@ -140,7 +140,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
             <FormProvider {...passwordMethods}>
               <form
                 onSubmit={handlePasswordSubmit(onSubmitPassword)}
-                className="pl-6"
+                className="min-[500px]:pl-6"
               >
                 <div className="space-y-4">
                   <div>
@@ -243,7 +243,7 @@ const AccountSettings = ({ user, isLoading, onSubmit }) => {
           {user?.profile?.username && (
             <button
               onClick={handlePasswordSubmit(onSubmitPassword)}
-              className="col-span-2 mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+              className="mt-8 sm:mt-16 md:mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
               disabled={isPasswordLoading}
             >
               {isPasswordLoading ? (

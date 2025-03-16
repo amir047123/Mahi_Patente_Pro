@@ -88,8 +88,8 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
     <TabsContent value="profile" className="pt-6">
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
-          <div className="px-36">
-            <div className="flex items-center gap-4 justify-center">
+          <div className="sm:px-10 lg:px-20 xl:px-36">
+            <div className="flex min-[400px]:flex-row flex-col items-center gap-4 justify-center mb-6">
               <Typography.Heading5 variant="medium" className="text-secondary">
                 Profile Picture
               </Typography.Heading5>
@@ -116,7 +116,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
                         profilePic || user?.profile?.profilePicture || demoUser
                       }
                       alt={user?.profile?.name}
-                      className="w-28 h-28 rounded-full"
+                      className="min-w-28 min-h-28 w-28 h-28 rounded-full"
                     />
 
                     <div
@@ -138,42 +138,44 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
                 />
               </div>
 
-              <label
-                tabIndex={0}
-                role="button"
-                aria-label="Upload profile picture"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    document.getElementById("profilePicture")?.click();
-                  }
-                }}
-                htmlFor="profilePicture"
-                className="px-4 py-1.5 sm:py-2.5 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed rounded-full text-white font-medium flex items-center justify-center text-sm min-w-[135px] cursor-pointer"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Spinner size={24} className="text-white" />
-                ) : (
-                  "Change Picture"
-                )}
-              </label>
+              <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center gap-2 lg:gap-4">
+                <label
+                  tabIndex={0}
+                  role="button"
+                  aria-label="Upload profile picture"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      document.getElementById("profilePicture")?.click();
+                    }
+                  }}
+                  htmlFor="profilePicture"
+                  className="px-4 py-1.5 sm:py-2.5 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed rounded-full text-white font-medium flex items-center justify-center text-sm min-w-[135px] cursor-pointer"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Spinner size={24} className="text-white" />
+                  ) : (
+                    "Change Picture"
+                  )}
+                </label>
 
-              <button
-                type="button"
-                className="px-4 py-1.5 sm:py-2.5 disabled:cursor-not-allowed rounded-full text-secondary font-medium flex items-center justify-center text-sm min-w-[135px]"
-                disabled={isLoading}
-                onClick={handleRemovePicture}
-              >
-                {isLoading ? (
-                  <Spinner size={24} className="text-secondary" />
-                ) : (
-                  "Remove Picture"
-                )}
-              </button>
+                <button
+                  type="button"
+                  className="px-4 py-1.5 sm:py-2.5 disabled:cursor-not-allowed rounded-full text-secondary font-medium flex items-center justify-center text-sm min-w-[135px]"
+                  disabled={isLoading}
+                  onClick={handleRemovePicture}
+                >
+                  {isLoading ? (
+                    <Spinner size={24} className="text-secondary" />
+                  ) : (
+                    "Remove Picture"
+                  )}
+                </button>
+              </div>
             </div>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <CustomInput
                     type="text"
                     name="profile.name"
@@ -224,7 +226,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
 
           <button
             onClick={handleSubmit(onSubmit)}
-            className="mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+            className="mt-8 sm:mt-16 md:mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
             disabled={isLoading}
           >
             {isLoading ? <Spinner size={24} className="text-white" /> : "Save"}

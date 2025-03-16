@@ -24,8 +24,11 @@ const AddressSettings = ({ user, isLoading, onSubmit }) => {
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="px-28">
-              <div className="grid grid-cols-2 gap-6">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="sm:px-10 lg:px-20 xl:px-36"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <CustomSelect
                   name="address.country"
                   label="Country"
@@ -75,7 +78,7 @@ const AddressSettings = ({ user, isLoading, onSubmit }) => {
           </FormProvider>
           <button
             onClick={handleSubmit(onSubmit)}
-            className="mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+            className="mt-8 sm:mt-16 md:mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
             disabled={isLoading}
           >
             {isLoading ? <Spinner size={24} className="text-white" /> : "Save"}

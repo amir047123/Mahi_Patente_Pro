@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import RedeemCodeModal from "./RedeemCodeModal";
+import { Link } from "react-router-dom";
 
 const SubscriptionSettings = () => {
   const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false);
@@ -12,7 +13,7 @@ const SubscriptionSettings = () => {
     <TabsContent value="subscription" className="pt-6 pb-40">
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
-          <div className="grid grid-cols-2 gap-10">
+          <div className="grid sm:grid-cols-2 gap-10">
             <div>
               <div>
                 <Typography.Heading4 variant="semibold">
@@ -80,12 +81,15 @@ const SubscriptionSettings = () => {
                 </span>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-4">
+              <div className="mt-6 grid min-[400px]:grid-cols-2 gap-4">
                 <div>
                   <Typography.Base variant="regular" className="">
                     Subscription ID
                   </Typography.Base>
-                  <Typography.Heading5 variant="semibold" className="mt-1">
+                  <Typography.Heading5
+                    variant="semibold"
+                    className="mt-1 break-all"
+                  >
                     62114347517739008
                   </Typography.Heading5>
                 </div>
@@ -99,7 +103,7 @@ const SubscriptionSettings = () => {
                 </div>
               </div>
 
-              <div className="mt-20">
+              <div className="mt-6 sm:mt-20">
                 <button
                   onClick={() => setIsRedeemModalOpen(true)}
                   className="w-full bg-[#F3F4F6] px-10 py-3 rounded-full text-[#4B5563] flex items-center justify-between"
@@ -108,10 +112,13 @@ const SubscriptionSettings = () => {
                   <ChevronRight className="text-secondaryText" size={24} />
                 </button>
 
-                <button className="w-full mt-4 bg-[#F3F4F6] px-10 py-3 rounded-full text-[#4B5563] flex items-center justify-between">
+                <Link
+                  to="/user-dashboard/settings/purchase-history"
+                  className="w-full mt-4 bg-[#F3F4F6] px-10 py-3 rounded-full text-[#4B5563] flex items-center justify-between"
+                >
                   Purchase History
                   <ChevronRight className="text-secondaryText" size={24} />
-                </button>
+                </Link>
               </div>
             </div>
           </div>

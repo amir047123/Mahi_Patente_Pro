@@ -49,13 +49,13 @@ export default function RedeemCodeModal({ isOpen, setIsOpen }) {
               <Typography.Heading5 variant="medium">
                 Enter Redeem Code
               </Typography.Heading5>
-              <div className="px-20 w-full mb-6">
+              <div className="min-[400px]:px-10 md:px-20 w-full mb-2 sm:mb-6">
                 <input
                   type="text"
                   value={redeemCode}
                   onChange={(e) => setRedeemCode(e.target.value)}
                   placeholder="Enter your Redeem Code"
-                  className="w-full px-4 py-2 sm:py-3 border border-secondaryText/40 rounded-full focus:outline-none"
+                  className="w-full px-4 py-3 border border-secondaryText/40 rounded-full focus:outline-none"
                 />
               </div>
 
