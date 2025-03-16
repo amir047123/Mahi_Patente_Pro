@@ -6,15 +6,21 @@ import Spinner from "@/Components/ui/Spinner";
 import FilterComponent from "@/Shared/FilterComponent";
 import ItemPerPage from "@/Shared/ItemPerPage";
 import PaginationCompo from "@/Shared/PaginationCompo";
+import { useAuthContext } from "@/Context/AuthContext";
 
 export default function PurchaseHistory() {
-  const { useFetchEntities } = useCrudOperations("quiz-session/user-sessions");
+  const { user } = useAuthContext();
+  const { useFetchEntities } = useCrudOperations(
+    "subscription/user-subscriptions"
+  );
   const [filters, setFilters] = useState({
     currentPage: 1,
     itemPerPage: 10,
     totalPages: 1,
     subType: "",
+    userId: user?.auth?.email || user?.profile?.phone,
   });
+
   const {
     data: response,
     isSuccess,
@@ -89,10 +95,10 @@ export default function PurchaseHistory() {
                     </div>
                   </td>
                 </tr>
-              ) : response?.data?.sessions?.length > 0 ? (
-                response?.data?.sessions?.map((item, index) => (
+              ) : response?.data?.subscriptions?.length > 0 ? (
+                response?.data?.subscriptions?.map((item, index) => (
                   <tr key={index} className="text-secondaryText border-b">
-                    <td className="p-2 py-3">{item?.category}</td>
+                    <td className="p-2 py-3">{item?._id?.slice(0, 8)}</td>
                     <td className="p-2 py-3 pl-4">
                       <span className="text-nowrap block">
                         {new Date(item?.timeInfo?.end)?.toLocaleString(
@@ -115,19 +121,29 @@ export default function PurchaseHistory() {
                         )}
                       </span>
                     </td>
-                    <td className="text-center p-2 py-3">{item?.difficulty}</td>
                     <td className="text-center p-2 py-3">
-                      {item?.scoreInfo?.correctPercentage}
+                      {item?.package?.name}
                     </td>
-                    <td className="text-center p-2 py-3">
-                      {item?.scoreInfo?.correctQuizzes || 0}
+                    <td className="text-center p-2 py-3">{item?.price}</td>
+                    <td className="text-center p-2 py-3 capitalize">
+                      {item?.package?.duration === 30
+                        ? "month"
+                        : item?.package?.duration === 90
+                        ? "3 month"
+                        : item?.package?.duration === 180
+                        ? "6 month"
+                        : item?.package?.duration === 365
+                        ? "1 year"
+                        : `${item?.package?.duration || 0} days`}
                     </td>
 
                     <td
                       className={`text-center p-2 py-3 ${
-                        item?.status === "Completed"
+                        item?.status === "Active"
                           ? "text-green-500"
-                          : item?.status === "In-progress"
+                          : item?.status === "Used"
+                          ? "text-blue-500"
+                          : item?.status === "Expired"
                           ? "text-orange-500"
                           : "text-red-500"
                       }`}

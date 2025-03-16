@@ -74,7 +74,7 @@ export default function RedeemCodeModal({ isOpen, setIsOpen }) {
                 onClick={() => setIsOpen(false)}
                 className="w-full rounded-full border border-secondary bg-white px-4 py-2 sm:py-3 text-secondary"
               >
-                Cancle
+                Cancel
               </button>
             </div>
           </Dialog.Content>
