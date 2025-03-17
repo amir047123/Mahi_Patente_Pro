@@ -15,7 +15,7 @@ const UserDashboardBookmarksHistory = () => {
     itemPerPage: 10,
     totalPages: 1,
   });
-  const { useFetchEntities } = useCrudOperations("quiz-session/user-session");
+  const { useFetchEntities } = useCrudOperations("bookmark/user-bookmarks");
 
   const { data: response, error, isError, isLoading } = useFetchEntities();
 
@@ -45,18 +45,19 @@ const UserDashboardBookmarksHistory = () => {
         <div className="flex items-center justify-center mt-10">
           <Spinner size={40} />
         </div>
-      ) : response?.data?.quizzes?.length > 0 ? (
+      ) : response?.data?.bookmarks?.length > 0 ? (
         <div className="">
-          {response?.data?.quizzes?.map((question, index) => (
+          {response?.data?.bookmarks?.map((question, index) => (
             <div key={index} className="mb-4">
               <ErrorReviewQuestionsCard
-                question={question}
-                quizReviewData={response?.data?.quizzes}
+                question={question?.quiz}
+                quizReviewData={response?.data?.bookmarks}
+                forHistory={true}
               />
             </div>
           ))}
 
-          <div className="flex justify-between mt-10">
+          <div className="flex justify-between mt-5 p-4 rounded-xl mb-10 bg-white">
             <ItemPerPage
               itemPerPage={filters?.itemPerPage}
               onLimitChange={(newItemPerPage) =>

@@ -24,7 +24,11 @@ import toast from "react-hot-toast";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useQueryClient } from "@tanstack/react-query";
 
-const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
+const ErrorReviewQuestionsCard = ({
+  question,
+  quizReviewData,
+  forHistory = false,
+}) => {
   const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
@@ -38,7 +42,13 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
       {
         onSuccess: (data) => {
           query.invalidateQueries({
+            queryKey: ["quiz"],
+          });
+          query.invalidateQueries({
             queryKey: ["quiz-session/user-session"],
+          });
+          query.invalidateQueries({
+            queryKey: ["bookmark/user-bookmarks"],
           });
           toast.success(data?.message);
         },
@@ -117,7 +127,7 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
                 <button
                   onClick={addOrRemoveBookmark}
                   className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
-                    question?.isBookmarked
+                    question?.isBookmarked || forHistory
                       ? "hover:text-[#b1b1b1]"
                       : "text-[#b1b1b1] hover:text-gray-600"
                   }`}
@@ -161,9 +171,13 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
               className="text-secondaryText !text-xs sm:!text-sm"
             >
               Question No.{" "}
-              {quizReviewData?.findIndex(
-                (item) => item?._id === question?._id
-              ) + 1}
+              {forHistory
+                ? quizReviewData?.findIndex(
+                    (item) => item?.quiz?._id === question?._id
+                  ) + 1
+                : quizReviewData?.findIndex(
+                    (item) => item?._id === question?._id
+                  ) + 1}
             </Typography.Base>
             <Typography.Heading5
               variant="medium"
@@ -180,25 +194,29 @@ const ErrorReviewQuestionsCard = ({ question, quizReviewData }) => {
           </div>
 
           <div className="flex items-center justify-between gap-2 mt-auto">
-            <div className="flex items-center gap-2">
-              {question?.isCorrect === false && question?.selectedAnswer ? (
-                <ThumbsDown size={20} className="text-secondary" />
-              ) : question?.isCorrect === true && question?.selectedAnswer ? (
-                <ThumbsUp size={20} className="text-green-500" />
-              ) : (
-                <X size={20} className="text-primaryText" />
-              )}
-              <Typography.Base
-                variant="medium"
-                className="text-secondaryText text-xs sm:text-base"
-              >
-                {question?.selectedAnswer === "1"
-                  ? "You Answered FALSE"
-                  : question?.selectedAnswer === "0"
-                  ? "You Answered TRUE"
-                  : "You didn’t answer"}
-              </Typography.Base>
-            </div>
+            {forHistory ? (
+              "Chapter and Sbubject Data"
+            ) : (
+              <div className="flex items-center gap-2">
+                {question?.isCorrect === false && question?.selectedAnswer ? (
+                  <ThumbsDown size={20} className="text-secondary" />
+                ) : question?.isCorrect === true && question?.selectedAnswer ? (
+                  <ThumbsUp size={20} className="text-green-500" />
+                ) : (
+                  <X size={20} className="text-primaryText" />
+                )}
+                <Typography.Base
+                  variant="medium"
+                  className="text-secondaryText text-xs sm:text-base"
+                >
+                  {question?.selectedAnswer === "1"
+                    ? "You Answered FALSE"
+                    : question?.selectedAnswer === "0"
+                    ? "You Answered TRUE"
+                    : "You didn’t answer"}
+                </Typography.Base>
+              </div>
+            )}
 
             <span
               className={`${

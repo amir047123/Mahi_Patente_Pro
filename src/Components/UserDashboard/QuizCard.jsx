@@ -63,6 +63,12 @@ const QuizCard = ({ question }) => {
           query.invalidateQueries({
             queryKey: ["quiz"],
           });
+          query.invalidateQueries({
+            queryKey: ["quiz-session/user-session"],
+          });
+          query.invalidateQueries({
+            queryKey: ["bookmark/user-bookmarks"],
+          });
           toast.success(data?.message);
         },
         onError: (error) => {
