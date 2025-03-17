@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { CircleX, Paperclip } from "lucide-react";
+import { CircleX, FileVideo, Paperclip } from "lucide-react";
 import ErrorMessage from "./ErrorMessage";
 import useVideoUploader from "@/Hooks/useVideoUploader";
 import { useAuthContext } from "@/Context/AuthContext";
@@ -197,6 +197,7 @@ const CustomVideoUploader = ({
               </div>
               {selectedFile && (
                 <div className="w-14 relative">
+                  <FileVideo size={32} className="text-gray-500" />
                   <button
                     type="button"
                     onClick={handleRemoveFile}
