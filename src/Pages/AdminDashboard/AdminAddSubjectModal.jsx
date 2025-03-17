@@ -13,6 +13,7 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
+import CustomVideoUploader from "@/Shared/Form/CustomVideoUploader";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -50,7 +51,7 @@ const AdminAddSubjectModal = ({ children }) => {
   }
 
   const methods = useForm();
-  const { handleSubmit, reset, setValue } = methods;
+  const { handleSubmit, reset, setValue, watch } = methods;
 
   const { createEntity } = useCrudOperations("subject/create");
 
@@ -86,7 +87,10 @@ const AdminAddSubjectModal = ({ children }) => {
     <Dialog className="">
       <DialogTrigger>{children}</DialogTrigger>
 
-      <DialogContent className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] ">
+      <DialogContent
+        onInteractOutside={(e) => e.preventDefault()}
+        className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] "
+      >
         <DialogHeader>
           <DialogClose asChild>
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
@@ -157,6 +161,16 @@ const AdminAddSubjectModal = ({ children }) => {
                   </Typography.Body>
                 </div>
 
+                <CustomVideoUploader
+                  name="video"
+                  label="Subject Video"
+                  placeholder="Upload Subject video"
+                  title={watch("name")}
+                  description={watch("description")}
+                />
+              </div>
+
+              <div className="sm:col-span-2">
                 <CustomInput
                   type="textarea"
                   rows={3}

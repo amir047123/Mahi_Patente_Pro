@@ -9,6 +9,7 @@ const useVideoUploader = () => {
   const { youtubeToken } = useAuthContext();
   const [uploadProgress, setUploadProgress] = useState(0);
   const [statusMessage, setStatusMessage] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   const uploadVideo = async (
     file,
@@ -21,6 +22,7 @@ const useVideoUploader = () => {
       return;
     }
 
+    setIsUploading(true);
     setStatusMessage("Initializing upload...");
     setUploadProgress(0);
 
@@ -56,6 +58,8 @@ const useVideoUploader = () => {
       const errorMessage = error?.response?.data?.error?.message;
       toast.error(errorMessage || "Error initializing upload:");
       setStatusMessage(errorMessage || "Error initializing upload");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -77,6 +81,7 @@ const useVideoUploader = () => {
                 ((offset + event.loaded) / file.size) * 100
               );
               setUploadProgress(percent);
+              setStatusMessage(`${percent}% uploaded`);
             }
           },
           validateStatus: (status) =>
@@ -84,7 +89,7 @@ const useVideoUploader = () => {
         });
 
         if (res?.status === 200 || res?.status === 201) {
-          setStatusMessage("Upload successful!");
+          setStatusMessage(`Upload successful : ${file?.name}`);
           setUploadProgress(100);
           setUploadedVideoId && setUploadedVideoId(res?.data?.id);
           return;
@@ -105,7 +110,13 @@ const useVideoUploader = () => {
     }
   };
 
-  return { uploadVideo, uploadProgress, statusMessage };
+  return {
+    uploadVideo,
+    uploadProgress,
+    statusMessage,
+    isUploading,
+    setIsUploading,
+  };
 };
 
 export default useVideoUploader;
