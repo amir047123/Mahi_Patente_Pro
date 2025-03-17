@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
+import notUploaded from "@/assets/UserDashboard/no-prev.jpg";
 
 const UserDashboardSubjectDetails = () => {
   const query = useQueryClient();
@@ -110,7 +111,7 @@ const UserDashboardSubjectDetails = () => {
         <>
           {response?.data?.subject && (
             <div className="py-5 border-b mb-5 flex flex-col sm:flex-row gap-4">
-              <div className="sm:w-2/3">
+              <div className="w-full sm:w-2/3">
                 <div className="gap-4 flex items-center">
                   <img
                     className="h-[100px] object-cover rounded-xl"
@@ -166,22 +167,30 @@ const UserDashboardSubjectDetails = () => {
                 </div>
               </div>
 
-              <div className="sm:w:1/3 max-h-40 flex items-center justify-center mt-6 sm:mt-0 sm:justify-end">
-                {!showPlayer ? (
-                  <img
-                    src={`https://img.youtube.com/vi/gjrcyKBd6hA/hqdefault.jpg`}
-                    alt="Video Thumbnail"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setShowPlayer(true)}
-                    className="h-full rounded-lg"
-                  />
+              <div className="w-full sm:w:1/3 max-h-40 flex items-center justify-center mt-6 sm:mt-0 sm:justify-end overflow-hidden">
+                {response?.data?.subject?.videoId ? (
+                  !showPlayer ? (
+                    <img
+                      src={`https://img.youtube.com/vi/${response?.data?.subject?.videoId}/hqdefault.jpg`}
+                      alt="Video Thumbnail"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setShowPlayer(true)}
+                      className="sm:h-full rounded-lg object-scale-down"
+                    />
+                  ) : (
+                    <iframe
+                      className="h-full rounded-lg"
+                      title="video"
+                      src={`https://www.youtube.com/embed/${response?.data?.subject?.videoId}`}
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  )
                 ) : (
-                  <iframe
-                    className="h-full rounded-lg"
-                    title="video"
-                    src={`https://www.youtube.com/embed/gjrcyKBd6hA`}
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                    allowFullScreen
+                  <img
+                    src={notUploaded}
+                    alt="not uploaded"
+                    className="sm:h-full rounded-lg"
                   />
                 )}
               </div>

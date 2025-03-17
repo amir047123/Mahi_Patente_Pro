@@ -40,8 +40,7 @@ const AdminDashboardHeader = () => {
   }, [user?._id]);
 
   useEffect(() => {
-    const handleNotifications = (notification) => {
-      console.log(notification);
+    const handleNotifications = () => {
       notiAudio.play();
       fetchNotifications(1);
     };

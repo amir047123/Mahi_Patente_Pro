@@ -162,7 +162,7 @@ const AdminAddSubjectModal = ({ children }) => {
                 </div>
 
                 <CustomVideoUploader
-                  name="video"
+                  name="videoId"
                   label="Subject Video"
                   placeholder="Upload Subject video"
                   title={watch("name")}

@@ -46,8 +46,6 @@ const UserDashboardBookmarksHistory = () => {
     );
   };
 
-  console.log(audioRef.current);
-
   return (
     <>
       <DashboardBreadcrumb

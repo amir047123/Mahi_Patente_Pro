@@ -60,7 +60,7 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
     setValue("status", item?.status);
     setValue("image", item?.image);
     setValue("description", item?.description);
-    setValue("video", item?.video);
+    setValue("videoId", item?.videoId);
   }, [item, setValue]);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -122,12 +122,12 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
                 </div>
 
                 <CustomVideoUploader
-                  name="video"
+                  name="videoId"
                   label="Subject Video"
                   placeholder="Upload Subject video"
                   title={watch("name")}
                   description={watch("description")}
-                  value={item?.video}
+                  value={item?.videoId}
                 />
               </div>
               <div className="sm:col-span-2">
