@@ -2,6 +2,7 @@ import Typography from "@/Components/Typography";
 import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
+import CustomAudioUploader from "@/Shared/Form/CustomAudioUploader";
 import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
@@ -155,8 +156,15 @@ const AdminDashboardAddQuizQuestions = () => {
             quizType: "true_false",
             status: item?.status,
           },
+          media: {
+            image: item?.image,
+            sound: item?.sound,
+          },
           ...staticData,
+
           difficulty: undefined,
+          image: undefined,
+          sound: undefined,
         };
       }),
     };
@@ -422,11 +430,10 @@ const AdminDashboardAddQuizQuestions = () => {
                   </div>
 
                   <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
-                    <CustomImageUpload
-                      required={false}
-                      name={`quizs[${index}].media.image`}
-                      placeholder="Upload Image"
-                      label="Upload Image (Optional)"
+                    <CustomAudioUploader
+                      name={`quizs[${index}].sound`}
+                      placeholder="Upload Suound"
+                      label="Upload Sound"
                       index={index}
                     />
 
@@ -456,9 +463,24 @@ const AdminDashboardAddQuizQuestions = () => {
                       options={correctAnswerTrueFalseOptions}
                       index={index}
                     />
-                  </div>
 
-                  <div className="col-span-2">
+                    <div className="">
+                      <CustomImageUpload
+                        required={false}
+                        name={`quizs[${index}].image`}
+                        label="Upload Image (Optional)"
+                        placeholder="Upload Image (Optional)"
+                        index={index}
+                      />
+                      <Typography.Body
+                        variant="regular"
+                        className="text-secondary my-1 pb-2 !text-sm"
+                      >
+                        <span className="text-secondaryText">Note</span>: Please
+                        make sure the image dimensions are 280px in width and
+                        280px in height.
+                      </Typography.Body>
+                    </div>
                     <CustomInput
                       type="textarea"
                       name={`quizs[${index}].explanation`}

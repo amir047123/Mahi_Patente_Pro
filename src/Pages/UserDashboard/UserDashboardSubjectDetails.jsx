@@ -4,8 +4,9 @@ import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import chapterImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
+import textToSpeech from "@/lib/textToSpeech";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 
@@ -72,6 +73,28 @@ const UserDashboardSubjectDetails = () => {
           toast.error(error?.message);
         },
       }
+    );
+  };
+
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const audioRef = useRef(null);
+
+  const handleAudio = (question) => {
+    setCurrentQuestion(question);
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    audioRef.current = new Audio(question?.media?.sound);
+
+    textToSpeech(
+      question?.question,
+      question?.media?.sound,
+      audioRef,
+      isSpeaking,
+      setIsSpeaking
     );
   };
 
@@ -167,7 +190,13 @@ const UserDashboardSubjectDetails = () => {
           {response?.data?.questions?.length > 0 ? (
             <div className="space-y-4">
               {response?.data?.questions?.map((question, index) => (
-                <QuizCard key={index} question={question} />
+                <QuizCard
+                  key={index}
+                  question={question}
+                  handleAudio={handleAudio}
+                  isSpeaking={isSpeaking}
+                  currentQuestion={currentQuestion}
+                />
               ))}
             </div>
           ) : (

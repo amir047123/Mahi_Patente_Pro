@@ -2,7 +2,6 @@ import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
 import { MdGTranslate, MdOutlineBook } from "react-icons/md";
 import { LuMessageCircleMore } from "react-icons/lu";
-import textToSpeech from "@/lib/textToSpeech";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
@@ -25,13 +24,13 @@ import {
   TooltipTrigger,
 } from "@/Components/ui/tooltip";
 
-const QuizCard = ({ question }) => {
+const QuizCard = ({ question, handleAudio, isSpeaking, currentQuestion }) => {
   const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [translatedText, setTranslatedText] = useState();
   const [translatedLang, setTranslatedLang] = useState("en");
+
   const { createEntity: translate } = useCrudOperations("translate");
 
   const translateText = () => {
@@ -164,14 +163,18 @@ const QuizCard = ({ question }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() =>
-                    textToSpeech(question?.question, setIsSpeaking)
-                  }
+                  onClick={() => handleAudio(question)}
                   className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
-                    isSpeaking ? "text-secondary border-secondary" : ""
+                    isSpeaking && currentQuestion?._id === question?._id
+                      ? "text-secondary border-secondary"
+                      : ""
                   }`}
                 >
-                  {isSpeaking ? <Volume2 size={18} /> : <Volume1 size={18} />}
+                  {isSpeaking && currentQuestion?._id === question?._id ? (
+                    <Volume2 size={18} />
+                  ) : (
+                    <Volume1 size={18} />
+                  )}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" align="center">

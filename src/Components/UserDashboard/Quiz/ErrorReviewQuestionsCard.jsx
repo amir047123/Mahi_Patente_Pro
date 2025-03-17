@@ -1,6 +1,5 @@
 import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
-import textToSpeech from "@/lib/textToSpeech";
 import {
   BookMarked,
   ThumbsDown,
@@ -28,11 +27,13 @@ const ErrorReviewQuestionsCard = ({
   question,
   quizReviewData,
   forHistory = false,
+  handleAudio,
+  isSpeaking,
+  currentQuestion,
 }) => {
   const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const { updateEntity } = useCrudOperations("bookmark");
 
@@ -80,14 +81,18 @@ const ErrorReviewQuestionsCard = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() =>
-                    textToSpeech(question?.question, setIsSpeaking)
-                  }
+                  onClick={() => handleAudio(question)}
                   className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
-                    isSpeaking ? "text-secondary border-secondary" : ""
+                    isSpeaking && currentQuestion?._id === question?._id
+                      ? "text-secondary border-secondary"
+                      : ""
                   }`}
                 >
-                  {isSpeaking ? <Volume2 size={18} /> : <Volume1 size={18} />}
+                  {isSpeaking && currentQuestion?._id === question?._id ? (
+                    <Volume2 size={18} />
+                  ) : (
+                    <Volume1 size={18} />
+                  )}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" align="center">
