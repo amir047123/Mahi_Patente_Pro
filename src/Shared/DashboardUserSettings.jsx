@@ -14,9 +14,8 @@ import SubscriptionSettings from "@/Pages/UserDashboard/UserSettings/Subscriptio
 const DashboardUserSettings = () => {
   const query = useQueryClient();
   const [activeTab, setActiveTab] = useState("profile");
-  const { backupUser, setBackupUser } = useAuthContext();
+  const { backupUser, setBackupUser, user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuthContext();
 
   const onSubmit = async (data) => {
     try {

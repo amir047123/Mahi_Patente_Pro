@@ -169,14 +169,18 @@ const CustomInput = ({
             readOnly={!isEditable}
             className={`appearance-none
             ${
-              isEditable
+              isEditable || iconType === "activationCode"
                 ? "border bg-white focus:outline-none focus:shadow-outline"
                 : "bg-gray-100 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
             } ${
               errorMessage
                 ? "border-red-500"
                 : `${
-                    className ? className : isEditable ? "border-slate-300" : ""
+                    className
+                      ? className
+                      : isEditable || iconType === "activationCode"
+                      ? "border-slate-300"
+                      : ""
                   }`
             } ${
               type === "number" &&

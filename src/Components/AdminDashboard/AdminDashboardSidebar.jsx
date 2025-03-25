@@ -5,6 +5,7 @@ import {
   ChevronDown,
   CircleHelp,
   Grid2x2Check,
+  Keyboard,
   LayoutDashboard,
   List,
   // ListTodo,
@@ -98,6 +99,11 @@ const items = [
     title: "Subscription Manage",
     url: "/admin-dashboard/subscription-manage",
     icon: BadgePercent,
+  },
+  {
+    title: "Activation Manage",
+    url: "/admin-dashboard/activation-manage",
+    icon: Keyboard,
   },
   {
     title: "Notification Manage",

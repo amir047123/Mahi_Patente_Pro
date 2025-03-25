@@ -200,7 +200,7 @@ const ErrorReviewQuestionsCard = ({
 
           <div className="flex items-center justify-between gap-2 mt-auto">
             {forHistory ? (
-              "Chapter and Sbubject Data"
+              "Chapter and Subject Data"
             ) : (
               <div className="flex items-center gap-2">
                 {question?.isCorrect === false && question?.selectedAnswer ? (

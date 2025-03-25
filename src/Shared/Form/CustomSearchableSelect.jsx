@@ -20,6 +20,7 @@ export default function CustomSearchableSelect({
   name,
   menuHeight = null,
   hasLogo = true,
+  isHidden = false,
 }) {
   const {
     formState: { errors },
@@ -82,10 +83,14 @@ export default function CustomSearchableSelect({
 
   return (
     <>
-      <div className={`min-w-[200px] ${!isEditable && "pointer-events-none"}`}>
+      <div
+        className={`min-w-[200px] ${isHidden ? "hidden" : ""} ${
+          !isEditable && "pointer-events-none"
+        }`}
+      >
         {label && labelShown && (
           <label
-            className="block text-primary_text text-base font-semibold mb-2"
+            className="block text-primary_text text-base mb-2"
             htmlFor={name}
           >
             {label} {required && <span className="text-red-500">*</span>}

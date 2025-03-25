@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
 import FilterComponent from "@/Shared/FilterComponent";
-import AdminDashboardCreateSubscriptionModal from "./AdminDashboardCreateSubscriptionModal";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
-import Spinner from "../ui/Spinner";
-import AdminDashboardEditSubscriptionModal from "./AdminDashboardEditSubscriptionModal";
+import Spinner from "../../ui/Spinner";
+import AdminDashboardEditSubscriptionModal from "../AdminDashboardEditSubscriptionModal";
+import AdminDashboardCreateActivationModal from "./AdminDashboardCreateActivationModal";
 
-const AdminDashboardSubscriptionManage = () => {
+const AdminDashboardActivationManage = () => {
   const [filters, setFilters] = useState({
     status: "",
     currentPage: 1,
@@ -48,7 +48,7 @@ const AdminDashboardSubscriptionManage = () => {
     <>
       <DashboardBreadcrumb
         role="admin"
-        items={[{ name: "Subscription Manage", path: "subscription-manage" }]}
+        items={[{ name: "Activation Manage", path: "activation-manage" }]}
       />
 
       <FilterComponent
@@ -56,11 +56,14 @@ const AdminDashboardSubscriptionManage = () => {
         setFilters={setFilters}
         fields={[
           {
+            type: "date",
+            name: "date",
+          },
+          {
             type: "status",
             name: "status",
             options: ["Active", "Inactive"],
           },
-
           {
             type: "search",
             name: "searchText",
@@ -74,7 +77,7 @@ const AdminDashboardSubscriptionManage = () => {
                 }}
               >
                 <span className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
-                  Create Subscription Plan
+                  Generate Activation Code
                 </span>
               </button>
             ),
@@ -87,19 +90,28 @@ const AdminDashboardSubscriptionManage = () => {
           <thead className="bg-[#EAF2FA] rounded-full ">
             <tr>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap  uppercase tracking-wider">
-                Plan ID
+                Date & Time
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                User Name
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                User Mobile No.
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
                 Plan Name
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Price
+                Amount
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
                 Duration
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                Features
+                Valid Until
+              </th>
+              <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
+                Activation Code
               </th>
               <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
                 Status
@@ -112,7 +124,7 @@ const AdminDashboardSubscriptionManage = () => {
           <tbody className="divide-y divide-gray-200">
             {isLoading ? (
               <tr>
-                <td colSpan={8} className="py-6 text-center">
+                <td colSpan={10} className="py-6 text-center">
                   <div className="flex items-center justify-center">
                     <Spinner size={40} />
                   </div>
@@ -122,7 +134,20 @@ const AdminDashboardSubscriptionManage = () => {
               response?.data?.data?.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50 border-b">
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {index + 1}
+                    <span className="text-nowrap block">
+                      {new Date(item?.createdAt)?.toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {item?.name || "N/A"}
+                  </td>
+
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    {item?.name || "N/A"}
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
                     {item?.name || "N/A"}
@@ -133,7 +158,7 @@ const AdminDashboardSubscriptionManage = () => {
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
                     {item?.duration === 30
-                      ? "month"
+                      ? "1 month"
                       : item?.duration === 90
                       ? "3 month"
                       : item?.duration === 180
@@ -141,6 +166,16 @@ const AdminDashboardSubscriptionManage = () => {
                       : item?.duration === 365
                       ? "1 year"
                       : `${item?.duration || 0} days`}
+                  </td>
+
+                  <td className="py-4 px-4 text-sm text-secondaryText">
+                    <span className="text-nowrap block">
+                      {new Date(item?.createdAt)?.toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
                   </td>
 
                   <td className="py-4 px-4 text-sm text-secondaryText">
@@ -171,8 +206,8 @@ const AdminDashboardSubscriptionManage = () => {
               ))
             ) : (
               <tr className="">
-                <td colSpan={8} className="py-4 text-center !text-sm">
-                  No Package Found!
+                <td colSpan={10} className="py-4 text-center !text-sm">
+                  No Activations Found!
                 </td>
               </tr>
             )}
@@ -198,7 +233,7 @@ const AdminDashboardSubscriptionManage = () => {
           }
         />
       </div>
-      <AdminDashboardCreateSubscriptionModal
+      <AdminDashboardCreateActivationModal
         isOpen={isCreateModalOpen}
         setIsOpen={setIsCreateModalOpen}
       />
@@ -212,4 +247,4 @@ const AdminDashboardSubscriptionManage = () => {
   );
 };
 
-export default AdminDashboardSubscriptionManage;
+export default AdminDashboardActivationManage;
