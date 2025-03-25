@@ -38,7 +38,7 @@ const AdminAddSubjectModal = ({ children }) => {
 
   useEffect(() => {
     if (isSuccess && response?.success) {
-      const chapters = response?.data?.map((item) => ({
+      const chapters = response?.data?.chapters?.map((item) => ({
         key: item?._id,
         label: item?.name,
       }));

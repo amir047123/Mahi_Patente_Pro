@@ -6,9 +6,14 @@ import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import RedeemCodeModal from "./RedeemCodeModal";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "@/Context/AuthContext";
 
 const SubscriptionSettings = () => {
   const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false);
+  const {
+    backupUser: { subscription },
+  } = useAuthContext();
+
   return (
     <TabsContent value="subscription" className="pt-6 pb-40">
       <Card className="border-0 shadow-none">
@@ -17,14 +22,27 @@ const SubscriptionSettings = () => {
             <div>
               <div>
                 <Typography.Heading4 variant="semibold">
-                  <span className="text-secondary">Standard Plan</span> | Mahi
-                  Patente Pro
+                  <span className="text-secondary">
+                    {subscription?.subscriptionData?.package?.name} Plan
+                  </span>{" "}
+                  | Mahi Patente Pro
                 </Typography.Heading4>
                 <Typography.Heading6
                   variant="normal"
                   className="text-secondaryText mt-1"
                 >
-                  €39.99/month | Duration: 6 Month
+                  €{subscription?.subscriptionData?.price} | Duration:{" "}
+                  {subscription?.subscriptionData?.package?.duration === 30
+                    ? "month"
+                    : subscription?.subscriptionData?.package?.duration === 90
+                    ? "3 month"
+                    : subscription?.subscriptionData?.package?.duration === 180
+                    ? "6 month"
+                    : subscription?.subscriptionData?.package?.duration === 365
+                    ? "1 year"
+                    : `${
+                        subscription?.subscriptionData?.package?.duration || 0
+                      } days`}
                 </Typography.Heading6>
               </div>
 
@@ -32,42 +50,19 @@ const SubscriptionSettings = () => {
                 <Typography.Heading6 variant="semibold">
                   What’s included
                 </Typography.Heading6>
-                <div className="flex items-center gap-4 mt-2">
-                  <FaCheckCircle size={20} className="text-secondary" />
-                  <Typography.Base
-                    variant="regular"
-                    className="text-secondaryText"
-                  >
-                    Everything in Basic
-                  </Typography.Base>
-                </div>
-                <div className="flex items-center gap-4 mt-2">
-                  <FaCheckCircle size={20} className="text-secondary" />
-                  <Typography.Base
-                    variant="regular"
-                    className="text-secondaryText"
-                  >
-                    Unlimited video lessons
-                  </Typography.Base>
-                </div>
-                <div className="flex items-center gap-4 mt-2">
-                  <FaCheckCircle size={20} className="text-secondary" />
-                  <Typography.Base
-                    variant="regular"
-                    className="text-secondaryText"
-                  >
-                    Language lessons included
-                  </Typography.Base>
-                </div>
-                <div className="flex items-center gap-4 mt-2">
-                  <FaCheckCircle size={20} className="text-secondary" />
-                  <Typography.Base
-                    variant="regular"
-                    className="text-secondaryText"
-                  >
-                    Full Mock Test
-                  </Typography.Base>
-                </div>
+                {subscription?.subscriptionData?.package?.features?.map(
+                  (feature, index) => (
+                    <div className="flex items-center gap-4 mt-2" key={index}>
+                      <FaCheckCircle size={20} className="text-secondary" />
+                      <Typography.Base
+                        variant="regular"
+                        className="text-secondaryText"
+                      >
+                        {feature}
+                      </Typography.Base>
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
@@ -77,20 +72,20 @@ const SubscriptionSettings = () => {
                   PREMIUM
                 </span>
                 <span className="px-2 py-1 bg-[#C2F3D6] text-[#1A8245] rounded-full font-medium text-xs">
-                  Active
+                  {subscription?.isActive ? "ACTIVE" : "INACTIVE"}
                 </span>
               </div>
 
               <div className="mt-6 grid min-[400px]:grid-cols-2 gap-4">
                 <div>
                   <Typography.Base variant="regular" className="">
-                    Subscription ID
+                    Current Redeem Code
                   </Typography.Base>
                   <Typography.Heading5
                     variant="semibold"
                     className="mt-1 break-all"
                   >
-                    62114347517739008
+                    {subscription?.subscriptionData?.token}
                   </Typography.Heading5>
                 </div>
                 <div>
@@ -98,7 +93,13 @@ const SubscriptionSettings = () => {
                     Expires At
                   </Typography.Base>
                   <Typography.Heading5 variant="semibold" className="mt-1">
-                    Fri, March 21, 2025
+                    {new Date(
+                      subscription?.subscriptionData?.expiresAt
+                    )?.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </Typography.Heading5>
                 </div>
               </div>

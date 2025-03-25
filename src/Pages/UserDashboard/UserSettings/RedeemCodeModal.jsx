@@ -6,18 +6,31 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Typography from "@/Components/Typography";
+import { useAuthContext } from "@/Context/AuthContext";
 
 export default function RedeemCodeModal({ isOpen, setIsOpen }) {
   const query = useQueryClient();
   const [redeemCode, setRedeemCode] = useState("");
+  const { setBackupUser } = useAuthContext();
 
-  const { createEntity } = useCrudOperations("redeemCode/create");
+  const { createEntity } = useCrudOperations("subscription/use-token");
 
   const onSubmit = async () => {
+    if (!redeemCode) {
+      toast.error("Please enter redeem code");
+      return;
+    }
+
     createEntity.mutate(
-      { redeemCode },
+      { token: redeemCode },
       {
         onSuccess: (data) => {
+          setBackupUser((prev) => {
+            return {
+              ...prev,
+              subscription: { isActive: true, subscriptionData: data?.data },
+            };
+          });
           toast.success(data?.message);
           query.invalidateQueries({
             queryKey: ["redeemCode"],

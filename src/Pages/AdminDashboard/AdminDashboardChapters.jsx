@@ -1,5 +1,5 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import AdminAddChapterModal from "./AdminAddChapterModal";
 import AdminChapterCard from "@/Components/AdminDashboard/AdminChapterCard";
@@ -9,9 +9,15 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import { useQueryClient } from "@tanstack/react-query";
 import WarningModal from "@/Shared/WarningModal";
 import FilterComponent from "@/Shared/FilterComponent";
+import PaginationCompo from "@/Shared/PaginationCompo";
+import ItemPerPage from "@/Shared/ItemPerPage";
 
 const AdminDashboardChapters = () => {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 11,
+    totalPages: 1,
+  });
   const [isWarningModalOpen, setIsWarningModalOpen] = useState("");
   const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
   const [itemIndex, setItemIndex] = useState(-1);
@@ -42,7 +48,17 @@ const AdminDashboardChapters = () => {
     error,
     isError,
     isLoading,
+    isSuccess,
   } = useFetchEntities(filters);
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      setFilters((prev) => ({
+        ...prev,
+        totalPages: response?.data?.totalPages || 1,
+      }));
+    }
+  }, [isSuccess, response]);
 
   if (isError && !isLoading) {
     toast.error(error?.message);
@@ -106,7 +122,7 @@ const AdminDashboardChapters = () => {
       />
 
       <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-3">
-        {response?.data?.map((item, index) => (
+        {response?.data?.chapters?.map((item, index) => (
           <AdminChapterCard
             key={index}
             item={item}
@@ -116,6 +132,48 @@ const AdminDashboardChapters = () => {
           />
         ))}
         <AdminAddChapterCard />
+      </div>
+
+      <div className="flex justify-between mt-5 p-4 rounded-xl mb-10 bg-white">
+        <ItemPerPage
+          itemPerPage={filters?.itemPerPage}
+          onLimitChange={(newItemPerPage) =>
+            setFilters((prev) => ({
+              ...prev,
+              itemPerPage: newItemPerPage,
+              currentPage: 1,
+            }))
+          }
+          options={[
+            {
+              value: 11,
+              label: "11",
+            },
+            {
+              value: 22,
+              label: "22",
+            },
+            {
+              value: 33,
+              label: "33",
+            },
+            {
+              value: 44,
+              label: "44",
+            },
+            {
+              value: 55,
+              label: "55",
+            },
+          ]}
+        />
+        <PaginationCompo
+          currentPage={filters?.currentPage}
+          totalPages={filters?.totalPages}
+          onPageChange={(page) =>
+            setFilters((prev) => ({ ...prev, currentPage: page }))
+          }
+        />
       </div>
     </>
   );

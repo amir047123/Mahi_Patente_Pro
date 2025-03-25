@@ -9,9 +9,10 @@ import toast from "react-hot-toast";
 import { baseURL } from "@/Config";
 import { useForm } from "react-hook-form";
 import { useAuthContext } from "@/Context/AuthContext";
-import { MdOutlineAlternateEmail } from "react-icons/md";
+import { MdOutlineAlternateEmail, MdPerson } from "react-icons/md";
 import Spinner from "../ui/Spinner";
 import ForgottenPasswordModal from "@/Pages/UserDashboard/UserSettings/ForgottenPasswordModal";
+import { Hash, Keyboard, Mail } from "lucide-react";
 
 const SignInForm = () => {
   const {
@@ -23,9 +24,11 @@ const SignInForm = () => {
     error,
     setError: setAuthError,
     loading,
+    loginWithRedeemCode,
   } = useAuthContext();
   const [isForgottenPassword, setIsForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showRedeemCode, setShowRedeemCode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +36,7 @@ const SignInForm = () => {
   const [showResendOtp, setShowResendOtp] = useState(false);
   const [apiError, setAPIError] = useState(null);
   const [otpLoading, setOtpLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("email");
 
   const methods = useForm();
 
@@ -42,11 +46,16 @@ const SignInForm = () => {
     setError,
     formState: { errors },
     setValue,
+    reset,
   } = methods;
 
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
+
+  useEffect(() => {
+    reset();
+  }, [activeTab, reset]);
 
   const onSubmit = async (data) => {
     if (otpSent) {
@@ -69,46 +78,50 @@ const SignInForm = () => {
         setIsLoading(false);
       }
     } else {
-      if (data?.password?.length < 6) {
-        setError("password", {
-          type: "manual",
-          message: "Passwords must be at least 6 characters",
-        });
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-
-        const response = await fetch(`${baseURL}/user/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: data?.email,
-            password: data?.password,
-          }),
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {
-          toast.success(responseData?.message);
-          setEmail(data?.email);
-          setPassword(data?.password);
-          setOtpSent(true);
-          setAPIError("");
-          setAuthError("");
-        } else {
-          throw new Error(responseData?.message);
+      if (activeTab === "email") {
+        if (data?.password?.length < 6) {
+          setError("password", {
+            type: "manual",
+            message: "Passwords must be at least 6 characters",
+          });
+          return;
         }
-      } catch (error) {
-        setAPIError(error?.message);
-        setAuthError(error?.message);
-        toast.error(error?.message);
-      } finally {
-        setIsLoading(false);
+
+        try {
+          setIsLoading(true);
+
+          const response = await fetch(`${baseURL}/user/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: data?.email,
+              password: data?.password,
+            }),
+          });
+
+          const responseData = await response.json();
+
+          if (response.ok) {
+            toast.success(responseData?.message);
+            setEmail(data?.email);
+            setPassword(data?.password);
+            setOtpSent(true);
+            setAPIError("");
+            setAuthError("");
+          } else {
+            throw new Error(responseData?.message);
+          }
+        } catch (error) {
+          setAPIError(error?.message);
+          setAuthError(error?.message);
+          toast.error(error?.message);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        await loginWithRedeemCode(data?.redeemCode);
       }
     }
   };
@@ -184,6 +197,10 @@ const SignInForm = () => {
     };
   }, [setOtpSent]);
 
+  const handleToggleRedeemCode = () => {
+    setShowRedeemCode((prev) => !prev);
+  };
+
   return (
     <form
       className="rounded-3xl px-8 pt-8 pb-5 secondary-border p-10 bg-white max-w-xl mx-auto border"
@@ -199,72 +216,167 @@ const SignInForm = () => {
       </div>
 
       {!otpSent ? (
-        <div className="space-y-4 mb-6 ">
-          <div>
-            <label className="text-black mb-2 block text-lg">
-              Email address
-            </label>
-            <div className="relative">
-              <input
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
-                  },
-                })}
-                className="w-full bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter your email address"
-              />
-              <MdOutlineAlternateEmail className="pointer-events-none absolute inset-y-0 start-1 top-3.5 grid w-10 place-content-center text-2xl text-gray-400" />
-            </div>
-            {showError("email")}
+        <>
+          <div className="w-full flex justify-between bg-white border-b mb-6">
+            <button
+              type="button"
+              onClick={() => setActiveTab("email")}
+              className={`flex-1 py-2 font-medium text-sm flex items-center justify-center gap-2 ${
+                activeTab === "email"
+                  ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
+                  : "text-gray-600"
+              }`}
+            >
+              <Mail className="h-5" />
+              Email
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("code")}
+              className={`flex-1 py-2 font-medium text-sm flex items-center justify-center gap-2 ${
+                activeTab === "code"
+                  ? "text-secondary border-b-2 border-secondary !rounded-none font-semibold"
+                  : "text-gray-600"
+              }`}
+            >
+              <Keyboard className="h-5" />
+              Code
+            </button>
           </div>
-          <div>
-            <label className="text-black mb-2 block text-lg"> Password </label>
-            <div className="relative">
-              <input
-                {...register("password", { required: "Password is required" })}
-                className="w-full  bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your Password"
-              />
-              <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <CiLock className="text-secondaryText/60 text-2xl" />
+
+          <div
+            className={`space-y-4 mb-6 ${
+              activeTab === "email" ? "hidden" : ""
+            }`}
+          >
+            <div>
+              <label className="text-black mb-2 block text-lg">Full Name</label>
+              <div className="relative">
+                <input
+                  {...register("name")}
+                  className="w-full bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
+                  id="name"
+                  name="name"
+                  type="name"
+                  placeholder="Enter your full name"
+                />
+                <MdPerson className="pointer-events-none absolute inset-y-0 start-1 top-3.5 grid w-10 place-content-center text-2xl text-gray-400" />
+              </div>
+              {showError("name")}
+            </div>
+            <div>
+              <label className="text-black mb-2 block text-lg">
+                Activation Code
+              </label>
+              <div className="relative">
+                <input
+                  {...register("redeemCode", {
+                    required:
+                      activeTab === "code" && "Activation Code is required",
+                  })}
+                  className="w-full  bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
+                  type={showRedeemCode ? "text" : "password"}
+                  placeholder="Enter your Activation Code"
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                  <Hash className="text-secondaryText/60 text-2xl" />
+                </div>
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                  onClick={handleToggleRedeemCode}
+                >
+                  {showRedeemCode ? (
+                    <IoEyeOffOutline className="text-secondaryText/60 text-2xl" />
+                  ) : (
+                    <IoEyeOutline className="text-secondaryText/60 text-2xl" />
+                  )}
+                </button>
+              </div>
+              {showError("redeemCode")}
+            </div>
+
+            <div className="flex justify-center items-center mb-6 text-[#666]">
+              <button type="button" className="hover:underline">
+                Forgot Code? Contact Support
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`space-y-4 mb-6 ${activeTab === "code" ? "hidden" : ""}`}
+          >
+            <div>
+              <label className="text-black mb-2 block text-lg">
+                Email address
+              </label>
+              <div className="relative">
+                <input
+                  {...register("email", {
+                    required: activeTab === "email" && "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  className="w-full bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                />
+                <MdOutlineAlternateEmail className="pointer-events-none absolute inset-y-0 start-1 top-3.5 grid w-10 place-content-center text-2xl text-gray-400" />
+              </div>
+              {showError("email")}
+            </div>
+            <div>
+              <label className="text-black mb-2 block text-lg">
+                {" "}
+                Password{" "}
+              </label>
+              <div className="relative">
+                <input
+                  {...register("password", {
+                    required: activeTab === "email" && "Password is required",
+                  })}
+                  className="w-full  bg-primary/5 outline-none border border-gray-300 px-5 py-3  sm:text-[16px] rounded-full pl-10 text-black"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your Password"
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                  <CiLock className="text-secondaryText/60 text-2xl" />
+                </div>
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                  onClick={handleTogglePassword}
+                >
+                  {showPassword ? (
+                    <IoEyeOffOutline className="text-secondaryText/60 text-2xl" />
+                  ) : (
+                    <IoEyeOutline className="text-secondaryText/60 text-2xl" />
+                  )}
+                </button>
+              </div>
+              {showError("password")}
+            </div>
+
+            {/* Remember Me & Forgot Password */}
+            <div className="flex justify-between items-center mb-6 text-[#666]">
+              <div className="flex items-center gap-2">
+                <Checkbox className=""></Checkbox>
+                <span className=""> Remember me</span>
               </div>
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                onClick={handleTogglePassword}
+                onClick={() => setIsForgottenPassword(true)}
+                className="hover:underline"
               >
-                {showPassword ? (
-                  <IoEyeOffOutline className="text-secondaryText/60 text-2xl" />
-                ) : (
-                  <IoEyeOutline className="text-secondaryText/60 text-2xl" />
-                )}
+                Forgot Password?
               </button>
             </div>
-            {showError("password")}
           </div>
-
-          {/* Remember Me & Forgot Password */}
-          <div className="flex justify-between items-center mb-6 text-[#666]">
-            <div className="flex items-center gap-2">
-              <Checkbox className=""></Checkbox>
-              <span className=""> Remember me</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsForgottenPassword(true)}
-              className="hover:underline"
-            >
-              Forgot Password?
-            </button>
-          </div>
-        </div>
+        </>
       ) : (
         <>
           <div>

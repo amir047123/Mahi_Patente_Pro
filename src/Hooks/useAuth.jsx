@@ -251,6 +251,34 @@ export const useAuth = () => {
     }
   };
 
+  const loginWithRedeemCode = async (redeemCode) => {
+    try {
+      setError(null);
+      setLoading(true);
+      const response = await axios.post(
+        `${baseURL}/user/token-login`,
+        { token: redeemCode },
+        { withCredentials: true }
+      );
+
+      localStorage.setItem("token", response?.data?.data?.token);
+
+      setUser(response?.data?.data?.user);
+      setBackupUser(response?.data?.data?.user);
+
+      toast.success("Login successful!");
+    } catch (err) {
+      setError(
+        err?.response?.data?.message || "Invalid or expired Redeem Code."
+      );
+      toast.error(
+        err?.response?.data?.message || "Invalid or expired Redeem Code."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     user,
     loading,
@@ -271,5 +299,6 @@ export const useAuth = () => {
     ytLogin,
     ytLogout,
     refreshYoutubeAccessToken,
+    loginWithRedeemCode,
   };
 };
