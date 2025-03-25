@@ -315,7 +315,7 @@ const AdminDashboardCreateActivationModal = ({ isOpen, setIsOpen }) => {
                   >
                     €{selectedPackage?.price || 0} | Duration:{" "}
                     {selectedPackage?.duration === 30
-                      ? "month"
+                      ? "1 month"
                       : selectedPackage?.duration === 90
                       ? "3 month"
                       : selectedPackage?.duration === 180

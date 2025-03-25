@@ -33,7 +33,7 @@ const SubscriptionSettings = () => {
                 >
                   €{subscription?.subscriptionData?.price} | Duration:{" "}
                   {subscription?.subscriptionData?.package?.duration === 30
-                    ? "month"
+                    ? "1 month"
                     : subscription?.subscriptionData?.package?.duration === 90
                     ? "3 month"
                     : subscription?.subscriptionData?.package?.duration === 180

@@ -121,7 +121,7 @@ export default function PurchaseHistory() {
                     <td className="text-center p-2 py-3">{item?.price}</td>
                     <td className="text-center p-2 py-3 capitalize">
                       {item?.package?.duration === 30
-                        ? "month"
+                        ? "1 month"
                         : item?.package?.duration === 90
                         ? "3 month"
                         : item?.package?.duration === 180

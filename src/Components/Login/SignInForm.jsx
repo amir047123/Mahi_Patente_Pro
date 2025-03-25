@@ -121,7 +121,9 @@ const SignInForm = () => {
           setIsLoading(false);
         }
       } else {
+        setIsLoading(true);
         await loginWithRedeemCode(data?.redeemCode);
+        setIsLoading(false);
       }
     }
   };
