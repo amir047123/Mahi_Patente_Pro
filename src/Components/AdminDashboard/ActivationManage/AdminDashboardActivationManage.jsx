@@ -1,5 +1,5 @@
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
-import { UserRoundPen } from "lucide-react";
+import { ReceiptText } from "lucide-react";
 import { useEffect, useState } from "react";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
@@ -7,8 +7,8 @@ import FilterComponent from "@/Shared/FilterComponent";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
-import AdminDashboardEditSubscriptionModal from "../AdminDashboardEditSubscriptionModal";
 import AdminDashboardCreateActivationModal from "./AdminDashboardCreateActivationModal";
+import AdminDashboardViewActivationModal from "./AdminDashboardViewActivationModal";
 
 const AdminDashboardActivationManage = () => {
   const [filters, setFilters] = useState({
@@ -18,10 +18,10 @@ const AdminDashboardActivationManage = () => {
     totalPages: 1,
   });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [item, setItem] = useState(null);
 
-  const { useFetchEntities } = useCrudOperations("package");
+  const { useFetchEntities } = useCrudOperations("subscription/all");
   const {
     data: response,
     error,
@@ -43,6 +43,20 @@ const AdminDashboardActivationManage = () => {
   if (isError && !isLoading) {
     toast.error(error?.message);
   }
+
+  const handleCopy = async (item) => {
+    const activationCode = item?.token;
+    try {
+      if (!activationCode) {
+        toast.error("Failed to copy activation code");
+        return;
+      }
+      await navigator.clipboard.writeText(activationCode);
+      toast.success(`${activationCode?.slice(0, 5)}... copied to clipboard`);
+    } catch (err) {
+      toast.error("Failed to copy activation code", err);
+    }
+  };
 
   return (
     <>
@@ -135,51 +149,57 @@ const AdminDashboardActivationManage = () => {
                 <tr key={index} className="hover:bg-gray-50 border-b">
                   <td className="py-4 px-4 text-sm text-secondaryText">
                     <span className="text-nowrap block">
-                      {new Date(item?.createdAt)?.toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {item?.startDate
+                        ? new Date(item?.startDate)?.toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : "N/A"}
                     </span>
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {item?.name || "N/A"}
+                    {item?.subscriber?.user?.profile?.name || "N/A"}
                   </td>
 
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {item?.name || "N/A"}
+                    {item?.subscriber?.user?.auth?.phone || "N/A"}
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {item?.name || "N/A"}
+                    {item?.package?.name || "N/A"}
                   </td>
 
                   <td className="py-4 px-4 text-sm text-green-600 ">
                     €{item?.price || 0}
                   </td>
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {item?.duration === 30
+                    {item?.package?.duration === 30
                       ? "1 month"
-                      : item?.duration === 90
+                      : item?.package?.duration === 90
                       ? "3 month"
-                      : item?.duration === 180
+                      : item?.package?.duration === 180
                       ? "6 month"
-                      : item?.duration === 365
+                      : item?.package?.duration === 365
                       ? "1 year"
-                      : `${item?.duration || 0} days`}
+                      : `${item?.package?.duration || 0} days`}
                   </td>
 
                   <td className="py-4 px-4 text-sm text-secondaryText">
                     <span className="text-nowrap block">
-                      {new Date(item?.createdAt)?.toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {item?.expiresAt
+                        ? new Date(item?.expiresAt)?.toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : "N/A"}
                     </span>
                   </td>
 
                   <td className="py-4 px-4 text-sm text-secondaryText">
-                    {item?.features?.join(", ") || "N/A"}
+                    <button onClick={() => handleCopy(item)}>
+                      {item?.token ? `${item?.token?.slice(0, 6)}...` : "N/A"}
+                    </button>
                   </td>
 
                   <td
@@ -196,10 +216,10 @@ const AdminDashboardActivationManage = () => {
                       className="flex gap-2 items-center"
                       onClick={() => {
                         setItem(item);
-                        setIsEditModalOpen(true);
+                        setIsViewModalOpen(true);
                       }}
                     >
-                      <UserRoundPen size={20} /> Edit
+                      <ReceiptText size={20} /> View
                     </button>
                   </td>
                 </tr>
@@ -238,9 +258,9 @@ const AdminDashboardActivationManage = () => {
         setIsOpen={setIsCreateModalOpen}
       />
 
-      <AdminDashboardEditSubscriptionModal
-        isOpen={isEditModalOpen}
-        setIsOpen={setIsEditModalOpen}
+      <AdminDashboardViewActivationModal
+        isOpen={isViewModalOpen}
+        setIsOpen={setIsViewModalOpen}
         item={item}
       />
     </>

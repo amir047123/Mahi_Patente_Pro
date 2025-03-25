@@ -65,10 +65,10 @@ const AdminDashboardCreateActivationModal = ({ isOpen, setIsOpen }) => {
       package: data?.package,
       subscriber: {
         user: selectedUser?.fullData?._id,
-        email: data?.email,
-        phone: data?.phone,
+        email: data?.email || selectedUser?.fullData?.auth?.email,
+        phone: data?.phone || selectedUser?.fullData?.auth?.phone,
       },
-      name: data?.name,
+      name: data?.name || selectedUser?.fullData?.profile?.name,
     };
 
     createEntity.mutate(updatedData, {
@@ -86,7 +86,7 @@ const AdminDashboardCreateActivationModal = ({ isOpen, setIsOpen }) => {
   };
 
   const handleCopy = async () => {
-    const activationCode = getValues("activationCode");
+    const activationCode = getValues("token");
     try {
       if (!activationCode) {
         toast.error("Failed to copy activation code");
@@ -113,10 +113,9 @@ const AdminDashboardCreateActivationModal = ({ isOpen, setIsOpen }) => {
   }, [packageValue, response]);
 
   useEffect(() => {
-    if (!isOpen) {
-      reset();
-    }
-  }, [isOpen, reset]);
+    reset();
+    setSelectedUser(null);
+  }, [isOpen, reset, activeTab]);
 
   const fetchUsers = async (pageNumber = 1) => {
     setIsUserLoading(true);
@@ -261,6 +260,7 @@ const AdminDashboardCreateActivationModal = ({ isOpen, setIsOpen }) => {
                       setCurrentPage={setCurrentPage}
                       placeholder="Select An User"
                       required={activeTab === "existing"}
+                      isEditable={generatedActivationCode ? false : true}
                     />
                   </div>
 
