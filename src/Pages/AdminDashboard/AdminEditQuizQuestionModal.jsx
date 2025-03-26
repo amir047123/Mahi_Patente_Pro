@@ -1,3 +1,4 @@
+import Typography from "@/Components/Typography";
 import {
   Dialog,
   DialogClose,
@@ -8,6 +9,7 @@ import {
 } from "@/Components/ui/dialog";
 import Spinner from "@/Components/ui/Spinner";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import CustomAudioUploader from "@/Shared/Form/CustomAudioUploader";
 import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
@@ -63,6 +65,7 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
     setValue("question", item?.question);
     setValue("questionBn", item?.questionBn);
     setValue("media.image", item?.media?.image);
+    setValue("media.sound", item?.media?.sound);
     setValue("meta.difficulty", item?.meta?.difficulty);
     setValue("meta.status", item?.meta?.status);
     setValue("correctAnswer", item?.correctAnswer);
@@ -148,12 +151,11 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
               </div>
 
               <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
-                <CustomImageUpload
-                  required={false}
-                  name={`media.image`}
-                  placeholder="Upload Image"
-                  label="Upload Image (Optional)"
-                  value={item?.media?.image}
+                <CustomAudioUploader
+                  name={`media.sound`}
+                  placeholder="Upload Suound"
+                  label="Upload Sound"
+                  value={item?.media?.sound}
                 />
 
                 <CustomSelect
@@ -163,9 +165,7 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
                   placeholder="Select Status"
                   required={false}
                 />
-              </div>
 
-              <div className="col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
                 <CustomSelect
                   name={`meta.difficulty`}
                   label="Difficulty"
@@ -179,9 +179,25 @@ const AdminEditQuizQuestionModal = ({ isOpen, setIsOpen, item }) => {
                   placeholder="Select Value"
                   options={correctAnswerTrueFalseOptions}
                 />
-              </div>
 
-              <div className="col-span-2">
+                <div className="">
+                  <CustomImageUpload
+                    required={false}
+                    name={`media.image`}
+                    placeholder="Upload Image"
+                    label="Upload Image (Optional)"
+                    value={item?.media?.image}
+                  />
+                  <Typography.Body
+                    variant="regular"
+                    className="text-secondary my-1 pb-2 !text-sm"
+                  >
+                    <span className="text-secondaryText">Note</span>: Please
+                    make sure the image dimensions are 280px in width and 280px
+                    in height.
+                  </Typography.Body>
+                </div>
+
                 <CustomInput
                   type="textarea"
                   name={`explanation`}

@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import useImageUploader from "@/Hooks/useImageUploader";
-import { CircleX, Paperclip } from "lucide-react";
+import { CircleX, FileVolume, Paperclip } from "lucide-react";
 import ErrorMessage from "./ErrorMessage";
+import useAudioUploader from "@/Hooks/useAudioUploader";
 
-const CustomImageUpload = ({
+const CustomAudioUploader = ({
   name,
   label = "",
   required = true,
@@ -16,11 +16,10 @@ const CustomImageUpload = ({
   index = -1,
   labelShown = true,
   isHidden = false,
-  previewShown = true,
 }) => {
   const [selectedFile, setSelectedFile] = useState(value || null);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const { uploading, error, uploadImage } = useImageUploader();
+  const { uploading, error, uploadAudio } = useAudioUploader();
   const {
     setValue,
     register,
@@ -74,7 +73,7 @@ const CustomImageUpload = ({
   const handleFileChangeDirectly = async (file) => {
     setUploadedFile(file);
     try {
-      const uploadedFileUrl = await uploadImage(file);
+      const uploadedFileUrl = await uploadAudio(file);
       if (uploadedFileUrl) {
         setValue(name, uploadedFileUrl, { shouldValidate: true });
         setSelectedFile(uploadedFileUrl);
@@ -172,29 +171,15 @@ const CustomImageUpload = ({
               <input
                 id={name}
                 type="file"
-                accept="image/*, application/pdf"
+                accept="audio/*"
                 className="hidden"
                 onChange={handleFileChange}
                 ref={fileInputRef}
               />
             </div>
-            {previewShown && selectedFile && (
+            {selectedFile && (
               <div className="w-14 relative">
-                {selectedFile.endsWith("pdf") ? (
-                  <embed
-                    src={selectedFile}
-                    type="application/pdf"
-                    width="40px"
-                    height="40px"
-                    className="rounded"
-                  />
-                ) : (
-                  <img
-                    src={selectedFile}
-                    alt="Uploaded Preview"
-                    className="max-h-10 max-w-10 object-cover rounded-md"
-                  />
-                )}
+                <FileVolume size={32} className="text-gray-500" />
                 <button
                   type="button"
                   onClick={handleRemoveFile}
@@ -226,4 +211,4 @@ const CustomImageUpload = ({
   );
 };
 
-export default CustomImageUpload;
+export default CustomAudioUploader;

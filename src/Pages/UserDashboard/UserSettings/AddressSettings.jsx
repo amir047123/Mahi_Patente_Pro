@@ -22,10 +22,13 @@ const AddressSettings = ({ user, isLoading, onSubmit }) => {
   return (
     <TabsContent value="address" className="pt-6">
       <Card className="border-0 shadow-none">
-        <CardContent className="p-0 space-y-6">
+        <CardContent className="p-0">
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid grid-cols-2 gap-6">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="sm:px-10 lg:px-20 xl:px-36"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <CustomSelect
                   name="address.country"
                   label="Country"
@@ -71,19 +74,15 @@ const AddressSettings = ({ user, isLoading, onSubmit }) => {
                   placeholder="Enter your street address"
                 />
               </div>
-              <button
-                type="submit"
-                className="mt-6 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Spinner size={24} className="text-white" />
-                ) : (
-                  "Save"
-                )}
-              </button>
             </form>
           </FormProvider>
+          <button
+            onClick={handleSubmit(onSubmit)}
+            className="mt-8 sm:mt-16 md:mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+            disabled={isLoading}
+          >
+            {isLoading ? <Spinner size={24} className="text-white" /> : "Save"}
+          </button>
         </CardContent>
       </Card>
     </TabsContent>

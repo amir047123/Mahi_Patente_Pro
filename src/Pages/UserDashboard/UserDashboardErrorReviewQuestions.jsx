@@ -2,9 +2,10 @@ import Typography from "@/Components/Typography";
 import Spinner from "@/Components/ui/Spinner";
 import ErrorReviewQuestionsCard from "@/Components/UserDashboard/Quiz/ErrorReviewQuestionsCard";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import textToSpeech from "@/lib/textToSpeech";
 import DashboardBreadcrumb from "@/Shared/DashboardBreadcrumb/DashboardBreadcrumb";
 import { ArrowDownNarrowWide } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 
@@ -35,6 +36,28 @@ const UserDashboardErrorReviewQuestions = () => {
       setFilteredQuizzes(response?.data?.quizzes);
     }
   }, [isFiltered, response, isSuccess]);
+
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const audioRef = useRef(null);
+
+  const handleAudio = (question) => {
+    setCurrentQuestion(question);
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    audioRef.current = new Audio(question?.media?.sound);
+
+    textToSpeech(
+      question?.question,
+      question?.media?.sound,
+      audioRef,
+      isSpeaking,
+      setIsSpeaking
+    );
+  };
 
   return (
     <>
@@ -84,6 +107,9 @@ const UserDashboardErrorReviewQuestions = () => {
               <ErrorReviewQuestionsCard
                 question={question}
                 quizReviewData={response?.data?.quizzes}
+                handleAudio={handleAudio}
+                isSpeaking={isSpeaking}
+                currentQuestion={currentQuestion}
               />
             </div>
           ))}

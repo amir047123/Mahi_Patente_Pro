@@ -1,4 +1,4 @@
-import { AtSign, PhoneCall, ShieldCheck } from "lucide-react";
+import { AtSign, ShieldCheck, Smartphone, UserRound } from "lucide-react";
 import { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
@@ -67,10 +67,12 @@ const CustomInput = ({
 
   const ChooseIcon = () => {
     switch (iconType) {
+      case "name":
+        return <UserRound className="h-5" />;
       case "email":
         return <AtSign className="h-5" />;
       case "phone":
-        return <PhoneCall className="h-5" />;
+        return <Smartphone className="h-5" />;
       case "otp":
         return <ShieldCheck className="h-5" />;
       default:
@@ -167,14 +169,18 @@ const CustomInput = ({
             readOnly={!isEditable}
             className={`appearance-none
             ${
-              isEditable
+              isEditable || iconType === "activationCode"
                 ? "border bg-white focus:outline-none focus:shadow-outline"
                 : "bg-gray-100 focus:border-none focus:ring-0 focus:outline-none pointer-events-none"
             } ${
               errorMessage
                 ? "border-red-500"
                 : `${
-                    className ? className : isEditable ? "border-slate-300" : ""
+                    className
+                      ? className
+                      : isEditable || iconType === "activationCode"
+                      ? "border-slate-300"
+                      : ""
                   }`
             } ${
               type === "number" &&
@@ -190,7 +196,7 @@ const CustomInput = ({
         )}
 
         {iconType && (
-          <div className="text-sec_text absolute bottom-3 right-3">
+          <div className="text-sec_text absolute bottom-3 right-3 text-secondaryText">
             {ChooseIcon()}
           </div>
         )}

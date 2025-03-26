@@ -5,11 +5,12 @@ import {
   ChevronDown,
   CircleHelp,
   Grid2x2Check,
+  Keyboard,
   LayoutDashboard,
   List,
   // ListTodo,
   MessageCircleQuestion,
-  MonitorCog,
+  // MonitorCog,
   Signpost,
   UserCog,
 } from "lucide-react";
@@ -89,20 +90,25 @@ const items = [
     url: "/admin-dashboard/users-manage",
     icon: UserCog,
   },
+  // {
+  //   title: "Quiz Configuration",
+  //   url: "/admin-dashboard/quiz-configuration",
+  //   icon: MonitorCog,
+  // },
   {
-    title: "Quiz Configuration",
-    url: "/admin-dashboard/quiz-configuration",
-    icon: MonitorCog,
+    title: "Subscription Manage",
+    url: "/admin-dashboard/subscription-manage",
+    icon: BadgePercent,
+  },
+  {
+    title: "Activation Manage",
+    url: "/admin-dashboard/activation-manage",
+    icon: Keyboard,
   },
   {
     title: "Notification Manage",
     url: "/admin-dashboard/notification-manage",
     icon: BellRing,
-  },
-  {
-    title: "Subscription Manage",
-    url: "/admin-dashboard/subscription-manage",
-    icon: BadgePercent,
   },
 ];
 

@@ -65,7 +65,6 @@ const AdminDashboardCreateSubscriptionModal = ({ isOpen, setIsOpen }) => {
       return toast.error("Type feature first");
     }
     setFeatures([...features, feature]);
-    console.log("hey", feature);
     setFeature("");
   };
 

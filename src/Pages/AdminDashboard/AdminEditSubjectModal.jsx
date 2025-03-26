@@ -12,6 +12,7 @@ import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import CustomImageUpload from "@/Shared/Form/CustomImageUploader";
 import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
+import CustomVideoUploader from "@/Shared/Form/CustomVideoUploader";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
@@ -22,7 +23,7 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
   const query = useQueryClient();
 
   const methods = useForm();
-  const { handleSubmit, setValue } = methods;
+  const { handleSubmit, setValue, watch } = methods;
 
   const { updateEntity } = useCrudOperations("subject");
 
@@ -59,10 +60,14 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
     setValue("status", item?.status);
     setValue("image", item?.image);
     setValue("description", item?.description);
+    setValue("videoId", item?.videoId);
   }, [item, setValue]);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] ">
+      <DialogContent
+        onInteractOutside={(e) => e.preventDefault()}
+        className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] "
+      >
         <DialogHeader>
           <DialogClose asChild>
             <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
@@ -116,6 +121,16 @@ const AdminEditSubjectModal = ({ isOpen, setIsOpen, item }) => {
                   </Typography.Body>
                 </div>
 
+                <CustomVideoUploader
+                  name="videoId"
+                  label="Subject Video"
+                  placeholder="Upload Subject video"
+                  title={watch("name")}
+                  description={watch("description")}
+                  value={item?.videoId}
+                />
+              </div>
+              <div className="sm:col-span-2">
                 <CustomInput
                   type="textarea"
                   rows={3}

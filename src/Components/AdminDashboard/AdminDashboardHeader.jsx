@@ -24,7 +24,8 @@ import { Link } from "react-router-dom";
 
 const AdminDashboardHeader = () => {
   const query = useQueryClient();
-  const { user, backupUser, setBackupUser, logout } = useAuthContext();
+  const { user, backupUser, setBackupUser, logout, refreshYoutubeAccessToken } =
+    useAuthContext();
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
   const { fetchNotifications, unreadCount } = useNotificationsContext();
@@ -39,8 +40,7 @@ const AdminDashboardHeader = () => {
   }, [user?._id]);
 
   useEffect(() => {
-    const handleNotifications = (notification) => {
-      console.log(notification);
+    const handleNotifications = () => {
       notiAudio.play();
       fetchNotifications(1);
     };
@@ -139,6 +139,12 @@ const AdminDashboardHeader = () => {
       await handleFileChangeDirectly(file);
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(refreshYoutubeAccessToken, 55 * 60 * 1000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <header className=" w-full border-b bg-white">

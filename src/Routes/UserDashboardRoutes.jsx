@@ -13,6 +13,8 @@ import UserDashboardQuizHistory from "@/Pages/UserDashboard/UserDashboardQuizHis
 // import UserDashboardPreparationStatistics from "@/Pages/UserDashboard/UserDashboardPreparationStatistics";
 import UserDashboardErrorReviewQuestions from "@/Pages/UserDashboard/UserDashboardErrorReviewQuestions";
 import DashboardUserSettings from "@/Shared/DashboardUserSettings";
+import PurchaseHistory from "@/Pages/UserDashboard/UserSettings/PurchaseHistory";
+import UserDashboardBookmarksHistory from "@/Pages/UserDashboard/UserDashboardBookmarksHistory";
 
 const UserDashboardRoutes = [
   { path: "", Component: UserDashboardIndex },
@@ -46,6 +48,14 @@ const UserDashboardRoutes = [
   {
     path: "settings",
     Component: DashboardUserSettings,
+  },
+  {
+    path: "settings/purchase-history",
+    Component: PurchaseHistory,
+  },
+  {
+    path: "bookmarks",
+    Component: UserDashboardBookmarksHistory,
   },
 ];
 

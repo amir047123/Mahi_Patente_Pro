@@ -1,5 +1,8 @@
 export default function textToSpeech(
   text,
+  audio,
+  audioRef,
+  isSpeaking,
   setIsSpeaking,
   lang = "en-US",
   rate = 1,
@@ -11,11 +14,12 @@ export default function textToSpeech(
   }
 
   const synth = window.speechSynthesis;
+  const audioElement = audioRef.current;
 
   const speakText = () => {
     const voices = synth.getVoices();
     if (voices.length === 0) {
-      alert.warn("No voices available for speech synthesis.");
+      alert("No voices available for speech synthesis.");
       return;
     }
 
@@ -32,7 +36,25 @@ export default function textToSpeech(
     synth.speak(utterance);
   };
 
-  if (synth.speaking) {
+  if (audio) {
+    if (synth.speaking) {
+      synth.cancel();
+      setIsSpeaking(false);
+    }
+
+    if (isSpeaking) {
+      audioElement.pause();
+      audioElement.currentTime = 0;
+      setIsSpeaking(false);
+    } else {
+      audioElement.play();
+      setIsSpeaking(true);
+
+      audioElement.onended = () => {
+        setIsSpeaking(false);
+      };
+    }
+  } else if (synth.speaking) {
     synth.cancel();
     setIsSpeaking(false);
   } else {

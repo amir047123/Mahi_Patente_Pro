@@ -39,8 +39,7 @@ const UserDashboardHeader = () => {
   }, [user?._id]);
 
   useEffect(() => {
-    const handleNotifications = (notification) => {
-      console.log(notification);
+    const handleNotifications = () => {
       notiAudio.play();
       fetchNotifications(1);
     };
@@ -133,6 +132,10 @@ const UserDashboardHeader = () => {
       toast.dismiss(toastId);
     }
   };
+
+  useEffect(() => {
+    setProfilePic(backupUser?.profile?.profilePicture || demoUser);
+  }, [backupUser]);
 
   const handleFileChange = async (event) => {
     const file = event.target.files?.[0];

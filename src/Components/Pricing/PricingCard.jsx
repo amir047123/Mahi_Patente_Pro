@@ -21,7 +21,7 @@ const PricingCard = ({ item, isSpecial = false }) => {
             <Typography.Body className="text-secondaryText">
               /{" "}
               {item?.duration === 30
-                ? "month"
+                ? "1 month"
                 : item?.duration === 90
                 ? "3 month"
                 : item?.duration === 180
