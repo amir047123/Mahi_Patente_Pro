@@ -10,9 +10,16 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 import notUploaded from "@/assets/UserDashboard/no-prev.jpg";
+import ItemPerPage from "@/Shared/ItemPerPage";
+import PaginationCompo from "@/Shared/PaginationCompo";
 
 const UserDashboardSubjectDetails = () => {
   const query = useQueryClient();
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 10,
+    totalPages: 1,
+  });
   const [showPlayer, setShowPlayer] = useState(false);
   const { subject } = useParams();
   const [breadCrumbData, setBreadCrumbData] = useState([
@@ -27,10 +34,15 @@ const UserDashboardSubjectDetails = () => {
     error,
     isError,
     isLoading,
-  } = useFetchEntities({ subject: subject });
+  } = useFetchEntities({ ...filters, subject: subject });
 
   useEffect(() => {
     if (isSuccess && response?.success) {
+      setFilters((prev) => ({
+        ...prev,
+        totalPages:
+          response?.data?.totalPages === 0 ? 1 : response?.data?.totalPages,
+      }));
       setBreadCrumbData([
         { name: "Theory", path: "theory" },
         {
@@ -73,7 +85,7 @@ const UserDashboardSubjectDetails = () => {
         onError: (error) => {
           toast.error(error?.message);
         },
-      }
+      },
     );
   };
 
@@ -95,7 +107,7 @@ const UserDashboardSubjectDetails = () => {
       question?.media?.sound,
       audioRef,
       isSpeaking,
-      setIsSpeaking
+      setIsSpeaking,
     );
   };
 
@@ -211,6 +223,26 @@ const UserDashboardSubjectDetails = () => {
           ) : (
             <p className="text-center mt-10">No questions found!</p>
           )}
+
+          <div className="flex justify-between mt-5 p-4 rounded-xl mb-10 bg-white">
+            <ItemPerPage
+              itemPerPage={filters?.itemPerPage}
+              onLimitChange={(newItemPerPage) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  itemPerPage: newItemPerPage,
+                  currentPage: 1,
+                }))
+              }
+            />
+            <PaginationCompo
+              currentPage={filters?.currentPage}
+              totalPages={filters?.totalPages}
+              onPageChange={(page) =>
+                setFilters((prev) => ({ ...prev, currentPage: page }))
+              }
+            />
+          </div>
         </>
       )}
     </>
