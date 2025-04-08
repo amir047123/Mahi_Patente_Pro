@@ -42,6 +42,7 @@ export function useCrudOperations(endpoint) {
         filters?.subject,
         filters?.category,
         filters?.userId,
+        filters?.package,
       ],
       queryFn: async () => {
         const queryParams = new URLSearchParams();
@@ -87,6 +88,7 @@ export function useCrudOperations(endpoint) {
         if (filters?.category)
           queryParams.append("category", filters?.category);
         if (filters?.userId) queryParams.append("userId", filters?.userId);
+        if (filters?.package) queryParams.append("package", filters?.package);
 
         const response = await fetch(
           `${baseURL}/${endpoint}?${queryParams.toString()}`,

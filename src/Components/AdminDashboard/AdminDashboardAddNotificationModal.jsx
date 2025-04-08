@@ -7,18 +7,167 @@ import {
   DialogTitle,
 } from "@/Components/ui/dialog";
 import { Input } from "../ui/input";
-import { useState } from "react";
-import {  Search, CalendarIcon, ArrowLeft } from "lucide-react";
-import { Button } from "../ui/button";
+import { ArrowLeft } from "lucide-react";
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Calendar } from "../ui/calendar";
-import { Select, SelectContent, SelectGroup, SelectItem,  SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Controller, FormProvider, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { baseURL } from "@/Config";
+import CustomSearchableSelect from "@/Shared/Form/CustomSearchableSelect";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import { useQueryClient } from "@tanstack/react-query";
+import Spinner from "../ui/Spinner";
 
 const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
-  const [date, setDate] = useState();
+  const methods = useForm();
+  const { createEntity } = useCrudOperations("notification/create");
+  const query = useQueryClient();
+
+  const [search, setSearch] = useState("");
+  const [isSearchDisabled, setIsSearchDisabled] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [usersForSelection, setUsersForSelection] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterPriority, setFilterPriority] = useState("user");
+
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+    watch,
+    setValue,
+    clearErrors,
+    reset,
+  } = methods;
+
+  const target = watch("target");
+  const sendOption = watch("sendOption");
+  const priority = watch("priority");
+
+  const onSubmit = async (data) => {
+    const updatedData = {
+      ...data,
+      userId:
+        data?.target === "specific"
+          ? data?.selectedUser?.fullData?._id
+          : undefined,
+      userEmail:
+        data?.target === "specific"
+          ? data?.selectedUser?.fullData?.auth?.email
+          : undefined,
+      isAdmin: data?.priority === "admin" ? true : false,
+      time: data?.sendOption === "sendNow" ? undefined : data?.time,
+
+      selectedUser: undefined,
+      priority: undefined,
+    };
+
+    createEntity.mutate(updatedData, {
+      onSuccess: (data) => {
+        toast.success(data?.message);
+        query.invalidateQueries({
+          queryKey: ["notification/all"],
+        });
+        reset();
+      },
+      onError: (error) => {
+        toast.error(error?.message);
+      },
+    });
+  };
+
+  const showError = (name) => {
+    const errorMsg = errors[name]?.message;
+    return <p className="text-red-500 text-xs mt-2">{errorMsg}</p>;
+  };
+
+  const fetchUsers = async (pageNumber = 1) => {
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${baseURL}/user/users`, {
+        params: {
+          search: search || "",
+          page: currentPage || 1,
+          limit: 10,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      const selectUsersOptions = response?.data?.data
+        ?.filter((item) => item?.profile?.role === filterPriority)
+        ?.map((item) => {
+          return {
+            value: item._id,
+            label: `${item?.auth?.email} • ${item?.profile?.name}`,
+            logo: item?.profile?.profilePicture,
+            fullData: item,
+          };
+        });
+
+      if (pageNumber === 1) {
+        setUsersForSelection(selectUsersOptions);
+      } else {
+        setUsersForSelection((prevOptions) => {
+          const combinedOptions = [...prevOptions, ...selectUsersOptions];
+          const uniqueOptions = Array.from(
+            new Set(combinedOptions.map((option) => option.value))
+          ).map((value) =>
+            combinedOptions.find((option) => option.value === value)
+          );
+          return uniqueOptions;
+        });
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (target !== "specific") {
+      setSelectedUser(null);
+      setValue("selectedUser", "");
+      setSearch("");
+      setIsSearchDisabled(true);
+      clearErrors("selectedUser");
+    } else {
+      setIsSearchDisabled(false);
+    }
+    if (sendOption !== "scheduleLater") {
+      clearErrors("time");
+      setValue("time", "");
+    }
+  }, [setValue, target, clearErrors, sendOption]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setFilterPriority(priority);
+    setSelectedUser(null);
+    setValue("selectedUser", "");
+  }, [priority, setValue]);
+
+  useEffect(() => {
+    fetchUsers(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterPriority]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] lg:p-7 p-3 sm:p-5">
@@ -31,206 +180,249 @@ const AdminDashboardAddNotificationModal = ({ isOpen, setIsOpen }) => {
           </DialogClose>
         </DialogHeader>
 
-        <div className="w-full sm:p-5 p-4 pb-6 rounded-xl  bg-white">
-          <div className="space-y-6">
-            {/* Notification Title Section */}
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-2">
-                Notification Title
-              </p>
+        <FormProvider {...methods}>
+          <form>
+            <div className="w-full sm:p-5 p-4 pb-6 rounded-xl  bg-white">
+              <div className="space-y-6">
+                {/* Notification Title Section */}
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    Notification Title
+                  </p>
 
-              <Input
-                className="px-5 py-5 border-gray-200 rounded-full"
-                placeholder="Type Notification title"
-              />
-            </div>
-
-            {/* Message Content Section */}
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-2">
-                Message Content
-              </p>
-              <Input
-                className="py-6 px-5 border-gray-200 rounded-full"
-                placeholder="Type message content"
-              />
-            </div>
-
-            {/* Target Audience Section */}
-
-            <div className="text-secondaryText">
-              <p className="text-sm font-medium text-pink-500 mb-3">
-                Target Audience
-              </p>
-              <RadioGroup.Root
-                defaultValue="all"
-                className="flex lg:gap-5 gap-3 items-center justify-between flex-wrap md:flex-nowrap"
-              >
-                <div className="flex flex-wrap lg:gap-5 gap-3 items-center">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroup.Item
-                      value="all"
-                      id="all"
-                      className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
-                    >
-                      <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
-                    </RadioGroup.Item>
-                    <label htmlFor="all" className="text-sm whitespace-nowrap">
-                      All User
-                    </label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroup.Item
-                      value="active"
-                      id="active"
-                      className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
-                    >
-                      <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
-                    </RadioGroup.Item>
-                    <label
-                      htmlFor="active"
-                      className="text-sm whitespace-nowrap"
-                    >
-                      Active User
-                    </label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroup.Item
-                      value="specific"
-                      id="specific"
-                      className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
-                    >
-                      <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
-                    </RadioGroup.Item>
-                    <label
-                      htmlFor="specific"
-                      className="text-sm whitespace-nowrap"
-                    >
-                      Specific Users
-                    </label>
-                  </div>
+                  <Input
+                    className="px-5 py-5 border-gray-200 rounded-full"
+                    placeholder="Type Notification title"
+                    {...register("title", {
+                      required: "Title is required",
+                    })}
+                  />
+                  {showError("title")}
                 </div>
-                <div className="flex lg:gap-5 gap-3 items-center ">
-                  <div className="relative  w-full">
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                      <Search className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      className="h-9 pl-8 w-full min-w-20 text-sm rounded-full text-gray-400"
-                      placeholder="Search & Select User"
-                    />
-                  </div>
 
-                  <Button className="bg-secondary/90 hover:bg-secondary rounded-full text-sm px-6 ml-auto block">
-                    Select User
-                  </Button>
+                {/* Message Content Section */}
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    Message Content
+                  </p>
+                  <Input
+                    className="py-6 px-5 border-gray-200 rounded-full"
+                    placeholder="Type message content"
+                    {...register("message", {
+                      required: "Message is required",
+                    })}
+                  />
+                  {showError("message")}
                 </div>
-              </RadioGroup.Root>
-            </div>
 
-            {/* Scheduling Options and Priority Level */}
-            <div className="flex justify-between text-secondaryText">
-              <div className="">
-                <p className="text-sm font-medium text-pink-500 mb-2">
-                  Scheduling Options
-                </p>
-                <div className="flex flex-wrap md:flex-nowrap md:gap-5 sm:gap-10 gap-5 items-start">
-                  <RadioGroup.Root
-                    defaultValue="sendNow"
-                    className="flex gap-5 mt-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroup.Item
-                        value="sendNow"
-                        id="sendNow"
-                        className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
-                      >
-                        <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
-                      </RadioGroup.Item>
-                      <label
-                        htmlFor="sendNow"
-                        className="text-sm whitespace-nowrap"
-                      >
-                        Send Now
-                      </label>
-                    </div>
-                    <div className="flex items-center  space-x-2">
-                      <RadioGroup.Item
-                        value="scheduleLater"
-                        id="scheduleLater"
-                        className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
-                      >
-                        <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
-                      </RadioGroup.Item>
-                      <label
-                        htmlFor="scheduleLater"
-                        className="text-sm whitespace-nowrap"
-                      >
-                        Schedule For Later
-                      </label>
-                    </div>
-                  </RadioGroup.Root>
-                  <div className="flex flex-wrap sm:flex-nowrap lg:gap-5 gap-3 ">
-                    <div className="flex lg:gap-5 gap-3 ">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              " justify-start text-left font-normal",
-                              !date && "text-muted-foreground"
+                {/* Target Audience Section */}
+
+                <div className="text-secondaryText">
+                  <p className="text-sm font-medium text-pink-500 mb-3">
+                    Target Audience
+                  </p>
+
+                  <div className="flex sm:flex-row flex-col gap-5">
+                    <div className="w-fit flex items-center gap-4">
+                      <Controller
+                        name="priority"
+                        control={control}
+                        defaultValue="user"
+                        rules={{ required: "Priority is required" }}
+                        render={({ field, fieldState }) => (
+                          <div>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="w-24">
+                                <SelectValue placeholder="Select priority" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectItem value="user">User</SelectItem>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+
+                            {fieldState?.error && (
+                              <span className="text-red-500 text-xs block mt-2">
+                                {fieldState.error.message}
+                              </span>
                             )}
+                          </div>
+                        )}
+                      />
+                      <Controller
+                        name="target"
+                        control={control}
+                        defaultValue={"all"}
+                        render={({ field }) => (
+                          <RadioGroup.Root
+                            {...field}
+                            className="flex lg:gap-5 gap-3 items-start flex-wrap md:flex-nowrap"
+                            onValueChange={(value) => field.onChange(value)}
                           >
-                            <CalendarIcon />
-                            {date ? (
-                              format(date, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <input
-                        type="time"
-                        className=" text-sm pl-3 h-9 border-gray-200 rounded-md border px-3 py-1"
-                        placeholder="pick a time"
+                            <div className="flex lg:gap-5 gap-3 items-center w-full">
+                              {["all", "specific"].map((option) => (
+                                <div
+                                  key={option}
+                                  className="flex items-center space-x-2"
+                                >
+                                  <RadioGroup.Item
+                                    value={option}
+                                    id={option}
+                                    className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white cursor-pointer"
+                                  >
+                                    <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary" />
+                                  </RadioGroup.Item>
+                                  <label
+                                    htmlFor={option}
+                                    className="text-sm whitespace-nowrap cursor-pointer"
+                                  >
+                                    {option === "all"
+                                      ? "All Users"
+                                      : option === "active"
+                                      ? "Active Users"
+                                      : "Specific Users"}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </RadioGroup.Root>
+                        )}
                       />
                     </div>
 
-                    <div className="sm:-mt-7">
-                      <p className="text-sm font-medium text-gray-600 mb-2">
-                        Priority Level
-                      </p>
-                      <Select>
-                        <SelectTrigger className="lg:w-[180px] w-[200px]">
-                          <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value="user">User</SelectItem>
-                            <SelectItem value="admin">Admin</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                    <div
+                      className={`${isSearchDisabled ? "hidden" : "w-full"}`}
+                    >
+                      <CustomSearchableSelect
+                        name="selectedUser"
+                        label="User"
+                        labelShown={false}
+                        options={usersForSelection}
+                        isLoading={isLoading}
+                        setSelectedItem={setSelectedUser}
+                        selectedItem={selectedUser}
+                        setSearchText={setSearch}
+                        refetchData={fetchUsers}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        placeholder="Select An User"
+                        required={watch("target") === "specific"}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Scheduling Options and Priority Level */}
+                <div className="flex justify-between text-secondaryText">
+                  <div className="">
+                    <p className="text-sm font-medium text-pink-500 mb-2">
+                      Scheduling Options
+                    </p>
+                    <div className="flex flex-wrap md:flex-nowrap md:gap-5 sm:gap-10 gap-5 items-start">
+                      <Controller
+                        name="sendOption"
+                        control={control}
+                        defaultValue="sendNow"
+                        render={({ field }) => (
+                          <RadioGroup.Root
+                            {...field}
+                            className="flex gap-5 mt-2"
+                            onValueChange={(value) => field.onChange(value)}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <RadioGroup.Item
+                                value="sendNow"
+                                id="sendNow"
+                                className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
+                              >
+                                <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary cursor-pointer" />
+                              </RadioGroup.Item>
+                              <label
+                                htmlFor="sendNow"
+                                className="text-sm whitespace-nowrap cursor-pointer"
+                              >
+                                Send Now
+                              </label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroup.Item
+                                value="scheduleLater"
+                                id="scheduleLater"
+                                className="w-4 h-4 rounded-full border border-gray-300 data-[state=checked]:border-pink-500 data-[state=checked]:bg-white"
+                              >
+                                <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-secondary cursor-pointer" />
+                              </RadioGroup.Item>
+                              <label
+                                htmlFor="scheduleLater"
+                                className="text-sm whitespace-nowrap cursor-pointer"
+                              >
+                                Schedule For Later
+                              </label>
+                            </div>
+                          </RadioGroup.Root>
+                        )}
+                      />
+
+                      <div
+                        className={`flex lg:gap-5 gap-3 ${
+                          sendOption === "scheduleLater" ? "" : "hidden"
+                        }`}
+                      >
+                        <Controller
+                          name="time"
+                          control={control}
+                          defaultValue=""
+                          rules={{
+                            required:
+                              watch("sendOption") === "scheduleLater" &&
+                              "Date & Time is required",
+                          }}
+                          render={({ field, fieldState }) => (
+                            <div>
+                              <input
+                                type="datetime-local"
+                                className="text-sm pl-3 h-9 border-gray-200 rounded-md border px-3 py-1 cursor-pointer"
+                                placeholder="Pick a time"
+                                {...field}
+                                min={new Date().toISOString().slice(0, 16)}
+                                disabled={
+                                  watch("sendOption") === "scheduleLater"
+                                    ? false
+                                    : true
+                                }
+                              />
+                              {fieldState?.error && (
+                                <span className="text-red-500 text-xs block mt-2">
+                                  {fieldState.error.message}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
+          </form>
+        </FormProvider>
         <DialogFooter className="flex gap-5 items-center">
-          <button className="text-sm px-4 py-3 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center">
-            Send Notification
+          <button
+            disabled={createEntity?.isPending}
+            onClick={handleSubmit(onSubmit)}
+            className="bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-medium text-white rounded-full w-full flex items-center justify-center"
+          >
+            {createEntity?.isPending ? (
+              <Spinner size={20} className="text-white" />
+            ) : (
+              "Create"
+            )}
           </button>
           <DialogClose asChild>
             <button className="border border-secondary/50 px-6 py-2.5 text-sm font-medium text-secondary rounded-full w-full">

@@ -3,7 +3,7 @@ import FastManiaCategoryCard from "@/Components/UserDashboard/Quiz/FastManiaCate
 import MinisterialQuizCard from "@/Components/UserDashboard/Quiz/MinisterialQuizCard";
 import * as Tabs from "@radix-ui/react-tabs";
 import { ListChecks, TimerReset } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import demoImg from "@/assets/UserDashboard/demo-chapeter-img.svg";
 import demoImg2 from "@/assets/UserDashboard/subject-demo-img.svg";
@@ -17,6 +17,13 @@ import UserDashboardFeedQuizQuestion from "./UserDashboardFeedQuizQuestion";
 const UserDashboardQuizLayout = () => {
   const [selectedChapters, setSelectedChapters] = useState([]);
   const [tab, setTab] = useState("fastMania");
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 12,
+    totalPages: 1,
+  });
+  const [chapters, setChapters] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
   const activeTab =
     "data-[state=active]:text-primary data-[state=active]:!font-semibold data-[state=active]:border-b-4 data-[state=active]:border-primary";
 
@@ -78,7 +85,49 @@ const UserDashboardQuizLayout = () => {
 
   const { useFetchEntities } = useCrudOperations("quiz-chapter/all");
 
-  const { data: response, error, isError, isLoading } = useFetchEntities();
+  const {
+    data: response,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+    isRefetching,
+  } = useFetchEntities(filters);
+
+  const loadMore = () => {
+    setFilters((prev) => ({
+      ...prev,
+      currentPage: prev.currentPage + 1,
+    }));
+  };
+
+  useEffect(() => {
+    if (isSuccess && response?.success) {
+      setFilters((prev) => ({
+        ...prev,
+        totalPages: response?.data?.totalPages || 1,
+      }));
+
+      setChapters((prevChapters) => {
+        const newChapters = response?.data?.chapters || [];
+        const mergedChapters = [
+          ...prevChapters,
+          ...newChapters.filter(
+            (newC) => !prevChapters.some((prevC) => prevC._id === newC._id)
+          ),
+        ];
+
+        return filters.currentPage === 1 ? newChapters : mergedChapters;
+      });
+
+      if (response?.data?.currentPage < response?.data?.totalPages) {
+        setHasMore(true);
+      } else {
+        setHasMore(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, response]);
 
   if (isError && !isLoading) {
     toast.error(error?.message);
@@ -153,13 +202,27 @@ const UserDashboardQuizLayout = () => {
               Quiz by chapter of the theory
             </Typography.Heading4>
 
+            <div className="flex justify-center mt-8">
+              <button
+                disabled={selectedChapters?.length === 0}
+                onClick={handleQuizStart}
+                className={`bg-secondary transition-all duration-300 ease-in-out font-medium rounded-full text-white py-3 px-6  text-sm ${
+                  selectedChapters?.length === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-secondary/80"
+                }`}
+              >
+                Start Quiz With Selected Chapters
+              </button>
+            </div>
+
             {isLoading ? (
               <div className="flex items-center justify-center mt-10">
                 <Spinner size={40} />
               </div>
-            ) : response?.data?.length > 0 ? (
+            ) : chapters?.length > 0 ? (
               <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 md:gap-5 mt-5">
-                {response?.data?.map((item, index) => (
+                {chapters?.map((item, index) => (
                   <MinisterialQuizCard
                     key={index}
                     item={item}
@@ -174,15 +237,23 @@ const UserDashboardQuizLayout = () => {
 
             <div className="flex justify-center mt-8">
               <button
-                disabled={selectedChapters?.length === 0}
-                onClick={handleQuizStart}
-                className={`bg-secondary transition-all duration-300 ease-in-out font-medium rounded-full text-white py-3 px-6  text-sm ${
-                  selectedChapters?.length === 0
+                disabled={!hasMore}
+                onClick={loadMore}
+                className={`bg-primary transition-all duration-300 ease-in-out font-medium rounded-full text-white py-3 px-6 min-w-[150px] text-sm ${
+                  !hasMore
                     ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-secondary/80"
+                    : "hover:bg-primary/80"
                 }`}
               >
-                Start Quiz With Selected Chapters
+                {isLoading || isRefetching ? (
+                  <div className="flex items-center justify-center">
+                    <Spinner size={24} className="text-white" />
+                  </div>
+                ) : hasMore ? (
+                  "Load More"
+                ) : (
+                  "No more chapters to load"
+                )}
               </button>
             </div>
           </div>

@@ -6,6 +6,7 @@ const fetchuserData = async (token) => {
     const response = await axios.get(`${baseURL}/user/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       withCredentials: true,
     });

@@ -79,6 +79,18 @@ const SignUpForm = () => {
         setIsLoading(false);
       }
     } else {
+      if (data?.password?.length < 6 || data?.confirmPassword?.length < 6) {
+        setError("password", {
+          type: "manual",
+          message: "Passwords must be at least 6 characters",
+        });
+        setError("confirmPassword", {
+          type: "manual",
+          message: "Passwords must be at least 6 characters",
+        });
+        return;
+      }
+
       if (data?.password !== data?.confirmPassword) {
         setError("password", {
           type: "manual",

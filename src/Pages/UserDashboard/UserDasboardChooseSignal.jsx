@@ -38,6 +38,7 @@ const UserDasboardChooseSignal = () => {
   const [hasTimer, setHasTimer] = useState(true);
   const [difficulty, setDifficulty] = useState("Easy");
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (quizSession?.quizzes?.length > 0) {
@@ -50,12 +51,21 @@ const UserDasboardChooseSignal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizSession]);
 
+  useEffect(() => {
+    return () => {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error exiting full screen:", err);
+      });
+    };
+  }, []);
+
   const getQuizzes = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`${baseURL}/quiz-session/create`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         credentials: "include",
@@ -143,6 +153,7 @@ const UserDasboardChooseSignal = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",

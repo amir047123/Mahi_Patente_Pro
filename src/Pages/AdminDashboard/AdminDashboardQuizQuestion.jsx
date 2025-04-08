@@ -182,7 +182,7 @@ const AdminDashboardQuizQuestion = () => {
                   <td className="py-4 px-4 text-sm text-green-600 font-medium">
                     {quiz?.correctAnswer === "0" ? "True" : "False"}
                   </td>
-                  <td className="py-4 px-4 text-sm text-secondaryText text-center">
+                  <td className="py-4 px-4 text-sm text-secondaryText text-center text-nowrap">
                     <span className="block">
                       {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
                         year: "numeric",

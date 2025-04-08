@@ -11,7 +11,7 @@ import FilterComponent from "@/Shared/FilterComponent";
 const AdminDashboardGuessTheSignalQuestions = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [item, setItem] = useState(null);
-   const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({});
   const { useFetchEntities } = useCrudOperations("quiz");
 
   const {
@@ -124,7 +124,7 @@ const AdminDashboardGuessTheSignalQuestions = () => {
                   <td className="py-4 px-4 text-sm text-secondaryText font-medium">
                     {quiz?.options?.join(", ")}
                   </td>
-                  <td className="py-4 px-4 text-sm text-secondaryText text-center">
+                  <td className="py-4 px-4 text-sm text-secondaryText text-center text-nowrap">
                     <span className="block">
                       {new Date(quiz?.updatedAt)?.toLocaleString("en-US", {
                         year: "numeric",

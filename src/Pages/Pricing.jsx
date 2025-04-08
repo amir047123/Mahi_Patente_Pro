@@ -1,9 +1,19 @@
 import PricingCard from "@/Components/Pricing/PricingCard";
 import Typography from "@/Components/Typography";
+import Spinner from "@/Components/ui/Spinner";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import Footer from "@/Shared/Footer/Footer";
 import Navbar from "@/Shared/Navbar/Navbar";
+import toast from "react-hot-toast";
 
 const Pricing = () => {
+  const { useFetchEntities } = useCrudOperations("package/all");
+  const { data: response, error, isError, isLoading } = useFetchEntities();
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
+
   return (
     <div>
       <Navbar />
@@ -23,9 +33,21 @@ const Pricing = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:gap-6 gap-4 mt-5">
-          <PricingCard />
-          <PricingCard isSpecial={true} />
-          <PricingCard  />
+          {isLoading ? (
+            <div className="flex items-center justify-center mt-10">
+              <Spinner size={40} />
+            </div>
+          ) : response?.data?.length > 0 ? (
+            response?.data?.map((item, index) => (
+              <PricingCard
+                key={index}
+                item={item}
+                isSpecial={index === 1 ? true : false}
+              />
+            ))
+          ) : (
+            <p className="text-center mt-10">No pricing plan found!</p>
+          )}
         </div>
       </div>
 

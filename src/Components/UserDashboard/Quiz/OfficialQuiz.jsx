@@ -53,6 +53,7 @@ const OfficialQuiz = () => {
     { name: "Quiz", path: "quiz" },
     { name: "Official Quiz", path: "quiz/official-quiz" },
   ]);
+  const token = localStorage.getItem("token");
 
   const selectedChapters = new URLSearchParams(window.location.search).get(
     "chapters"
@@ -111,12 +112,21 @@ const OfficialQuiz = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizSession, navigateUrl]);
 
+  useEffect(() => {
+    return () => {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error exiting full screen:", err);
+      });
+    };
+  }, []);
+
   const getQuizzes = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`${baseURL}/quiz-session/create`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         credentials: "include",
@@ -213,6 +223,7 @@ const OfficialQuiz = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",

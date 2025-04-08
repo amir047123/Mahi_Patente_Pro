@@ -9,16 +9,14 @@ import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import ForgottenPasswordModal from "./ForgottenPasswordModal";
 
-const AccountSettings = ({ user }) => {
+const AccountSettings = ({ user, isLoading, onSubmit }) => {
   const [isForgottenPassword, setIsForgottenPassword] = useState(false);
   const [oldPasswordShown, setOldPasswordShown] = useState(false);
   const [newPasswordShown, setNewPasswordShown] = useState(false);
+  const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const methods = useForm();
-  const { handleSubmit, reset } = methods;
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const { handleSubmit, setValue } = methods;
 
   const passwordMethods = useForm();
   const {
@@ -42,7 +40,20 @@ const AccountSettings = ({ user }) => {
       toast.error("New Password must be at least 6 characters");
       setError("newPassword", {
         type: "manual",
-        message: "Password must be at least 6 characters",
+        message: "New Password must be at least 6 characters",
+      });
+      return;
+    }
+
+    if (data?.newPassword !== data?.confirmPassword) {
+      toast.error("New Password and Confirm Password must match");
+      setError("newPassword", {
+        type: "manual",
+        message: "New Password and Confirm Password must match",
+      });
+      setError("confirmPassword", {
+        type: "manual",
+        message: "New Password and Confirm Password must match",
       });
       return;
     }
@@ -75,44 +86,52 @@ const AccountSettings = ({ user }) => {
   };
 
   useEffect(() => {
-    reset({
-      email: user?.auth?.email,
-      username: user?.profile?.username,
-    });
-  }, [user, reset]);
+    setValue("profile.username", user?.profile?.username);
+    setValue("auth.email", user?.auth?.email);
+  }, [user, setValue]);
 
   return (
     <TabsContent value="account" className="pt-6">
       <Card className="border-0 shadow-none">
-        <CardContent className="p-0 space-y-6">
-          <div className="grid grid-cols-2">
+        <CardContent className="p-0">
+          <div className="grid grid-cols-1 min-[500px]:grid-cols-2 sm:px-4 lg:px-8 xl:px-36 gap-6 min-[500px]:gap-0">
             <FormProvider {...methods}>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="border-r-2 pr-6"
+                className="min-[500px]:border-r-2 min-[500px]:pr-6"
               >
                 <div className="space-y-6">
                   <CustomInput
+                    type="text"
+                    name="profile.username"
+                    label="Account Username"
+                    placeholder="Enter your username"
+                    isEditable={user?.profile?.username ? false : true}
+                  />
+
+                  <CustomInput
                     type="email"
-                    name="email"
-                    label="Email"
+                    name="auth.email"
+                    label="Account Email"
                     placeholder="Your email address"
                     isEditable={false}
                   />
 
-                  <CustomInput
-                    type="text"
-                    name="username"
-                    label="Username"
-                    placeholder="Enter your username"
-                  />
-
-                  <div className="col-span-2 text-center">
+                  <div
+                    className={`col-span-2 flex justify-center ${
+                      user?.profile?.username ? "hidden" : ""
+                    }`}
+                  >
                     <button
                       type="submit"
-                      className="px-5 py-2.5 w-fit bg-primary rounded-full text-white font-semibold text-center hover:bg-primary/80 duration-500"
+                      className="px-4 py-1.5 sm:py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 disabled:cursor-not-allowed w-fit rounded-full text-white font-semibold flex items-center justify-center min-w-[180px]"
+                      disabled={isLoading}
                     >
-                      Update Username
+                      {isLoading ? (
+                        <Spinner size={24} className="text-white" />
+                      ) : (
+                        "Update Username"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -121,28 +140,40 @@ const AccountSettings = ({ user }) => {
             <FormProvider {...passwordMethods}>
               <form
                 onSubmit={handlePasswordSubmit(onSubmitPassword)}
-                className="pl-6"
+                className="min-[500px]:pl-6"
               >
-                <div className="space-y-6">
-                  <div className="relative">
-                    <CustomInput
-                      type={oldPasswordShown ? "text" : "password"}
-                      name="oldPassword"
-                      label="Old Password"
-                      placeholder="Enter your old password"
-                      iconType="password"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-[42px] text-secondaryText"
-                      onClick={() => setOldPasswordShown((prev) => !prev)}
-                    >
-                      {oldPasswordShown ? (
-                        <Eye size={20} />
-                      ) : (
-                        <EyeOff size={20} />
-                      )}
-                    </button>
+                <div className="space-y-4">
+                  <div>
+                    <div className="relative">
+                      <CustomInput
+                        type={oldPasswordShown ? "text" : "password"}
+                        name="oldPassword"
+                        label="Old Password"
+                        placeholder="Enter your old password"
+                        iconType="password"
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-[42px] text-secondaryText"
+                        onClick={() => setOldPasswordShown((prev) => !prev)}
+                      >
+                        {oldPasswordShown ? (
+                          <Eye size={20} />
+                        ) : (
+                          <EyeOff size={20} />
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="flex justify-end mt-3">
+                      <button
+                        onClick={() => setIsForgottenPassword(true)}
+                        type="button"
+                        className="w-fit text-sm text-secondary"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
                   </div>
 
                   <div className="relative">
@@ -150,7 +181,7 @@ const AccountSettings = ({ user }) => {
                       type={newPasswordShown ? "text" : "password"}
                       name="newPassword"
                       label="New Password"
-                      placeholder="Enter your new password"
+                      placeholder="Set New Password"
                       iconType="password"
                     />
                     <button
@@ -166,26 +197,39 @@ const AccountSettings = ({ user }) => {
                     </button>
                   </div>
 
-                  <div className="col-span-2 flex flex-col items-center justify-between gap-4">
+                  <div className="relative">
+                    <CustomInput
+                      type={confirmPasswordShown ? "text" : "password"}
+                      name="confirmPassword"
+                      label="Confirm Password"
+                      placeholder="Confirm Password"
+                      iconType="password"
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-[42px] text-secondaryText"
+                      onClick={() => setConfirmPasswordShown((prev) => !prev)}
+                    >
+                      {confirmPasswordShown ? (
+                        <Eye size={20} />
+                      ) : (
+                        <EyeOff size={20} />
+                      )}
+                    </button>
+                  </div>
+                  {!user?.profile?.username && (
                     <button
                       type="submit"
-                      className="px-5 py-2.5 w-full bg-secondary rounded-full text-white font-semibold hover:bg-secondary/80 duration-500 flex items-center justify-center"
+                      className="mt-8 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+                      disabled={isPasswordLoading}
                     >
                       {isPasswordLoading ? (
-                        <Spinner size={24} className="!text-white" />
+                        <Spinner size={24} className="text-white" />
                       ) : (
                         "Update Password"
                       )}
                     </button>
-
-                    <button
-                      onClick={() => setIsForgottenPassword(true)}
-                      type="button"
-                      className="w-fit text-sm"
-                    >
-                      Forgotten Password
-                    </button>
-                  </div>
+                  )}
                 </div>
               </form>
             </FormProvider>
@@ -195,6 +239,20 @@ const AccountSettings = ({ user }) => {
               setIsOpen={setIsForgottenPassword}
             />
           </div>
+
+          {user?.profile?.username && (
+            <button
+              onClick={handlePasswordSubmit(onSubmitPassword)}
+              className="mt-8 sm:mt-16 md:mt-24 px-4 py-1.5 sm:py-2 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed w-full rounded-full text-white font-semibold flex items-center justify-center"
+              disabled={isPasswordLoading}
+            >
+              {isPasswordLoading ? (
+                <Spinner size={24} className="text-white" />
+              ) : (
+                "Save"
+              )}
+            </button>
+          )}
         </CardContent>
       </Card>
     </TabsContent>

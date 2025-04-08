@@ -213,7 +213,7 @@ const CustomImageUpload = ({
           >
             {uploading && `Uploading File...`}
             {/* {uploading && `Uploading ${uploadedFile?.name}...`} */}
-            {!uploading && uploadedFile && `Uploaded Successful.`}
+            {!uploading && uploadedFile && `Uploaded Successfully.`}
             {/* {!uploading && uploadedFile && `Uploaded ${uploadedFile?.name}.`} */}
           </span>
         </div>

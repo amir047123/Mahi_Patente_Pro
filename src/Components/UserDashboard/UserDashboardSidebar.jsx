@@ -1,4 +1,5 @@
 import {
+  Bookmark,
   History,
   LayoutDashboard,
   List,
@@ -41,6 +42,11 @@ const items = [
     title: "History",
     url: "/user-dashboard/history",
     icon: History,
+  },
+  {
+    title: "Bookmarks",
+    url: "/user-dashboard/bookmarks",
+    icon: Bookmark,
   },
 ];
 

@@ -8,7 +8,32 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 
-export default function ItemPerPage({ itemPerPage, onLimitChange }) {
+export default function ItemPerPage({
+  itemPerPage,
+  onLimitChange,
+  options = [
+    {
+      value: 10,
+      label: "10",
+    },
+    {
+      value: 20,
+      label: "20",
+    },
+    {
+      value: 30,
+      label: "30",
+    },
+    {
+      value: 40,
+      label: "40",
+    },
+    {
+      value: 50,
+      label: "50",
+    },
+  ],
+}) {
   return (
     <div className="relative w-[5rem] hidden sm:block">
       <Select
@@ -21,11 +46,12 @@ export default function ItemPerPage({ itemPerPage, onLimitChange }) {
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Items per page</SelectLabel>
-            <SelectItem value="10">10</SelectItem>
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="30">30</SelectItem>
-            <SelectItem value="40">40</SelectItem>
-            <SelectItem value="50">50</SelectItem>
+
+            {options.map((option) => (
+              <SelectItem key={option.value} value={String(option.value)}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>

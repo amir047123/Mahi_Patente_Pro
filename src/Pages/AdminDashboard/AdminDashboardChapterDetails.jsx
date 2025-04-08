@@ -10,9 +10,15 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import AdminAddSubjectCard from "@/Components/AdminDashboard/AdminAddSubjectCard";
 import FilterComponent from "@/Shared/FilterComponent";
+import PaginationCompo from "@/Shared/PaginationCompo";
+import ItemPerPage from "@/Shared/ItemPerPage";
 
 const AdminDashboardChapterDetails = () => {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    currentPage: 1,
+    itemPerPage: 11,
+    totalPages: 1,
+  });
   const { chapter } = useParams();
   const [breadCrumbData, setBreadCrumbData] = useState([
     { name: "Chapters", path: "quiz-manage/chapters" },
@@ -28,12 +34,12 @@ const AdminDashboardChapterDetails = () => {
     isLoading,
   } = useFetchEntities(filters);
 
-  if (isError && !isLoading) {
-    toast.error(error?.message);
-  }
-
   useEffect(() => {
     if (isSuccess && response?.success) {
+      setFilters((prev) => ({
+        ...prev,
+        totalPages: response?.data?.totalPages || 1,
+      }));
       setBreadCrumbData([
         { name: "Chapters", path: "quiz-manage/chapters" },
         {
@@ -43,6 +49,10 @@ const AdminDashboardChapterDetails = () => {
       ]);
     }
   }, [isSuccess, response]);
+
+  if (isError && !isLoading) {
+    toast.error(error?.message);
+  }
 
   return (
     <>
@@ -106,6 +116,48 @@ const AdminDashboardChapterDetails = () => {
         ))}
 
         <AdminAddSubjectCard />
+      </div>
+
+      <div className="flex justify-between mt-5 p-4 rounded-xl mb-10 bg-white">
+        <ItemPerPage
+          itemPerPage={filters?.itemPerPage}
+          onLimitChange={(newItemPerPage) =>
+            setFilters((prev) => ({
+              ...prev,
+              itemPerPage: newItemPerPage,
+              currentPage: 1,
+            }))
+          }
+          options={[
+            {
+              value: 11,
+              label: "11",
+            },
+            {
+              value: 22,
+              label: "22",
+            },
+            {
+              value: 33,
+              label: "33",
+            },
+            {
+              value: 44,
+              label: "44",
+            },
+            {
+              value: 55,
+              label: "55",
+            },
+          ]}
+        />
+        <PaginationCompo
+          currentPage={filters?.currentPage}
+          totalPages={filters?.totalPages}
+          onPageChange={(page) =>
+            setFilters((prev) => ({ ...prev, currentPage: page }))
+          }
+        />
       </div>
     </>
   );

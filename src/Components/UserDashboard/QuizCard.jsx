@@ -2,7 +2,6 @@ import quizDemo from "@/assets/UserDashboard/quiz-demo-img.svg";
 import Typography from "@/Components/Typography";
 import { MdGTranslate, MdOutlineBook } from "react-icons/md";
 import { LuMessageCircleMore } from "react-icons/lu";
-import textToSpeech from "@/lib/textToSpeech";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
@@ -16,7 +15,7 @@ import languageCodes from "@/lib/languageCodes";
 import Spinner from "../ui/Spinner";
 import QuizExplanationModal from "./Quiz/QuizExplanationModal";
 import QuizNoteModal from "./Quiz/QuizNoteModal";
-import { BookMarked, Volume2, Volume1 } from "lucide-react";
+import { BookMarked, Volume2, Volume1, Headset } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Tooltip,
@@ -25,13 +24,13 @@ import {
   TooltipTrigger,
 } from "@/Components/ui/tooltip";
 
-const QuizCard = ({ question }) => {
+const QuizCard = ({ question, handleAudio, isSpeaking, currentQuestion }) => {
   const query = useQueryClient();
   const [isExplanationModalOpen, setIsExplanationModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [translatedText, setTranslatedText] = useState();
   const [translatedLang, setTranslatedLang] = useState("en");
+
   const { createEntity: translate } = useCrudOperations("translate");
 
   const translateText = () => {
@@ -62,6 +61,12 @@ const QuizCard = ({ question }) => {
         onSuccess: (data) => {
           query.invalidateQueries({
             queryKey: ["quiz"],
+          });
+          query.invalidateQueries({
+            queryKey: ["quiz-session/user-session"],
+          });
+          query.invalidateQueries({
+            queryKey: ["bookmark/user-bookmarks"],
           });
           toast.success(data?.message);
         },
@@ -158,14 +163,18 @@ const QuizCard = ({ question }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() =>
-                    textToSpeech(question?.question, setIsSpeaking)
-                  }
+                  onClick={() => handleAudio(question)}
                   className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
-                    isSpeaking ? "text-secondary border-secondary" : ""
+                    isSpeaking && currentQuestion?._id === question?._id
+                      ? "text-secondary border-secondary"
+                      : ""
                   }`}
                 >
-                  {isSpeaking ? <Volume2 size={18} /> : <Volume1 size={18} />}
+                  {isSpeaking && currentQuestion?._id === question?._id ? (
+                    <Volume2 size={18} />
+                  ) : (
+                    <Volume1 size={18} />
+                  )}
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" align="center">
@@ -235,6 +244,25 @@ const QuizCard = ({ question }) => {
               </TooltipTrigger>
               <TooltipContent side="top" align="center">
                 View/Add Notes
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`bg-[#E3FAFF] transition-all duration-300 p-2 border rounded-md ${
+                    question?.note
+                      ? "hover:text-[#b1b1b1]"
+                      : "text-[#b1b1b1] hover:text-gray-600"
+                  }`}
+                >
+                  <Headset size={20} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                Support
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
