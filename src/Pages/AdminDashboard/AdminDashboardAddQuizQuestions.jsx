@@ -78,7 +78,7 @@ const AdminDashboardAddQuizQuestions = () => {
 
   useEffect(() => {
     if (chapterSuccess && chaptersResponse?.success) {
-      const chapters = chaptersResponse?.data?.map((item) => ({
+      const chapters = chaptersResponse?.data?.chapters?.map((item) => ({
         key: item?._id,
         label: item?.name,
       }));

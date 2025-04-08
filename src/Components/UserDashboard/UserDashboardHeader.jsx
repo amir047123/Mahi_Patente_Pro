@@ -21,6 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import { LuMessageCircleMore } from "react-icons/lu";
+import UserChat from "./UserChat/UserChat";
 
 const UserDashboardHeader = () => {
   const query = useQueryClient();
@@ -203,10 +205,11 @@ const UserDashboardHeader = () => {
               )}
             </div>
 
-            <button className="flex items-center md:gap-2.5 gap-1.5">
+            {/* <button className="flex items-center md:gap-2.5 gap-1.5">
               <img className="w-[22px]" src={languageIcon} alt="icon" />
               EN
-            </button>
+            </button> */}
+            <UserChat/>
 
             <div className="flex items-center sm:gap-2.5 gap-1">
               <label htmlFor="profilePicture" className="cursor-pointer">
