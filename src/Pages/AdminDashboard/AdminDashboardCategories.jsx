@@ -10,7 +10,7 @@ const AdminDashboardCategories = () => {
   const query = useQueryClient();
 
   const methods = useForm();
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit } = methods;
 
   const { createEntity } = useCrudOperations("quiz-category/create");
 
@@ -41,7 +41,10 @@ const AdminDashboardCategories = () => {
         items={[{ name: "Categories", path: "categories" }]}
       />
       <FormProvider {...methods}>
-        <form className="bg-white px-6 pt-3 pb-6 rounded-2xl" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="bg-white px-6 pt-3 pb-6 rounded-2xl"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="sm:grid sm:grid-cols-2 space-y-4 sm:space-y-0 gap-4 mt-4 ">
             <CustomInput
               name="name"

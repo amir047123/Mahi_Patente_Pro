@@ -186,7 +186,6 @@ const UserDashboardQuizLayout = () => {
                 <FastManiaCategoryCard key={index} item={item} />
               ))}
             </div>
-
             <UserDashboardFeedQuizQuestion />
           </div>
         </Tabs.Content>

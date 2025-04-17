@@ -36,7 +36,7 @@ const Footer = () => {
             </p>
             <Typography.Body className=" text-gray-500 leading-relaxed">
               Mahi Patente Pro offers step-by-step driving lessons in Bengali,
-              helping learners pass Italy's driving test with ease
+              helping learners pass Italy&apos;s driving test with ease
             </Typography.Body>
           </div>
 
@@ -93,7 +93,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/"
+                  to="/privacy-policy"
                   className="text-sm text-gray-500 hover:text-gray-700"
                 >
                   Privacy Policy
@@ -101,7 +101,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/"
+                  to="/privacy-policy"
                   className="text-sm text-gray-500 hover:text-gray-700"
                 >
                   Terms & Conditions
