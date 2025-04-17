@@ -36,7 +36,7 @@ const AdminDashboardAddQuizQuestions = () => {
 
   const {
     handleSubmit,
-    reset,
+
     control,
     setError,
     setValue,
@@ -190,10 +190,10 @@ const AdminDashboardAddQuizQuestions = () => {
   useEffect(() => {
     if (chapter && subject && chaptersResponse && subjectsResponse) {
       const selectedSubjectOption = subjectsResponse?.data?.subjects?.find(
-        (item) => item?._id === subject
+        (item) => item?._id === subject,
       );
       const selectedChapterOption = chaptersResponse?.data?.find(
-        (item) => item?._id === chapter
+        (item) => item?._id === chapter,
       );
 
       setBreadCrumbData([
@@ -238,7 +238,7 @@ const AdminDashboardAddQuizQuestions = () => {
         onError: (error) => {
           toast.error(error?.message);
         },
-      }
+      },
     );
   };
 

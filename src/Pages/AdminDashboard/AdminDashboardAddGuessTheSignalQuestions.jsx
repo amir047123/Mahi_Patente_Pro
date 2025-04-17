@@ -25,7 +25,7 @@ const AdminDashboardAddGuessTheSignalQuestions = () => {
     },
   });
 
-  const { handleSubmit, reset, control, watch, getValues, register, setError } =
+  const { handleSubmit, control, watch, getValues, register, setError } =
     methods;
   const { fields, append, remove, move } = useFieldArray({
     control,

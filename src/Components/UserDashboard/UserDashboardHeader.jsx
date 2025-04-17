@@ -1,6 +1,5 @@
 import { IoNotificationsOutline } from "react-icons/io5";
 import { SidebarTrigger } from "../ui/sidebar";
-import languageIcon from "@/assets/UserDashboard/language.svg";
 import demoUser from "@/assets/UserDashboard/demoUser.svg";
 import { ChevronDown } from "lucide-react";
 import socket from "@/socket";
@@ -21,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
-import { LuMessageCircleMore } from "react-icons/lu";
 import UserChat from "./UserChat/UserChat";
 
 const UserDashboardHeader = () => {
@@ -47,10 +45,10 @@ const UserDashboardHeader = () => {
     };
 
     socket.on("newNotification", (notification) =>
-      handleNotifications(notification)
+      handleNotifications(notification),
     );
     socket.on("userNotification", (notification) =>
-      handleNotifications(notification)
+      handleNotifications(notification),
     );
 
     return () => {
@@ -80,7 +78,7 @@ const UserDashboardHeader = () => {
 
   const { uploadImage } = useImageUploader();
   const [profilePic, setProfilePic] = useState(
-    backupUser?.profile?.profilePicture || demoUser
+    backupUser?.profile?.profilePicture || demoUser,
   );
   const [isHovered, setIsHovered] = useState(false);
   const handleFileChangeDirectly = async (file) => {
@@ -128,7 +126,7 @@ const UserDashboardHeader = () => {
       toast.error(
         `An error occurred while uploading: ${
           error instanceof Error ? error.message : error
-        }`
+        }`,
       );
     } finally {
       toast.dismiss(toastId);
@@ -209,7 +207,7 @@ const UserDashboardHeader = () => {
               <img className="w-[22px]" src={languageIcon} alt="icon" />
               EN
             </button> */}
-            <UserChat/>
+            <UserChat />
 
             <div className="flex items-center sm:gap-2.5 gap-1">
               <label htmlFor="profilePicture" className="cursor-pointer">

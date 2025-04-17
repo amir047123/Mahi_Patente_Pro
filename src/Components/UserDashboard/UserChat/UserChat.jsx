@@ -2,7 +2,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/Components/ui/popover";
 import { Paperclip, Send } from "lucide-react";
 import { LuMessageCircleMore } from "react-icons/lu";
 import demoImg from "../../../assets/Navbar/logo.svg";
@@ -11,7 +11,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { useState } from "react";
 
 const UserChat = () => {
-      const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -48,8 +48,6 @@ const UserChat = () => {
             </div>
 
             <div className="flex items-center gap-3">
-             
-
               <button
                 onClick={() => setOpen(false)}
                 className="bg-[#F2F2F2] p-2  rounded-lg border"

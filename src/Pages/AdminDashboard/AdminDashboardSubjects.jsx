@@ -36,7 +36,7 @@ const AdminDashboardSubjects = () => {
   }
 
   const methods = useForm();
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit } = methods;
 
   const { createEntity } = useCrudOperations("subject/create");
 
@@ -65,7 +65,10 @@ const AdminDashboardSubjects = () => {
         items={[{ name: "Subjects", path: "subject" }]}
       />
       <FormProvider {...methods}>
-        <form className="bg-white p-5 rounded-2xl mt-5" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="bg-white p-5 rounded-2xl mt-5"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="grid grid-cols-2 gap-4 mt-4">
             <CustomInput
               name="name"
