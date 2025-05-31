@@ -13,6 +13,10 @@ import {
   // MonitorCog,
   Signpost,
   UserCog,
+  BrickWall,
+  SearchCode,
+  Rss,
+  StickyNote
 } from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
@@ -109,6 +113,36 @@ const items = [
     title: "Notification Manage",
     url: "/admin-dashboard/notification-manage",
     icon: BellRing,
+  },
+
+
+  {
+    title: "Customization",
+    url: "/admin-dashboard/customization",
+    dropdown: true,
+    icon: BrickWall,
+    dropdownItem: [
+      {
+        title: "SEO Settings",
+        url: "/admin-dashboard/customization/seo-settings",
+        icon: SearchCode,
+      },
+      
+    ],
+  },
+  {
+    title: "Blogs",
+    url: "/admin-dashboard/blogs",
+    dropdown: true,
+    icon: Rss,
+    dropdownItem: [
+      {
+        title: "Posts",
+        url: "/admin-dashboard/blogs/posts",
+        icon: StickyNote,
+      },
+      
+    ],
   },
 ];
 

@@ -17,6 +17,7 @@ import AdminDashboardNotificationManage from "@/Pages/AdminDashboard/AdminDashbo
 import AdminDashboardSubscriptionManage from "@/Components/AdminDashboard/AdminDashboardSubscriptionManage";
 import DashboardUserSettings from "@/Shared/DashboardUserSettings";
 import AdminDashboardActivationManage from "@/Components/AdminDashboard/ActivationManage/AdminDashboardActivationManage";
+import SEOSettings from "@/Pages/AdminDashboard/Customization/SEOSettings";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -85,6 +86,13 @@ const AdminDashboardRoutes = [
   {
     path: "settings",
     Component: DashboardUserSettings,
+  },
+
+
+  // customization
+  {
+    path: "customization/seo-settings",
+    Component: SEOSettings,
   },
 ];
 
