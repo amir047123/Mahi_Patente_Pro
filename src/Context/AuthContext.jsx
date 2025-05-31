@@ -9,21 +9,18 @@ export const AuthProvider = ({ children }) => {
   const auth = useAuth();
 
   // Provide all auth values to children components
-  return (
-    <AuthContext.Provider value={auth}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  
+
   // Add error handling for when context is used outside of provider
   if (context === undefined || context === null) {
     throw new Error("useAuthContext must be used within an AuthProvider");
   }
-  
+
   return context;
 };
 

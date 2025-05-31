@@ -70,8 +70,9 @@ const WhyChoseUs = () => {
               Expert Support
             </Typography.Title>
             <Typography.Body className="text-gray-600 text-sm">
-              Whenever you need support, don't hesitate to reach out to experts
-              who can provide insights to help you navigate your challenges.
+              Whenever you need support, don&apos;t hesitate to reach out to
+              experts who can provide insights to help you navigate your
+              challenges.
             </Typography.Body>
           </div>
 

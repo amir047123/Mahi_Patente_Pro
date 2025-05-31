@@ -13,34 +13,35 @@ export const useAuth = () => {
   const [error, setError] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
   const navigate = useNavigate();
-  const { setGlobalContents } = useState();
+  // const { setGlobalContents } = useState();
   const [youtubeToken, setYoutubeToken] = useState(null);
 
   useEffect(() => {
     fetchAuthenticatedUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchGlobalContents = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.get(
-        `${baseURL}/global-search/get-all-content`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+  // const fetchGlobalContents = async () => {
+  //   const token = localStorage.getItem("token");
+  //   try {
+  //     const response = await axios.get(
+  //       `${baseURL}/global-search/get-all-content`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //         withCredentials: true,
+  //       }
+  //     );
 
-      setGlobalContents(response?.data?.data);
-    } catch (err) {
-      setError(
-        err?.response?.data?.message || "Failed to fetch search history"
-      );
-    }
-  };
+  //     setGlobalContents(response?.data?.data);
+  //   } catch (err) {
+  //     setError(
+  //       err?.response?.data?.message || "Failed to fetch search history"
+  //     );
+  //   }
+  // };
 
   const fetchAuthenticatedUser = async () => {
     const token = localStorage.getItem("token");
@@ -68,7 +69,7 @@ export const useAuth = () => {
       // fetchGlobalContents();
     } catch (err) {
       setError(
-        err?.response?.data?.message || "Error fetching authenticated user"
+        err?.response?.data?.message || "Error fetching authenticated user",
       );
       // toast.error("Error fetching authenticated user");
     } finally {
@@ -84,7 +85,7 @@ export const useAuth = () => {
       const response = await axios.post(
         `${baseURL}/user/login`,
         { email, password },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (response.data.success) {
         setOtpSent(true);
@@ -112,7 +113,7 @@ export const useAuth = () => {
       const response = await axios.post(
         `${baseURL}/user/verify-otp`,
         { email, otp },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       localStorage.setItem("token", response?.data?.data?.token);
@@ -156,7 +157,7 @@ export const useAuth = () => {
       await axios.post(
         `${baseURL}/user/refresh-token`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       // localStorage.setItem("token", response.data.token);
     } catch (err) {
@@ -258,7 +259,7 @@ export const useAuth = () => {
       const response = await axios.post(
         `${baseURL}/user/token-login`,
         { token: redeemCode },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       localStorage.setItem("token", response?.data?.data?.token);
@@ -269,10 +270,10 @@ export const useAuth = () => {
       toast.success("Login successful!");
     } catch (err) {
       setError(
-        err?.response?.data?.message || "Invalid or expired Redeem Code."
+        err?.response?.data?.message || "Invalid or expired Redeem Code.",
       );
       toast.error(
-        err?.response?.data?.message || "Invalid or expired Redeem Code."
+        err?.response?.data?.message || "Invalid or expired Redeem Code.",
       );
     } finally {
       setLoading(false);

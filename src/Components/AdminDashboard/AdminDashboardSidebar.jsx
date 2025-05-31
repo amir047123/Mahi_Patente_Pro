@@ -13,6 +13,10 @@ import {
   // MonitorCog,
   Signpost,
   UserCog,
+  BrickWall,
+  SearchCode,
+  Rss,
+  StickyNote
 } from "lucide-react";
 import logo from "@/assets/Navbar/logo.svg";
 import {
@@ -38,6 +42,7 @@ import {
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
 import { useState } from "react";
+import { setMinutes } from "date-fns";
 
 // Menu items.
 const items = [
@@ -110,6 +115,41 @@ const items = [
     url: "/admin-dashboard/notification-manage",
     icon: BellRing,
   },
+
+
+  {
+    title: "Customization",
+    url: "/admin-dashboard/customization",
+    dropdown: true,
+    icon: BrickWall,
+    dropdownItem: [
+      {
+        title: "SEO Settings",
+        url: "/admin-dashboard/customization/seo-settings",
+        icon: SearchCode,
+      },
+
+    ],
+  },
+  {
+    title: "Blogs",
+    url: "/admin-dashboard/blogs",
+    dropdown: true,
+    icon: Rss,
+    dropdownItem: [
+      {
+        title: "Posts",
+        url: "/admin-dashboard/blogs/posts",
+        icon: StickyNote,
+      },
+      {
+        title: "Category",
+        url: "/admin-dashboard/blogs/category",
+        icon: StickyNote,
+      },
+
+    ],
+  },
 ];
 
 export function AdminDashboardSidebar() {
@@ -118,6 +158,7 @@ export function AdminDashboardSidebar() {
   const dropdownPath = pathname.split("/")[3];
   const { logout } = useAuthContext();
   const [quizManageDropdown, setQuizManageDropdown] = useState(false);
+  const [blogsDropdown, setBlogsDropdown] = useState(false);
   const { setOpenMobile } = useSidebar();
   return (
     <Sidebar>
@@ -148,13 +189,18 @@ export function AdminDashboardSidebar() {
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
-                          onClick={() =>
-                            setQuizManageDropdown(!quizManageDropdown)
+                          onClick={() => {
+                            if (item?.title === "Blogs") {
+                              setBlogsDropdown(!blogsDropdown)
+                            } else {
+
+                              setQuizManageDropdown(!quizManageDropdown)
+                            }
                           }
-                          className={`hover:bg-[#EBF2FB] py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary h-10 ${
-                            currentPath === item.url.split("/")[2] &&
+                          }
+                          className={`hover:bg-[#EBF2FB] py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary h-10 ${currentPath === item.url.split("/")[2] &&
                             "text-secondary bg-[#EBF2FB]"
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center gap-2 justify-between w-full">
                             <div className="flex items-center gap-2">
@@ -163,11 +209,14 @@ export function AdminDashboardSidebar() {
                                 {item?.title}
                               </span>
                             </div>
-                            <ChevronDown
-                              className={`size-5 ${
-                                quizManageDropdown && "rotate-180"
-                              }`}
-                            />
+              {
+                              item?.title === "Blogs" ? <ChevronDown
+                                className={`size-5 ${blogsDropdown && "rotate-180"}`}
+                              /> : <ChevronDown
+                                className={`size-5 ${quizManageDropdown && "rotate-180"}`}
+                              />
+              }
+                          
                           </div>
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
@@ -181,10 +230,9 @@ export function AdminDashboardSidebar() {
                             >
                               <SidebarMenuSubItem
                                 as={Link}
-                                className={`hover:bg-[#EBF2FB] py-1.5 px-1.5 rounded-sm text-secondaryText hover:text-secondary ${
-                                  dropdownPath === i?.url.split("/")[3] &&
+                                className={`hover:bg-[#EBF2FB] py-1.5 px-1.5 rounded-sm text-secondaryText hover:text-secondary ${dropdownPath === i?.url.split("/")[3] &&
                                   "text-secondary bg-[#EBF2FB]"
-                                }`}
+                                  }`}
                               >
                                 <div className="flex items-center gap-1 ">
                                   <i.icon className="size-3.5" />
@@ -206,10 +254,9 @@ export function AdminDashboardSidebar() {
                     to={item.url}
                   >
                     <SidebarMenuItem
-                      className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${
-                        currentPath === item.url.split("/")[2] &&
+                      className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary ${currentPath === item.url.split("/")[2] &&
                         "text-secondary bg-[#EBF2FB] "
-                      }`}
+                        }`}
                       key={item.title}
                     >
                       <div className="flex items-center gap-2">
