@@ -18,6 +18,7 @@ import AdminDashboardSubscriptionManage from "@/Components/AdminDashboard/AdminD
 import DashboardUserSettings from "@/Shared/DashboardUserSettings";
 import AdminDashboardActivationManage from "@/Components/AdminDashboard/ActivationManage/AdminDashboardActivationManage";
 import SEOSettings from "@/Pages/AdminDashboard/Customization/SEOSettings";
+import AdminBlogs from "@/Pages/AdminDashboard/Blogs/AdminBlogs";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -93,6 +94,11 @@ const AdminDashboardRoutes = [
   {
     path: "customization/seo-settings",
     Component: SEOSettings,
+  },
+  // Blogs
+  {
+    path: "blogs/posts",
+    Component: AdminBlogs,
   },
 ];
 

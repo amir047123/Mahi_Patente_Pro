@@ -16,7 +16,7 @@ const CustomImageUpload = ({
   index = -1,
   labelShown = true,
   isHidden = false,
-  previewShown = true,
+  previewShown = false,
 }) => {
   const [selectedFile, setSelectedFile] = useState(value || null);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -26,6 +26,7 @@ const CustomImageUpload = ({
     register,
     formState: { errors },
   } = useFormContext();
+
 
   const fileInputRef = useRef(null);
 
