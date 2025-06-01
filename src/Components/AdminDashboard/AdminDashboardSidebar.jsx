@@ -42,7 +42,6 @@ import {
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
 import { useState } from "react";
-import { setMinutes } from "date-fns";
 
 // Menu items.
 const items = [
@@ -114,6 +113,11 @@ const items = [
     title: "Notification Manage",
     url: "/admin-dashboard/notification-manage",
     icon: BellRing,
+  },
+  {
+    title: "Chat Manage",
+    url: "/admin-dashboard/chat-manage",
+    icon: MessageCircleQuestion,
   },
 
 

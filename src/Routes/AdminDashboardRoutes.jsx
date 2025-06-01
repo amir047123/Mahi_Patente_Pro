@@ -20,6 +20,7 @@ import AdminDashboardActivationManage from "@/Components/AdminDashboard/Activati
 import SEOSettings from "@/Pages/AdminDashboard/Customization/SEOSettings";
 import AdminBlogs from "@/Pages/AdminDashboard/Blogs/AdminBlogs";
 import AdminBlogsCategory from "@/Pages/AdminDashboard/BlogCategory/AdminBlogsCategory";
+import ChatManage from "@/Components/AdminDashboard/ChatManage/ChatManage";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -105,6 +106,13 @@ const AdminDashboardRoutes = [
     path: "blogs/category",
     Component: AdminBlogsCategory,
   },
+
+  // customization
+  {
+    path: "chat-manage",
+    Component: ChatManage,
+  },
+  
 ];
 
 export default AdminDashboardRoutes;
