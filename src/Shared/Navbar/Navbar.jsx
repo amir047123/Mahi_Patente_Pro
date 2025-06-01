@@ -27,7 +27,7 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex items-center gap-2">
               <img src={logo} alt="logo" />
-              <Link href="/">
+              <Link to="/">
                 <p className="text-xl font-bold text-gray-900 font-mono">
                   Mahi
                 </p>

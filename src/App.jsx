@@ -11,13 +11,17 @@ import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import AdminDashboardIndex from "./Pages/AdminDashboard/AdminDashboardIndex";
 import AdminDashboardRoutes from "./Routes/AdminDashboardRoutes";
 import useSocket from "./Hooks/useSocket";
+import { useAuthContext } from "./Context/AuthContext";
+import ChatBot from "./Components/Chatbot/ChatBot";
 
 function App() {
+  const { user } = useAuthContext();
   useSocket();
+
   return (
     <>
       <Toaster position="bottom-right flex" />
-
+      <ChatBot />
       <Routes>
         {/* public routes */}
         <Route path="/" element={<Home />} />
