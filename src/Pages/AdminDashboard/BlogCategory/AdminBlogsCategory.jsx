@@ -6,14 +6,14 @@ import FilterComponent from "@/Shared/FilterComponent";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
-import AdminAddBlogModal from "./AdminAddBlogModal";
-import AdminEditBlogModal from "./AdminEditBlogModal";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import WarningModal from "@/Shared/WarningModal";
 import { useQueryClient } from "@tanstack/react-query";
+import AdminEditBlogCategoryModal from "./AdminEditBlogCategoryModal";
+import AdminAddBlogCategoryModal from "./AdminAddBlogCategoryModal";
 
-const AdminBlogs = () => {
+const AdminBlogsCategory = () => {
     const [filters, setFilters] = useState({
         status: "",
         currentPage: 1,
@@ -27,7 +27,7 @@ const AdminBlogs = () => {
     const [isDeletingSuccess, setIsDeletingSuccess] = useState(false);
     const [item, setItem] = useState(null);
 
-    const { useFetchEntities, deleteEntity } = useCrudOperations("blog");
+    const { useFetchEntities, deleteEntity } = useCrudOperations("blog-category");
     const {
         data: response,
         error,
@@ -35,13 +35,13 @@ const AdminBlogs = () => {
         isLoading,
         isSuccess,
     } = useFetchEntities(filters);
-
+    console.log(response)
     useEffect(() => {
         if (isSuccess && response?.success) {
             setFilters((prev) => ({
                 ...prev,
                 totalPages:
-                    response?.data?.totalBlogs === 0 ? 1 : response?.data?.totalBlogs,
+                    response?.data?.length === 0 ? 1 : response?.data?.length,
             }));
         }
     }, [isSuccess, response]);
@@ -59,7 +59,7 @@ const AdminBlogs = () => {
                 toast.success(updatedData?.message);
                 setIsDeletingSuccess(true);
                 query.invalidateQueries({
-                    queryKey: ["/blog"],
+                    queryKey: ["/blog-category"],
                 });
             },
             onError: (error) => {
@@ -72,10 +72,10 @@ const AdminBlogs = () => {
         <>
             <DashboardBreadcrumb
                 role="admin"
-                items={[{ name: "Blogs", path: "blogs/posts" }]}
+                items={[{ name: "Category", path: "blogs/category" }]}
             />
 
-            <FilterComponent title="Blogs"
+            <FilterComponent title="Category"
                 fields={[
 
                     {
@@ -87,7 +87,7 @@ const AdminBlogs = () => {
                                 }}
                             >
                                 <span className="px-6 py-2 whitespace-nowrap text-sm font-medium text-white bg-secondary rounded-full shadow-sm hover:bg-secondary/90">
-                                    Add Post
+                                    Add Category
                                 </span>
                             </button>
                         ),
@@ -100,10 +100,7 @@ const AdminBlogs = () => {
                     <thead className="bg-[#EAF2FA] rounded-full ">
                         <tr>
                             <th className="py-3 px-4 text-left text-xs font-semibold text-secondary whitespace-nowrap  uppercase tracking-wider">
-                                Image
-                            </th>
-                            <th className="py-3 px-4 text-center text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
-                                Title
+                                Name
                             </th>
 
                             <th className="py-3 px-4 text-right text-xs font-semibold text-secondary whitespace-nowrap uppercase tracking-wider">
@@ -120,16 +117,13 @@ const AdminBlogs = () => {
                                     </div>
                                 </td>
                             </tr>
-                        ) : response?.data?.blogs?.length > 0 ? (
-                            response?.data?.blogs?.map((item, index) => (
+                        ) : response?.data?.length > 0 ? (
+                                response?.data?.map((item, index) => (
                                 <tr key={index} className="hover:bg-gray-50 border-b">
 
-                                    <td className="py-4 px-4 text-sm text-secondaryText">
-                                        <img src={item?.thumbnail} alt="" className=" h-12 rounded-lg" />
-                                    </td>
 
-                                    <td className="py-4 px-4 text-sm text-green-600 text-center">
-                                        {item?.title || "N/A"}
+                                    <td className="py-4 px-4 text-sm text-green-600 text-left">
+                                        {item?.name || "N/A"}
                                     </td>
 
 
@@ -159,7 +153,7 @@ const AdminBlogs = () => {
                         ) : (
                             <tr className="">
                                 <td colSpan={8} className="py-4 text-center !text-sm">
-                                    No Blog Found!
+                                    No Blog Category Found!
                                 </td>
                             </tr>
                         )}
@@ -185,12 +179,12 @@ const AdminBlogs = () => {
                     }
                 />
             </div>
-            <AdminAddBlogModal
+            <AdminAddBlogCategoryModal
                 isOpen={isCreateModalOpen}
                 setIsOpen={setIsCreateModalOpen}
             />
 
-            <AdminEditBlogModal
+            <AdminEditBlogCategoryModal
                 isOpen={isEditModalOpen}
                 setIsOpen={setIsEditModalOpen}
                 item={item}
@@ -215,4 +209,4 @@ const AdminBlogs = () => {
     );
 };
 
-export default AdminBlogs;
+export default AdminBlogsCategory;

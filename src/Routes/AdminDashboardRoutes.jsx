@@ -19,6 +19,7 @@ import DashboardUserSettings from "@/Shared/DashboardUserSettings";
 import AdminDashboardActivationManage from "@/Components/AdminDashboard/ActivationManage/AdminDashboardActivationManage";
 import SEOSettings from "@/Pages/AdminDashboard/Customization/SEOSettings";
 import AdminBlogs from "@/Pages/AdminDashboard/Blogs/AdminBlogs";
+import AdminBlogsCategory from "@/Pages/AdminDashboard/BlogCategory/AdminBlogsCategory";
 
 const AdminDashboardRoutes = [
   { path: "", Component: AdminDashboardIndex },
@@ -99,6 +100,10 @@ const AdminDashboardRoutes = [
   {
     path: "blogs/posts",
     Component: AdminBlogs,
+  },
+  {
+    path: "blogs/category",
+    Component: AdminBlogsCategory,
   },
 ];
 

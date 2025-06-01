@@ -2,285 +2,203 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "@/Components/ui/dialog";
-import { Input } from "@/Components/ui/input";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useCrudOperations } from "@/Hooks/useCRUDOperation";
+import toast from "react-hot-toast";
+import CustomInput from "@/Shared/Form/CustomInput";
+import CustomImageUploader from "@/Shared/Form/CustomImageUploader";
+import ErrorMessage from "@/Shared/Form/ErrorMessage";
+import JoditEditor from "jodit-react";
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
-import { ArrowLeft, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { Controller, useForm } from "react-hook-form";
-import { useCrudOperations } from "@/Hooks/useCRUDOperation";
-import { useQueryClient } from "@tanstack/react-query";
 import Spinner from "@/Components/ui/Spinner";
 
 const AdminEditBlogModal = ({ isOpen, setIsOpen, item }) => {
-    const query = useQueryClient();
-    const [features, setFeatures] = useState([]);
-    const [feature, setFeature] = useState("");
-    const methods = useForm();
+    const [content, setContent] = useState("");
+    const editor = useRef(null);
+    const { updateEntity } = useCrudOperations("blog");
+    const { useFetchEntities } = useCrudOperations("blog-category");
     const {
-        handleSubmit,
-        register,
-        control,
-        formState: { errors },
-        reset,
-    } = methods;
+        data: categories,
+    } = useFetchEntities();
 
-    const { updateEntity } = useCrudOperations("package");
+    const methods = useForm({
+        defaultValues: {
+            title: "",
+            metaDescription: "",
+            slug: "",
+            thumbnail: null,
+            tags: "",
+            category: "",
+        },
+    });
 
-    const onSubmit = async (data) => {
-        if (features?.length === 0) {
-            toast.error("Please add at least one feature");
-            return;
-        }
-        const updatedData = { ...data, features, _id: item?._id };
-
-        updateEntity.mutate(updatedData, {
-            onSuccess: (data) => {
-                toast.success(data?.message);
-                query.invalidateQueries({
-                    queryKey: ["package"],
-                });
-            },
-            onError: (error) => {
-                toast.error(error?.message);
-            },
-        });
-    };
-
-    const addFeature = () => {
-        if (!feature) {
-            return toast.error("Type feature first");
-        }
-        setFeatures([...features, feature]);
-        setFeature("");
-    };
-
-    const removeFeature = (i) => {
-        setFeatures((prevFeatures) =>
-            prevFeatures?.filter?.((_, idx) => idx !== i)
-        );
-    };
-
-    const showError = (name) => {
-        const errorMsg = errors[name]?.message;
-        return <p className="text-red-500 text-xs mt-2">{errorMsg}</p>;
-    };
+    const { handleSubmit, formState: { errors } } = methods;
 
     useEffect(() => {
         if (isOpen && item) {
-            reset({
-                name: item?.name,
-                price: item?.price,
-                duration: String(item?.duration),
-                features: item?.features,
-                status: item?.status,
+            methods.reset({
+                title: item?.title || "",
+                metaDescription: item?.metaDescription || "",
+                slug: item?.slug || "",
+                thumbnail: item?.thumbnail || null,
+                tags: item?.tags || "",
+                category: item?.category || "",
             });
-            setFeatures(item?.features);
-        } else {
-            reset({
-                name: "",
-                price: "",
-                duration: "90",
-                features: [],
-                status: "Active",
-            });
+            setContent(item?.content || "");
         }
-    }, [isOpen, item, reset]);
+    }, [isOpen, item, methods]);
+
+    const onSubmit = (data) => {
+        updateEntity.mutate(
+            { ...data, content, _id: item?._id },
+            {
+                onSuccess: (res) => {
+                    toast.success(res?.message || "Blog post updated successfully");
+                    setIsOpen(false);
+                },
+                onError: (error) => {
+                    toast.error(error?.message || "Failed to update blog post");
+                },
+            }
+        );
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className=" overflow-y-auto max-h-screen  max-w-4xl bg-[#ECF2F8] lg:p-7 p-3 sm:p-5">
+            <DialogContent className="overflow-y-auto max-h-screen max-w-4xl bg-[#ECF2F8] lg:p-7 p-3 sm:p-5">
                 <DialogHeader>
                     <DialogClose asChild>
                         <DialogTitle className="text-xl font-semibold flex items-center gap-2 text-secondary cursor-pointer w-fit">
-                            <ArrowLeft />{" "}
-                            <span className="whitespace-nowrap">
-                                Create Subscription Plan
-                            </span>
+                            <ArrowLeft />{' '}
+                            <span className="whitespace-nowrap">Edit Blog Post</span>
                         </DialogTitle>
                     </DialogClose>
                 </DialogHeader>
 
-                <form className="w-full sm:p-5 p-4 pb-6 rounded-xl  bg-white">
-                    <div className="grid sm:grid-cols-2 grid-cols-1 gap-5">
-                        <div>
-                            <p className="text-sm font-medium text-gray-600 mb-2">
-                                Plan Name
-                            </p>
+                <FormProvider {...methods}>
+                    <form className="w-full p-0 sm:p-5 pb-6 rounded-xl bg-white" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="space-y-5">
+                            {/* Title */}
+                            <div>
+                                <CustomInput
+                                    name="title"
+                                    label="Title"
+                                    placeholder="Enter blog title"
+                                    required={true}
+                                />
+                            </div>
 
-                            <Input
-                                className="px-5 py-5 border-gray-200 rounded-full"
-                                placeholder="Type Plan Name"
-                                {...register("name", { required: "Plan name is required" })}
-                            />
+                            {/* Meta Description */}
+                            <div>
+                                <CustomInput
+                                    name="metaDescription"
+                                    label="Meta Description"
+                                    placeholder="Enter meta description"
+                                    type="textarea"
+                                    rows={3}
+                                />
+                            </div>
 
-                            {showError("name")}
-                        </div>
+                            {/* Slug */}
+                            <div>
+                                <CustomInput
+                                    name="slug"
+                                    label="Slug"
+                                    placeholder="Enter slug"
+                                />
+                            </div>
 
-                        <div>
-                            <p className="text-sm font-medium text-gray-600 mb-2">
-                                Price (€)
-                            </p>
+                            {/* Main Image */}
+                            <div>
+                                <CustomImageUploader
+                                    name="thumbnail"
+                                    label="Main Image (Recommended Size 750 × 400)"
+                                    required={true}
+                                    previewShown={true}
+                                    value={methods.watch("thumbnail")}
+                                />
+                                {errors.thumbnail && <ErrorMessage message={errors.thumbnail.message} />}
+                            </div>
 
-                            <Input
-                                type="number"
-                                className="px-5 py-5 border-gray-200 rounded-full"
-                                placeholder="Type Price"
-                                {...register("price", { required: "Price is required" })}
-                            />
+                            {/* Tags */}
+                            <div>
+                                <CustomInput
+                                    name="tags"
+                                    label="Tags (comma separated)"
+                                    placeholder="tag1, tag2, tag3"
+                                />
+                            </div>
 
-                            {showError("price")}
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-600 mb-2">Duration</p>
-
-                            <Controller
-                                name="duration"
-                                control={control}
-                                rules={{ required: "Duration is required" }}
-                                render={({ field, fieldState }) => (
-                                    <div>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            value={field.value}
-                                            className="w-full py-5"
-                                        >
-                                            <SelectTrigger className="w-full py-5 rounded-full">
-                                                <SelectValue placeholder="Select duration (Days)" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="30">1 Month</SelectItem>
-                                                    <SelectItem value="90">3 Month</SelectItem>
-                                                    <SelectItem value="180">6 Month</SelectItem>
-                                                    <SelectItem value="365">1 Year</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-
-                                        {fieldState?.error && (
-                                            <span className="text-red-500 text-xs block mt-2">
-                                                {fieldState.error.message}
-                                            </span>
-                                        )}
-                                    </div>
-                                )}
-                            />
-                        </div>
-
-                        <div>
-                            <p className="text-sm font-medium text-gray-600 mb-2">Status</p>
-                            <Controller
-                                name="status"
-                                control={control}
-                                defaultValue="Active"
-                                rules={{ required: "Status is required" }}
-                                render={({ field, fieldState }) => (
-                                    <div>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            value={field.value}
-                                            className="w-full py-5"
-                                        >
-                                            <SelectTrigger className="w-full py-5 rounded-full">
-                                                <SelectValue placeholder="Select Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="Active">Active</SelectItem>
-                                                    <SelectItem value="Inactive">Inactive</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-
-                                        {fieldState?.error && (
-                                            <span className="text-red-500 text-xs block mt-2">
-                                                {fieldState.error.message}
-                                            </span>
-                                        )}
-                                    </div>
-                                )}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mt-5">
-                        <p className="text-sm font-medium text-gray-600 mb-2">Features</p>
-
-                        <div className="mb-5 grid sm:grid-cols-3 grid-cols-2 gap-2">
-                            {features?.map((f, i) => (
-                                <li
-                                    key={i}
-                                    className="flex items-center text-primaryText text-sm font-medium"
+                            {/* Category */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Category <span className="text-red-500">*</span>
+                                </label>
+                                <Select className="py-2"
+                                    onValueChange={(value) => methods.setValue("category", value)}
+                                    defaultValue={methods.watch("category")}
                                 >
-                                    <svg
-                                        className="w-3.5 h-3.5 me-2 text-secondary dark:secondary shrink-0"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                                    </svg>
-                                    {f}{" "}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeFeature(i)}
-                                        className="text-red-500 ml-1"
-                                    >
-                                        <X size={16} />
-                                    </button>
-                                </li>
-                            ))}
+                                    <SelectTrigger className="w-full border border-gray-200 rounded-full px-4 py-5 focus:outline-none focus:ring-2 focus:ring-secondary/80 bg-white">
+                                        <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {categories?.data?.map((category) => (
+                                            <SelectItem key={category.name} value={category.name}>
+                                                {category.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.category && <ErrorMessage message={errors.category.message} />}
+                            </div>
+
+                            {/* Body */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Body</label>
+                                <JoditEditor
+                                    ref={editor}
+                                    value={content}
+                                    onChange={(newContent) => {
+                                        setContent(newContent);
+                                    }}
+                                />
+                            </div>
                         </div>
 
-                        <div className="flex items-center sm:gap-5 gap-3">
-                            <Input
-                                value={feature}
-                                onChange={(e) => setFeature(e.target.value)}
-                                className="px-5 py-5 border-gray-200 rounded-full"
-                                placeholder="Type Feature"
-                            />
+                        <div className="mt-8 flex gap-4">
                             <button
-                                type="button"
-                                onClick={addFeature}
-                                className="text-sm px-4 py-2.5 bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed whitespace-nowrap rounded-full text-white font-semibold flex items-center justify-center"
+                                type="submit"
+                                disabled={updateEntity?.isPending}
+                                className="flex-1 bg-secondary hover:bg-secondary text-white font-semibold py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Add Features
+                                {updateEntity?.isPending ? (
+                                    <Spinner size={20} className="text-white" />
+                                ) : (
+                                    "Update Post"
+                                )}
                             </button>
+                            <DialogClose asChild>
+                                <button
+                                    type="button"
+                                    className="flex-1 border border-secondary/50 text-secondary font-semibold py-2 px-4 rounded-lg transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </DialogClose>
                         </div>
-                    </div>
-                </form>
-
-                <DialogFooter className="flex gap-5 items-center">
-                    <button
-                        disabled={updateEntity?.isPending}
-                        onClick={handleSubmit(onSubmit)}
-                        className="bg-secondary hover:bg-secondary/90 disabled:bg-secondary/60 disabled:cursor-not-allowed px-6 py-2.5 text-sm font-medium text-white rounded-full w-full flex items-center justify-center"
-                    >
-                        {updateEntity?.isPending ? (
-                            <Spinner size={20} className="text-white" />
-                        ) : (
-                            "Save"
-                        )}
-                    </button>
-                    <DialogClose asChild>
-                        <button className="border border-secondary/50 px-6 py-2.5 text-sm font-medium text-secondary rounded-full w-full">
-                            Cancel
-                        </button>
-                    </DialogClose>
-                </DialogFooter>
+                    </form>
+                </FormProvider>
             </DialogContent>
         </Dialog>
     );
