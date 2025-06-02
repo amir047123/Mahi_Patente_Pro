@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import fetchuserData from "./globalUserDataFetching";
 import { baseURL } from "@/Config";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import { load } from "@fingerprintjs/fingerprintjs";
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -15,9 +16,21 @@ export const useAuth = () => {
   const navigate = useNavigate();
   // const { setGlobalContents } = useState();
   const [youtubeToken, setYoutubeToken] = useState(null);
+  const [fingerprint, setFingerprint] = useState();
 
   useEffect(() => {
     fetchAuthenticatedUser();
+    const initFingerprint = async () => {
+      try {
+        const fp = await load();
+        const result = await fp.get();
+        setFingerprint(result.visitorId);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    initFingerprint();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -301,5 +314,6 @@ export const useAuth = () => {
     ytLogout,
     refreshYoutubeAccessToken,
     loginWithRedeemCode,
+    fingerprint,
   };
 };

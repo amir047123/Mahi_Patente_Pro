@@ -358,6 +358,9 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChat, fetchFullActiveChat]);
+  // console.log(fullActiveChat)
+  // console.log(messages)
+  // console.log(activeChat)
 
   return (
     <div
@@ -564,7 +567,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
 
       {!fullActiveChat?.admin || !fullActiveChat?._id ? (
         <div className="flex gap-2 items-center absolute bottom-5 left-5 right-5">
-          <div className="relative flex items-center justify-center rounded-lg bg-white w-full">
+          <div className="relative flex items-center justify-center rounded-lg bg-secondary w-full">
             {activeChat && (
               <Button
                 isDisabled={!activeChat || disableJoin || isLoading}
