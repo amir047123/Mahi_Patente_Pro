@@ -90,8 +90,10 @@ const ChatBot = () => {
   });
 
   const fetchMessages = async (page) => {
-    if (!fingerprint || user) return;
+  
+    if (!fingerprint || !user) return;
     try {
+      
       page === 1 && setIsLoading(true);
       const response = await axios.post(
         `${baseURL}/chat/history`,
@@ -367,7 +369,7 @@ const ChatBot = () => {
                 <img src={logo} alt="User avatar" className="w-10" />
 
                 {/* <FaRobot size={20} /> */}
-                <h3 className="font-semibold">Genzam Support Chat</h3>
+                <h3 className="font-semibold">Mahi Patente Support Chat</h3>
                 {isActive && (
                   <div className="size-2 bg-green-500 rounded-full"></div>
                 )}
