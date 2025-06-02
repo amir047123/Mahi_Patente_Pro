@@ -20,6 +20,7 @@ import { Link, useLocation } from "react-router-dom";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useAuthContext } from "@/Context/AuthContext";
+import { FaWhatsapp } from "react-icons/fa6";
 
 // Menu items.
 const items = [
@@ -100,6 +101,23 @@ export function UserDashboardSidebar() {
                   </SidebarMenuItem>
                 </Link>
               ))}
+
+              <a target="_blank"
+                href="https://wa.me/+393511032106"
+                onClick={() => setOpenMobile(false)}
+               
+              >
+                <SidebarMenuItem
+                  className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary `}
+                >
+                  <div className="flex items-center gap-2">
+                    <FaWhatsapp className="text-[1rem]" />
+                    <span className="text-[16px] ml-1.5 font-medium ">
+                      Support
+                    </span>
+                  </div>
+                </SidebarMenuItem>
+              </a>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
