@@ -51,7 +51,7 @@ const AssignConversation = ({
   };
 
   return (
-    <PopoverContent className="max-w-md p-7">
+    <PopoverContent className="max-w-md p-7 bg-white shadow">
       <label className="text-[16px] font-semibold block mb-3 mr-auto">
         Assign to
       </label>

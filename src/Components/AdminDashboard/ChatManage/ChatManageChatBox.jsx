@@ -416,7 +416,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
             </div>
 
             {/* assign conversation */}
-            <Popover
+            {/* <Popover
               isOpen={isOpen}
               backdrop="opaque"
               showArrow
@@ -446,7 +446,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                 chat={fullActiveChat}
                 refetch={fetchFullActiveChat}
               />
-            </Popover>
+            </Popover> */}
           </div>
         </div>
 

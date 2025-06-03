@@ -20,8 +20,10 @@ const ProfileCard = ({ chat }) => {
     setIsActive(isUserActive || isVisitorActive || false);
   }, [visitors, onlineUsers, chat]);
 
+  console.log("ProfileCard", chat, isActive);
+
   return (
-    <PopoverContent className="max-w-sm p-7">
+    <PopoverContent className="max-w-sm p-7 bg-white shadow">
       <div className="flex items-center gap-5">
         <div className="relative">
           <img

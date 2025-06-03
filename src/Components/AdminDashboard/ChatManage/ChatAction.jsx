@@ -75,7 +75,7 @@ const ChatAction = ({ id, getAllChats }) => {
   return (
     <>
       {isLoading && <LinearLoader />}
-      <DropdownMenu
+      <DropdownMenu className="bg-white p-2 shadow rounded-md"
         aria-label="Dropdown menu with icons"
         variant="flat"
         disabledKeys={[userListTab]}
