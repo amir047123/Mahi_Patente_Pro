@@ -16,7 +16,7 @@ const ReceiverChat = ({ message }) => {
   return (
     <div className="flex items-start gap-3 mb-5">
       <img
-        src={message?.sender?.profilePicture || demoImg}
+        src={message?.sender?.profile?.profilePicture || demoImg}
         alt="User avatar"
         className="rounded-full w-10 border"
       />
@@ -24,7 +24,7 @@ const ReceiverChat = ({ message }) => {
       <div>
         <div className="text-[12px] flex items-center gap-1">
           <p className=" text-primary font-medium">
-            {message?.sender?.username || "Anonymous"}
+            {message?.sender?.profile?.name || "Anonymous"}
           </p>
           <p className="text-[#64748B]">
             •{" "}

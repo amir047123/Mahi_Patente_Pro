@@ -19,7 +19,7 @@ const ChatManageUserList = ({ getAllChats, isLoading }) => {
   useEffect(() => {
     if (selectedUser) {
       const chat = adminChats.find(
-        (chat) => chat?.user?._id === selectedUser?.value
+        (chat) => chat?.user?._id === selectedUser?.value,
       );
 
       if (chat) {
@@ -32,21 +32,22 @@ const ChatManageUserList = ({ getAllChats, isLoading }) => {
             firstName: selectedUser?.fullData?.firstName,
             surname: selectedUser?.fullData?.surname,
             phoneNumber: selectedUser?.fullData?.phoneNumber,
-            username: selectedUser?.fullData?.username,
+            username: selectedUser?.fullData?.profile?.username,
             email: selectedUser?.fullData?.email,
             status: selectedUser?.fullData?.status,
-            role: selectedUser?.fullData?.role,
+            role: selectedUser?.fullData?.profile?.role,
             profilePicture: selectedUser?.fullData?.profilePicture,
             referralId: {
               _id: selectedUser?.fullData?.referralId?._id,
-              username: selectedUser?.fullData?.referralId?.username,
-              role: selectedUser?.fullData?.referralId?.role || "admin",
+              username: selectedUser?.fullData?.referralId?.profile?.username,
+              role:
+                selectedUser?.fullData?.referralId?.profile?.role || "admin",
             },
           },
           admin: {
             _id: user?._id,
-            username: user?.username,
-            role: user?.role,
+            username: user?.profile?.username,
+            role: user?.profile?.role,
             profilePicture: user?.profilePicture,
           },
           status: "Active",
@@ -71,7 +72,6 @@ const ChatManageUserList = ({ getAllChats, isLoading }) => {
 
   return (
     <div className="2xl:col-span-2  pt-4 bg-gray-50 px-5 mt-5 rounded-lg ">
-
       <UserListTab />
 
       <div className="max-h-[64vh] overflow-y-scroll scrollbar-hide scroll-smooth">

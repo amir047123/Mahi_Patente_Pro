@@ -20,8 +20,6 @@ const ProfileCard = ({ chat }) => {
     setIsActive(isUserActive || isVisitorActive || false);
   }, [visitors, onlineUsers, chat]);
 
-  console.log("ProfileCard", chat, isActive);
-
   return (
     <PopoverContent className="max-w-sm p-7 bg-white shadow">
       <div className="flex items-center gap-5">
@@ -37,22 +35,22 @@ const ProfileCard = ({ chat }) => {
         </div>
         <div>
           <Typography.Heading5 variant="semibold" className="!text-[18px]">
-            {chat?.user
-              ? `${chat?.user?.firstName} ${chat?.user?.surname}`
-              : "Anonymous"}
+            {chat?.user ? `${chat?.user?.profile?.name}` : "Anonymous"}
           </Typography.Heading5>
           <Typography.Base
             variant="normal"
             className="!text-[14px] text-[#64748B] my-1.5"
           >
-            {chat?.user?.username || "N/A"}
+            {chat?.user?.profile?.username || "N/A"}
           </Typography.Base>
           <span
             className={`${
-              chat?.user?.role === "user" ? "bg-blue-500" : "bg-red-500"
+              chat?.user?.profile?.role === "user"
+                ? "bg-blue-500"
+                : "bg-red-500"
             } px-3 text-[12px] py-0.5 rounded-full text-white capitalize font-semibold`}
           >
-            {chat?.user?.role || "Visitor"}
+            {chat?.user?.profile?.role || "Visitor"}
           </span>
         </div>
       </div>
@@ -83,8 +81,8 @@ const ProfileCard = ({ chat }) => {
           <div className="flex justify-between w-full">
             <p className=" text-[#64748B]">Added By: </p>
             <p className="font-medium text-primary">
-              {chat?.user?.referralId?.username} ({chat?.user?.referralId?.role}
-              )
+              {chat?.user?.referralId?.profile?.username} (
+              {chat?.user?.referralId?.profile?.role})
             </p>
           </div>
           {/* <div className="flex justify-between w-full">

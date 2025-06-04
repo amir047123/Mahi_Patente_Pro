@@ -17,14 +17,12 @@ import ChatBot from "./Components/Chatbot/ChatBot";
 function App() {
   const { user } = useAuthContext();
   useSocket();
-console.log(user)
+
   return (
     <>
       <Toaster position="bottom-right flex" />
-      {
-        user?.profile?.role === "admin" ? "" : <ChatBot />
-      }
-      
+      {user?.profile?.role === "admin" ? null : <ChatBot />}
+
       <Routes>
         {/* public routes */}
         <Route path="/" element={<Home />} />

@@ -1,5 +1,5 @@
 import { Button, PopoverContent, Select, SelectItem } from "@nextui-org/react";
-import genzamLogo from "@/assets/Navbar/logo.svg";
+import logo from "@/assets/Navbar/logo.svg";
 import { useEffect, useState } from "react";
 import { baseURL } from "@/Config/config";
 import toast from "react-hot-toast";
@@ -69,13 +69,13 @@ const AssignConversation = ({
             onPress={() => setAssignedAdmin(admin._id)}
             startContent={
               <img
-                src={admin?.profilePicture || genzamLogo}
+                src={admin?.profilePicture || logo}
                 alt="img"
                 className="w-10 rounded-full"
               />
             }
           >
-            {admin?.username}
+            {admin?.profile?.username}
           </SelectItem>
         ))}
       </Select>

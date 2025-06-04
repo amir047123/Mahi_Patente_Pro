@@ -70,7 +70,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
       if (chat && chat?.adminUnreadCount > 0 && chat?.admin === user?._id) {
         socket.emit("read_message", {
           chatroomId: chat?._id,
-          role: user?.role || "visitor",
+          role: user?.profile?.role || "visitor",
         });
       }
     };
@@ -154,8 +154,8 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
       setFullActiveChat(data?.data?.data);
       setCurrentPage(data?.data?.currentPage);
       setTotalPages(data?.data?.totalPages);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -218,7 +218,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
         });
 
         toast.success(
-          `${chatMessage?.message?.sender?.username} Joined Chat : ${chatMessage?._id} `,
+          `${chatMessage?.message?.sender?.profile?.username} Joined Chat : ${chatMessage?._id} `,
         );
         setDisableJoin(false);
       }
@@ -259,7 +259,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
           });
 
           toast.success(
-            `${chatMessage?.message?.sender?.username} Joined Chat : ${chatMessage?._id} `,
+            `${chatMessage?.message?.sender?.profile?.username} Joined Chat : ${chatMessage?._id} `,
           );
           setDisableJoin(false);
         }
@@ -396,21 +396,21 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                 className="!text-[16px] 2xl:!text-[20px]"
               >
                 {activeChat
-                  ? activeChat?.user?.username || "Anonymous"
+                  ? activeChat?.user?.profile?.name || "Anonymous"
                   : "Select a chat"}
               </Typography.Title>
 
               {activeChat && (
                 <span
                   className={`${
-                    activeChat?.user?.role === "user"
+                    activeChat?.user?.profile?.role === "user"
                       ? "bg-[#2D68F8]"
-                      : activeChat?.user?.role === "admin"
+                      : activeChat?.user?.profile?.role === "admin"
                       ? "bg-primary"
                       : "bg-[#E10E0E]"
                   } px-3 text-[12px] py-0.5 rounded-full text-white capitalize font-semibold`}
                 >
-                  {activeChat?.user?.role || "Visitor"}
+                  {activeChat?.user?.profile?.role || "Visitor"}
                 </span>
               )}
             </div>
@@ -541,11 +541,12 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                       </time>
                       <br />
                       <span className="font-semibold text-primary">
-                        {message?.sender?.username || "Genzam Admin"}{" "}
+                        {message?.sender?.profile?.username ||
+                          "Mahi Patente Pro Admin"}{" "}
                       </span>
                       has joined the chat
                     </p>
-                  ) : message?.sender?.role === "admin" ? (
+                  ) : message?.sender?.profile?.role === "admin" ? (
                     <SenderChat message={message} />
                   ) : (
                     <ReceiverChat message={message} />
@@ -660,7 +661,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
               className="text-gray-500 !text-center px-4 py-2"
             >
               <span className="font-semibold">
-                {fullActiveChat?.admin?.username}
+                {fullActiveChat?.admin?.profile?.username}
               </span>{" "}
               is active in this conversation...
             </Typography.Base>

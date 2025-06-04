@@ -18,7 +18,7 @@ const SenderChat = ({ message }) => {
       <div>
         <div className="text-[12px] flex items-center gap-1  justify-end">
           <p className=" text-[#1A8245] font-medium">
-            {message?.sender?.username || "Genzam Admin"}
+            {message?.sender?.profile?.name || "Mahi Patente Pro Admin"}
           </p>
           <p className="text-[#64748B]">
             •{" "}
@@ -57,7 +57,7 @@ const SenderChat = ({ message }) => {
         </div>
       </div>
       <img
-        src={message?.sender?.profilePicture || demoImg}
+        src={message?.sender?.profile?.profilePicture || demoImg}
         alt="User avatar"
         className="rounded-full w-10 border"
       />

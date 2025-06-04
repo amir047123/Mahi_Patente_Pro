@@ -31,7 +31,7 @@ const ChatManage = () => {
             Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
-        }
+        },
       );
 
       const chats = response?.data?.data.sort((a, b) => {
@@ -41,8 +41,8 @@ const ChatManage = () => {
       });
 
       setAdminChats(chats);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -60,8 +60,8 @@ const ChatManage = () => {
       });
 
       setAllAdmins(response?.data);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -85,9 +85,8 @@ const ChatManage = () => {
 
   const sortAndUpdateChats = (chatMsg, type) => {
     const isDuplicate = adminChatsRef.current.some(
-      (chat) => chat._id === chatMsg._id
+      (chat) => chat._id === chatMsg._id,
     );
-
     const updatedChats = isDuplicate
       ? adminChatsRef.current.map((chat) =>
           chat._id === chatMsg._id
@@ -95,12 +94,12 @@ const ChatManage = () => {
                 ...chat,
                 ...chatMsg,
                 ...(type === "read_message" ||
-                chatMsg?.message?.sender?.role === "admin"
+                chatMsg?.message?.sender?.profile?.role === "admin"
                   ? { adminUnreadCount: 0 }
                   : { adminUnreadCount: (chat?.adminUnreadCount || 0) + 1 }),
                 // ...(type === "read_message" && { message: chat?.message }),
               }
-            : chat
+            : chat,
         )
       : [chatMsg, ...adminChatsRef.current];
 
@@ -114,7 +113,7 @@ const ChatManage = () => {
   };
 
   useEffect(() => {
-    getAllAdmins();
+    // getAllAdmins();
 
     const newChatroom = (chatroom) => {
       if (tabRef.current === "user" && chatroom?.user?._id) {
@@ -155,7 +154,7 @@ const ChatManage = () => {
 
     const assignChat = (updatedChatRoom) => {
       const chat = adminChatsRef.current.find(
-        (chat) => chat._id === updatedChatRoom._id
+        (chat) => chat._id === updatedChatRoom._id,
       );
       if (chat) {
         chat.admin = updatedChatRoom.admin;

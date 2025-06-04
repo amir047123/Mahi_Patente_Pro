@@ -21,7 +21,6 @@ import { baseURL } from "@/Config/config";
 import socket from "@/socket";
 import CustomIcon from "@/Ui/CustomIcon";
 
-
 const ChatBot = () => {
   const {
     fullChat,
@@ -84,16 +83,14 @@ const ChatBot = () => {
     content: "👋 Hi, there!. How can I help you today?",
     text: "👋 Hi, there!. How can I help you today?",
     sender: {
-      role: "admin",
+      profile: { role: "admin" },
     },
     timestamp: new Date(),
   });
 
   const fetchMessages = async (page) => {
-  
     if (!fingerprint || !user) return;
     try {
-      
       page === 1 && setIsLoading(true);
       const response = await axios.post(
         `${baseURL}/chat/history`,
@@ -104,7 +101,7 @@ const ChatBot = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           withCredentials: true,
-        }
+        },
       );
 
       if (response?.data?.data?.data?.messages?.length > 0) {
@@ -117,8 +114,8 @@ const ChatBot = () => {
             !messages.some(
               (prevMessage) =>
                 new Date(prevMessage.timestamp).getTime() ===
-                new Date(newMessage.timestamp).getTime()
-            )
+                new Date(newMessage.timestamp).getTime(),
+            ),
         );
         const updatedChats = [...messages, ...filteredMessages];
 
@@ -163,23 +160,23 @@ const ChatBot = () => {
         ...(!fullChatRef.current?._id ? chatMessage : {}),
         ...(chatMessage?.type === "admin_join"
           ? {
-              admin: chatMessage?.message?.sender,
+              admin: chatMessage?.message?.sender?.profile,
             }
           : {}),
         ...(chatMessage?.type === "read_message" ||
-        chatMessage?.message?.sender?.role !== "admin"
+        chatMessage?.message?.sender?.profile?.role !== "admin"
           ? { unreadCount: 0 }
           : { unreadCount: (fullChatRef.current?.unreadCount || 0) + 1 }),
       });
 
       chatMessage?.type === "admin_join" &&
-        toast.success("A Genzam Admin Joined the Support Chat");
+        toast.success("A Mahi Patente Pro Admin Joined the Support Chat");
 
       if (chatMessage?.type !== "read_message") {
         const isDuplicate = messagesRef.current.some(
           (message) =>
             new Date(message.timestamp).getTime() ===
-            new Date(chatMessage?.message.timestamp).getTime()
+            new Date(chatMessage?.message.timestamp).getTime(),
         );
 
         const updatedChats = isDuplicate
@@ -347,7 +344,7 @@ const ChatBot = () => {
             }`}
           >
             {/* <FaRobot size={24} /> */}
-            <img src={logo} alt="Genzam Logo" className="w-16 h-16" />
+            <img src={logo} alt="Mahi Patente Pro Logo" className="w-16 h-16" />
             {fullChat?.unreadCount > 0 && (
               <span className="absolute -top-2 right-0 bg-white text-primary text-sm rounded-full w-6 h-6 flex items-center justify-center">
                 {fullChat?.unreadCount || 0}
@@ -412,7 +409,7 @@ const ChatBot = () => {
                               <time
                                 className={`${
                                   new Date(
-                                    message?.timestamp
+                                    message?.timestamp,
                                   ).toDateString() !== new Date().toDateString()
                                     ? ""
                                     : "hidden"
@@ -426,12 +423,12 @@ const ChatBot = () => {
                                     year: "numeric",
                                     month: "short",
                                     day: "numeric",
-                                  }
+                                  },
                                 )}
                               </time>{" "}
                               <time>
                                 {new Date(
-                                  message?.timestamp || ""
+                                  message?.timestamp || "",
                                 ).toLocaleString("en-GB", {
                                   timeZone: "Europe/Rome",
                                   // weekday: "short",
@@ -443,7 +440,7 @@ const ChatBot = () => {
                               </time>
                               <br />
                               <span className="font-semibold text-primary">
-                                Genzam Admin{" "}
+                                Mahi Patente Pro Admin{" "}
                               </span>
                               has joined the chat
                             </p>
@@ -452,34 +449,35 @@ const ChatBot = () => {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               className={`flex ${
-                                message?.sender?.role === "admin"
+                                message?.sender?.profile?.role === "admin"
                                   ? "justify-start"
                                   : "justify-end"
                               }`}
                             >
                               <div
                                 className={`flex items-start gap-x-2 max-w-[80%] ${
-                                  message?.sender?.role === "admin"
+                                  message?.sender?.profile?.role === "admin"
                                     ? "flex-row"
                                     : "flex-row-reverse"
                                 }`}
                               >
                                 <div
                                   className={`${
-                                    message?.sender?.role === "admin"
+                                    message?.sender?.profile?.role === "admin"
                                       ? "p-2"
                                       : ""
                                   } rounded-full flex items-center justify-center min-w-8 min-h-8 w-8 h-8 ${
-                                    message?.sender?.role
+                                    message?.sender?.profile?.role
                                       ? "bg-gradient-to-r from-indigo-600 to-purple-600"
                                       : "bg-indigo-100"
                                   }`}
                                 >
-                                  {message?.sender?.role === "admin" ? (
+                                  {message?.sender?.profile?.role ===
+                                  "admin" ? (
                                     // <FaRobot className="text-white" size={24} />
                                     <img
-                                        src={logo}
-                                      alt="Genzam Logo"
+                                      src={logo}
+                                      alt="Mahi Patente Pro Logo"
                                       className="min-w-6 min-h-6 p-1"
                                     />
                                   ) : user?.profilePicture ? (
@@ -497,7 +495,7 @@ const ChatBot = () => {
                                 </div>
                                 <div
                                   className={`p-3 rounded-2xl ${
-                                    message?.sender?.role === "admin"
+                                    message?.sender?.profile?.role === "admin"
                                       ? "bg-gray-100 text-gray-800"
                                       : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
                                   } shadow-md`}
@@ -517,7 +515,7 @@ const ChatBot = () => {
                                     {message?.timestamp ? (
                                       <time>
                                         {new Date(
-                                          message?.timestamp
+                                          message?.timestamp,
                                         ).toLocaleString("en-GB", {
                                           timeZone: "Europe/Rome",
                                           // weekday: "short",
@@ -551,8 +549,8 @@ const ChatBot = () => {
                           className={`p-2 rounded-full flex items-center justify-center min-w-8 min-h-8 w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600`}
                         >
                           <img
-                                src={logo}
-                            alt="Genzam Logo"
+                            src={logo}
+                            alt="Mahi Patente Pro Logo"
                             className="min-w-6 min-h-6 p-1"
                           />
                         </div>

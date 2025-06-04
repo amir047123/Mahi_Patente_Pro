@@ -5,7 +5,6 @@ import { FormProvider, useForm } from "react-hook-form";
 const ContactUsForm = () => {
   const methods = useForm();
 
-
   const {
     register,
     handleSubmit,
@@ -14,7 +13,7 @@ const ContactUsForm = () => {
   } = methods;
 
   const onSubmit = async (data) => {
-   console.log(data)
+    console.log(data);
   };
 
   const ErrorFunction = (fieldName) => {
@@ -35,9 +34,7 @@ const ContactUsForm = () => {
           <div className=" ">
             <div className=" grid grid-cols-1 gap-5">
               <div>
-                <label className=" mb-2 block">
-                  Name
-                </label>
+                <label className=" mb-2 block">Name</label>
                 <div className="relative ">
                   <input
                     {...register("name", {
@@ -54,16 +51,14 @@ const ContactUsForm = () => {
               </div>
 
               <div className="">
-                <label className=" mb-2 block">
-                 Email
-                </label>
+                <label className=" mb-2 block">Email</label>
                 <div className="relative ">
                   <input
                     {...register("email", {
                       required: "this field is required",
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "type valid email"
+                        message: "type valid email",
                       },
                     })}
                     type="email"
@@ -77,9 +72,7 @@ const ContactUsForm = () => {
               </div>
 
               <div className="">
-                <label className=" mb-2 block">
-               Message
-                </label>
+                <label className=" mb-2 block">Message</label>
                 <div className="relative ">
                   <textarea
                     rows={4}
@@ -94,8 +87,6 @@ const ContactUsForm = () => {
                 </div>
                 {ErrorFunction("message")}
               </div>
-
-             
             </div>
           </div>
           <div className="flex justify-between gap-5">
@@ -113,14 +104,11 @@ const ContactUsForm = () => {
               type="submit"
               className="bg-secondary w-full text-white flex items-center justify-center py-2 px-5 gap-2 mt-10 rounded-lg hover:bg-secondary/80 min-h-12 disabled:bg-secondary/50 disabled:pointer-events-none"
             >
-             
-                <p className="">Submit</p>
-              
+              <p className="">Submit</p>
             </button>
           </div>
         </form>
       </FormProvider>
-      
     </div>
   );
 };

@@ -102,10 +102,10 @@ export function UserDashboardSidebar() {
                 </Link>
               ))}
 
-              <a target="_blank"
+              <a
+                target="_blank"
                 href="https://wa.me/+393511032106"
                 onClick={() => setOpenMobile(false)}
-               
               >
                 <SidebarMenuItem
                   className={`hover:bg-[#EBF2FB]   py-2.5 px-3 rounded-sm text-secondaryText hover:text-secondary `}

@@ -3,15 +3,11 @@ import contactImg from "@/assets/contact/contact-img.svg";
 import { MdAlternateEmail } from "react-icons/md";
 import { LuPhoneCall } from "react-icons/lu";
 import { GrLocation } from "react-icons/gr";
-import {
-  FaFacebook,
-  FaWhatsapp,
-} from "react-icons/fa";
-import Typography from "@/components/Typography";
+import { FaFacebook, FaWhatsapp } from "react-icons/fa";
+import Typography from "@/Components/Typography";
 import Navbar from "@/Shared/Navbar/Navbar";
 import ContactUsForm from "./ContactUsForm";
 import Footer from "@/Shared/Footer/Footer";
-
 
 const fadeInVariants = {
   hidden: { opacity: 0 },
@@ -25,11 +21,10 @@ const fadeInVariants = {
 };
 
 const ContactUs = () => {
-
   return (
     <div>
       <Navbar />
-       
+
       <div className="max-w-screen-max_screen mx-auto xl:px-0 lg:px-8 md:px-6 px-4 pt-28  pb-20">
         <motion.div
           className="2xl:px-0 md:px-10 px-5 max-w-screen-max_screen mx-auto "
@@ -54,7 +49,7 @@ const ContactUs = () => {
               {/* contact */}
               <div>
                 <Typography.Heading5 variant="semibold" className=" mb-8">
-                  Need any 
+                  Need any
                   <span className="text-secondary"> help?</span>
                 </Typography.Heading5>
 
@@ -68,7 +63,6 @@ const ContactUs = () => {
                     </span>
                     <Typography.Base variant="normal" className="text-gray-600">
                       vipersitaly@gmail.com
-
                     </Typography.Base>
                   </button>
 
@@ -83,10 +77,7 @@ const ContactUs = () => {
                       +39350 805 6202
                     </Typography.Base>
                   </button>
-                  <button
-                    className="flex gap-3 items-center w-fit"
-                   
-                  >
+                  <button className="flex gap-3 items-center w-fit">
                     <span className="w-9 h-9 rounded-full group gradient-border flex items-center justify-center cursor-pointer bg-secondary/10 shadow shadow-secondary/20 hover:bg-secondary hover:text-white hover:shadow-lg hover:shadow-secondary/20 text-gray-500 transition-all duration-300">
                       <GrLocation className="w-5 h-5" />
                     </span>
@@ -103,7 +94,9 @@ const ContactUs = () => {
                   <button
                     className="whitespace-nowrap bg-[#0866FF] px-5 py-2 rounded-full  flex items-center gap-2 text-sm text-white"
                     onClick={() =>
-                      window.open("https://www.facebook.com/share/1BnVVQbQTW/?mibextid=wwXIfr")
+                      window.open(
+                        "https://www.facebook.com/share/1BnVVQbQTW/?mibextid=wwXIfr",
+                      )
                     }
                   >
                     <FaFacebook className="w-5 h-5 " /> Follow us on:
@@ -112,11 +105,9 @@ const ContactUs = () => {
                     className="whitespace-nowrap text-white bg-[#198F45] px-5 py-2 rounded-full  flex items-center gap-2 text-sm"
                     onClick={() => window.open("https://wa.me/+393511032106")}
                   >
-                    <FaWhatsapp className="w-5 h-5 " />{" "}
-                    Chat via Whatsapp
+                    <FaWhatsapp className="w-5 h-5 " /> Chat via Whatsapp
                   </button>
                 </div>
-
               </div>
             </div>
 

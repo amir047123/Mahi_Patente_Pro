@@ -66,23 +66,23 @@ const ChatUserOverview = ({ chat, active, getAllChats }) => {
                 variant="semibold"
                 className="font-medium text-gray-900 group-hover:text-white"
               >
-                {chat?.user?.username || "Anonymous"}
+                {chat?.user?.profile?.name || "Anonymous"}
               </Typography.Base>
               <span
                 className={`${
-                  chat?.user?.role === "user"
+                  chat?.user?.profile?.role === "user"
                     ? "bg-[#2D68F8]"
-                    : chat?.user?.role === "admin"
+                    : chat?.user?.profile?.role === "admin"
                     ? "bg-primary"
                     : "bg-[#E10E0E]"
                 } px-3 text-[12px] py-0.5 rounded-full text-white !capitalize font-semibold`}
               >
-                {chat?.user?.role || "Visitor"}
+                {chat?.user?.profile?.role || "Visitor"}
               </span>
 
               {chat?.adminUnreadCount > 0 && (
                 <span
-                  className={`bg-title_gradient px-3 text-[12px] py-0.5 rounded-full text-white !capitalize font-semibold`}
+                  className={`bg-white px-2 text-[12px] py-0.5 rounded-full text-black !capitalize font-semibold`}
                 >
                   {chat?.adminUnreadCount || 0}
                 </span>
@@ -122,11 +122,11 @@ const ChatUserOverview = ({ chat, active, getAllChats }) => {
               variant={chat?.adminUnreadCount > 0 ? "semibold" : "regular"}
               className="text-gray-600 group-hover:text-gray-300 font-[300] text-sm line-clamp-1"
             >
-              {/* {chat?.message?.sender?.role === "admin" ? "Admin" : "User"}{" "} */}
+              {/* {chat?.message?.sender?.profile?.role === "admin" ? "Admin" : "User"}{" "} */}
               {chat?.message?.eventType === "admin_join" ? (
                 <>
                   <span className="font-semibold">
-                    {chat?.message?.sender?.username}
+                    {chat?.message?.sender?.profile?.username}
                   </span>{" "}
                   Joined Chat
                 </>
