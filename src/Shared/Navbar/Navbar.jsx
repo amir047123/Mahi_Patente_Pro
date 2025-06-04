@@ -9,10 +9,10 @@ const Navbar = () => {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/courses", label: "Courses" },
+    // { href: "/courses", label: "Courses" },
     { href: "/pricing", label: "Pricing" },
     { href: "/blogs", label: "Blogs" },
-    { href: "", label: "Contact" },
+    { href: "/contact-us", label: "Contact" },
   ];
 
   return (
