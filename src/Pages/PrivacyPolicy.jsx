@@ -194,7 +194,7 @@ const PrivacyPolicy = () => {
                   please contact us: Email:{" "}
                   <span className="text-secondary">vipersitaly@gmail.com</span>{" "}
                   Phone:{" "}
-                  <span className="text-secondary">+39 351 103 2106</span>{" "}
+                  <span className="text-secondary">+39350 805 6202</span>{" "}
                   Address:{" "}
                   <span className="text-secondary">
                     Mahi Patente Pro Office, 80086 Palma Campania, Italy

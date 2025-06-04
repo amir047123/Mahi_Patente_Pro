@@ -74,13 +74,13 @@ const ContactUs = () => {
 
                   <button
                     className="flex gap-3 items-center w-fit"
-                    onClick={() => window.open("tel:+393511032106")}
+                    onClick={() => window.open("tel:+393508056202")}
                   >
                     <span className="w-9 h-9 rounded-full group gradient-border flex items-center justify-center cursor-pointer bg-secondary/10 shadow shadow-secondary/20 hover:bg-secondary hover:text-white hover:shadow-lg hover:shadow-secondary/20 text-gray-500 transition-all duration-300">
                       <LuPhoneCall className="w-5 h-5" />
                     </span>
                     <Typography.Base variant="normal" className="text-gray-600">
-                      +39 351 103 2106
+                      +39350 805 6202
                     </Typography.Base>
                   </button>
                   <button
