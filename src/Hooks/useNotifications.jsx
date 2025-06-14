@@ -10,6 +10,7 @@ export const useNotification = () => {
   const observer = useRef(null);
   const token = localStorage.getItem("token");
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [visitors, setVisitors] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
   const fetchNotifications = async (page) => {
@@ -26,7 +27,7 @@ export const useNotification = () => {
             Authorization: `Bearer ${token}`,
           },
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -40,15 +41,15 @@ export const useNotification = () => {
 
       setNotifications((prev) => {
         const existingIds = new Set(
-          prev.map((notification) => notification._id)
+          prev.map((notification) => notification._id),
         );
         const newNotifications = data.notifications.filter(
-          (notification) => !existingIds.has(notification._id)
+          (notification) => !existingIds.has(notification._id),
         );
 
         return [...prev, ...newNotifications].sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
       });
 
@@ -91,7 +92,7 @@ export const useNotification = () => {
 
   const markAllAsRead = async () => {
     setNotifications((prev) =>
-      prev.map((notification) => ({ ...notification, read: true }))
+      prev.map((notification) => ({ ...notification, read: true })),
     );
 
     if (unreadCount === 0) return;
@@ -122,6 +123,8 @@ export const useNotification = () => {
     markAllAsRead,
     onlineUsers,
     setOnlineUsers,
+    visitors,
+    setVisitors,
     fetchNotifications,
     unreadCount,
   };

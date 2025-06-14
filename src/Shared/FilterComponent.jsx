@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 
-const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
+const FilterComponent = ({ fields, filters = {}, setFilters = () => {},title="" }) => {
   const [date, setDate] = useState({});
 
   const handleInputChange = (name, value) => {
@@ -36,6 +36,8 @@ const FilterComponent = ({ fields, filters = {}, setFilters = () => {} }) => {
     <HorizontalScroll
       className={`flex gap-5 items-center w-full my-5 bg-white p-5 rounded-2xl border `}
     >
+      {title && <h2 className="text-secondary font-semibold text-lg">{title}</h2>}
+
       {fields.map((field, i) => (
         <Fragment key={i}>
           <div key={field?.name} className="flex items-center gap-3">

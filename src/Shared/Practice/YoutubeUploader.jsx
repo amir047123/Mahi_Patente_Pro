@@ -25,6 +25,7 @@ const YoutubeUploader = () => {
   };
 
   console.log(uploadedVideoId);
+
   return (
     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg my-10">
       {!youtubeToken ? (

@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import socket from "@/socket";
 import { useAuthContext } from "@/Context/AuthContext";
+import { useNotificationsContext } from "@/Context/NotificationsContext";
 
 const useSocket = () => {
-  const { user } = useAuthContext();
-  const [onlineUsers, setOnlineUsers] = useState();
+  const { user, fingerprint } = useAuthContext();
+  const { setOnlineUsers, setVisitors } = useNotificationsContext();
 
   useEffect(() => {
-    if (!user) return;
     socket.connect();
-    socket.on("connect", () => {
-      console.log("Connected to Socket.IO server");
 
-      if (user && user._id) {
+    socket.on("connect", () => {
+      if (!user && fingerprint) {
+        socket.emit("visitor", { fingerprint });
+      }
+
+      if (user && user?._id) {
         socket.emit("userLogin", {
           userId: user?._id,
           role: user?.profile?.role,
@@ -20,10 +23,11 @@ const useSocket = () => {
       }
     });
 
-    socket.on("updateOnlineUsers", (onlineUserData) => {
-      if (user && user?.profile?.role === "admin") {
-        setOnlineUsers(onlineUserData);
-      }
+    socket.on("updateOnlineUsers", (onlineUsers, onlineVisitors) => {
+      // if (user && user.role === "admin") {
+      setOnlineUsers(onlineUsers);
+      setVisitors(onlineVisitors);
+      // }
     });
 
     socket.on("disconnect", () => {
@@ -33,11 +37,9 @@ const useSocket = () => {
     return () => {
       socket.disconnect();
     };
-  }, [user, setOnlineUsers]);
+  }, [user, setOnlineUsers, fingerprint, setVisitors]);
 
-  // user?.profile?.role === "admin" && console.log(onlineUsers);
-
-  return { socket, onlineUsers };
+  return { socket };
 };
 
 export default useSocket;
