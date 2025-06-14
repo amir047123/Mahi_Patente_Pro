@@ -31,8 +31,6 @@ const CustomVideoUploader = ({
     formState: { errors },
   } = useFormContext();
 
-  const [uploadedVideoId, setUploadedVideoId] = useState(null);
-
   const fileInputRef = useRef(null);
 
   let errorMessage;
@@ -79,7 +77,8 @@ const CustomVideoUploader = ({
 
   const handleFileChangeDirectly = async (file) => {
     try {
-      await uploadVideo(file, title, description, setUploadedVideoId);
+      const uploadedVideoId = await uploadVideo(file, title, description);
+
       if (uploadedVideoId) {
         setValue(name, uploadedVideoId, { shouldValidate: true });
         setSelectedFile(uploadedVideoId);
@@ -87,12 +86,12 @@ const CustomVideoUploader = ({
           fileInputRef.current.value = "";
         }
       } else {
-        console.error("Failed to upload file. Please try again.");
+        throw new Error("Failed to upload file. Please try again.");
       }
     } catch (error) {
       console.error(
         "An error occurred while uploading:",
-        error instanceof Error ? error.message : error
+        error instanceof Error ? error.message : error,
       );
     }
   };

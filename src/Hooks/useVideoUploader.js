@@ -15,7 +15,6 @@ const useVideoUploader = () => {
     file,
     title = `video-${Date.now()}`,
     description,
-    setUploadedVideoId
   ) => {
     if (!file || !youtubeToken) {
       setStatusMessage("Please select a file and login first.");
@@ -42,14 +41,15 @@ const useVideoUploader = () => {
             "X-Upload-Content-Length": file.size,
             "X-Upload-Content-Type": file.type,
           },
-        }
+        },
       );
 
       const uploadUrl = res.headers.location;
 
       if (uploadUrl) {
         setStatusMessage("Uploading...");
-        await uploadChunks(uploadUrl, file, setUploadedVideoId);
+        const uploadVideoId = await uploadChunks(uploadUrl, file);
+        return uploadVideoId;
       } else {
         toast.error("Failed to get upload URL");
         setStatusMessage("Failed to get upload URL");
@@ -63,7 +63,7 @@ const useVideoUploader = () => {
     }
   };
 
-  const uploadChunks = async (uploadUrl, file, setUploadedVideoId) => {
+  const uploadChunks = async (uploadUrl, file) => {
     let offset = 0;
 
     while (offset < file.size) {
@@ -78,7 +78,7 @@ const useVideoUploader = () => {
           onUploadProgress: (event) => {
             if (event.loaded) {
               const percent = Math.round(
-                ((offset + event.loaded) / file.size) * 100
+                ((offset + event.loaded) / file.size) * 100,
               );
               setUploadProgress(percent);
               setStatusMessage(`${percent}% uploaded`);
@@ -91,8 +91,7 @@ const useVideoUploader = () => {
         if (res?.status === 200 || res?.status === 201) {
           setStatusMessage(`Upload successful : ${file?.name}`);
           setUploadProgress(100);
-          setUploadedVideoId && setUploadedVideoId(res?.data?.id);
-          return;
+          return res.data.id;
         }
 
         if (res?.status === 308) {

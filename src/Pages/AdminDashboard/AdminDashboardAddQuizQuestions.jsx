@@ -192,7 +192,7 @@ const AdminDashboardAddQuizQuestions = () => {
       const selectedSubjectOption = subjectsResponse?.data?.subjects?.find(
         (item) => item?._id === subject,
       );
-      const selectedChapterOption = chaptersResponse?.data?.find(
+      const selectedChapterOption = chaptersResponse?.data?.chapters?.find(
         (item) => item?._id === chapter,
       );
 
