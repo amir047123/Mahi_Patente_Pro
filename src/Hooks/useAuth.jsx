@@ -251,7 +251,7 @@ export const useAuth = () => {
         code,
         client_id: import.meta.env.VITE_YOUTUBE_CLIENT_ID,
         client_secret: import.meta.env.VITE_YOUTUBE_CLIENT_SECRET,
-        redirect_uri: "http://localhost:5173",
+        redirect_uri: "https://www.mahipatentepro.com",
         grant_type: "authorization_code",
       });
 
