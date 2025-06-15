@@ -1,7 +1,6 @@
 import UserListTab from "./UserListTab";
 import ChatUserOverview from "./ChatUserOverview";
 import Typography from "@/Components/Typography";
-import { Button } from "@nextui-org/button";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../../Context/AuthContext";
@@ -81,18 +80,18 @@ const ChatManageUserList = ({ getAllChats, isLoading }) => {
           </div>
         ) : adminChats && adminChats?.length > 0 ? (
           adminChats?.map((chat, index) => (
-            <Button
-              fullWidth
+            <div
+              tabIndex={0}
               className={`bg-transparent h-fit block px-0 my-2 ${
                 activeChat?._id === chat?._id
                   ? "bg-gray-200"
                   : "hover:bg-gray-200"
               }`}
               key={index}
-              onPress={() => setActiveChat(chat)}
+              onClick={() => setActiveChat(chat)}
             >
               <ChatUserOverview chat={chat} getAllChats={getAllChats} />
-            </Button>
+            </div>
           ))
         ) : (
           <Typography.Base className="text-center mt-5">

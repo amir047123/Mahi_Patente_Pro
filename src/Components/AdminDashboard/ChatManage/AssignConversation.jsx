@@ -1,9 +1,9 @@
-import { Button, PopoverContent, Select, SelectItem } from "@nextui-org/react";
 import logo from "@/assets/Navbar/logo.svg";
 import { useEffect, useState } from "react";
 import { baseURL } from "@/Config/config";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
+import { PopoverContent } from "@/Components/ui/popover";
 
 const AssignConversation = ({
   isOpen,
@@ -56,29 +56,31 @@ const AssignConversation = ({
         Assign to
       </label>
 
-      <Select
+      <select
         className="w-[300px]"
         placeholder="Select someone from your business"
-        size="md"
-        selectedKeys={[assignedAdmin]}
       >
         {allAdmins.map((admin) => (
-          <SelectItem
+          <option
             key={admin._id}
             value={admin._id}
-            onPress={() => setAssignedAdmin(admin._id)}
-            startContent={
-              <img
-                src={admin?.profilePicture || logo}
-                alt="img"
-                className="w-10 rounded-full"
-              />
-            }
+            onClick={() => setAssignedAdmin(admin._id)}
+            className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer"
+            selected={admin._id === assignedAdmin}
+            style={{
+              backgroundColor:
+                admin._id === assignedAdmin ? "#f0f0f0" : "transparent",
+            }}
           >
+            <img
+              src={admin?.profile?.profilePicture || logo}
+              alt="img"
+              className="w-10 rounded-full"
+            />{" "}
             {admin?.profile?.username}
-          </SelectItem>
+          </option>
         ))}
-      </Select>
+      </select>
 
       <div className="mt-5 flex items-center w-full gap-5">
         <button
@@ -87,14 +89,13 @@ const AssignConversation = ({
         >
           Cancel
         </button>
-        <Button
-          color="primary"
-          onPress={handleAssign}
-          className="w-full"
-          isDisabled={loading}
+        <button
+          onClick={handleAssign}
+          className="w-full bg-primary text-white px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors duration-300 flex items-center justify-center gap-2"
+          disabled={loading}
         >
           {loading ? <Spinner size={24} /> : "Assign"}
-        </Button>
+        </button>
       </div>
     </PopoverContent>
   );

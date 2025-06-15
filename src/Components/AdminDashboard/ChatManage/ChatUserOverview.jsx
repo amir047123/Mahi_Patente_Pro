@@ -1,21 +1,22 @@
 import { RiMore2Fill } from "react-icons/ri";
 import demoImg from "@/assets/Navbar/logo.svg";
 import Typography from "@/Components/Typography";
-import {
-  Dropdown,
-  DropdownTrigger,
-  Popover,
-  PopoverTrigger,
-} from "@nextui-org/react";
+import { Popover, PopoverTrigger } from "@/Components/ui/popover";
 import ChatAction from "./ChatAction";
 import ProfileCard from "./ProfileCard";
 import { useEffect, useState } from "react";
 import { useNotificationsContext } from "../../../Context/NotificationsContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
 
 const ChatUserOverview = ({ chat, active, getAllChats }) => {
   const { visitors, onlineUsers } = useNotificationsContext();
   const [isActive, setIsActive] = useState(false);
   const [isOld, setIsOld] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const isUserActive =
@@ -41,8 +42,8 @@ const ChatUserOverview = ({ chat, active, getAllChats }) => {
       }`}
     >
       <div className="pr-4 pt-4 pb-4 hover:pl-4 duration-300 flex items-center gap-3 w-full">
-        <Popover backdrop="opaque" showArrow offset={10} placement="bottom">
-          <PopoverTrigger>
+        <Popover>
+          <PopoverTrigger asChild>
             <span className="relative" tabIndex={0}>
               <img
                 src={chat?.user?.profilePicture || demoImg}
@@ -139,14 +140,16 @@ const ChatUserOverview = ({ chat, active, getAllChats }) => {
               )}
             </Typography.Base>
 
-            <Dropdown>
-              <DropdownTrigger>
-                <span tabIndex={0}>
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+              <DropdownMenuTrigger asChild>
+                <button>
                   <RiMore2Fill className="text-xl cursor-pointer group-hover:text-gray-200" />
-                </span>
-              </DropdownTrigger>
-              <ChatAction id={chat?._id} getAllChats={getAllChats} />
-            </Dropdown>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-w-56 text-secondaryText">
+                <ChatAction id={chat?._id} getAllChats={getAllChats} />
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { IoNotificationsOutline } from "react-icons/io5";
 import { SidebarTrigger } from "../ui/sidebar";
 import languageIcon from "@/assets/UserDashboard/language.svg";
-import demoUser from "@/assets/UserDashboard/demoUser.svg";
+import demoUser from "@/assets/UserDashboard/demoUser.png";
 import { ChevronDown } from "lucide-react";
 import socket from "@/socket";
 import { useEffect, useRef, useState } from "react";
@@ -46,10 +46,10 @@ const AdminDashboardHeader = () => {
     };
 
     socket.on("newNotification", (notification) =>
-      handleNotifications(notification)
+      handleNotifications(notification),
     );
     socket.on("adminNotification", (notification) =>
-      handleNotifications(notification)
+      handleNotifications(notification),
     );
 
     return () => {
@@ -78,7 +78,7 @@ const AdminDashboardHeader = () => {
 
   const { uploadImage } = useImageUploader();
   const [profilePic, setProfilePic] = useState(
-    backupUser?.profile?.profilePicture || demoUser
+    backupUser?.profile?.profilePicture || demoUser,
   );
   const [isHovered, setIsHovered] = useState(false);
   const handleFileChangeDirectly = async (file) => {
@@ -126,7 +126,7 @@ const AdminDashboardHeader = () => {
       toast.error(
         `An error occurred while uploading: ${
           error instanceof Error ? error.message : error
-        }`
+        }`,
       );
     } finally {
       toast.dismiss(toastId);

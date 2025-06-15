@@ -3,7 +3,7 @@ import { UserRoundPen } from "lucide-react";
 import { useEffect, useState } from "react";
 import PaginationCompo from "@/Shared/PaginationCompo";
 import ItemPerPage from "@/Shared/ItemPerPage";
-import demoUser from "@/assets/AdminDashboard/demo-user.svg";
+import demoUser from "@/assets/AdminDashboard/demoUser.png";
 import { Link } from "react-router-dom";
 import { useCrudOperations } from "@/Hooks/useCRUDOperation";
 import toast from "react-hot-toast";
@@ -153,7 +153,7 @@ const AdminDashboardUsersManage = () => {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
-                        }
+                        },
                       )}
                     </span>
                     <span>
@@ -163,7 +163,7 @@ const AdminDashboardUsersManage = () => {
                           hour: "numeric",
                           minute: "numeric",
                           second: "numeric",
-                        }
+                        },
                       )}
                     </span>
                   </td>

@@ -1,5 +1,5 @@
 import bg from "../../assets/Home/Hero/hero_bg.svg";
-import img from "../../assets/Home/Hero/hero-img.svg";
+import img from "../../assets/Home/Hero/hero-img.png";
 import Typography from "@/Components/Typography";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "@/Context/AuthContext";

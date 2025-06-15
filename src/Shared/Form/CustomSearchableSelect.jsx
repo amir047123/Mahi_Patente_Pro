@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import Select from "react-select";
 import { useFormContext, Controller } from "react-hook-form";
-import placeholderImage from "@/assets/UserDashboard/demo-user.svg";
+import placeholderImage from "@/assets/UserDashboard/demoUser.png";
 
 export default function CustomSearchableSelect({
   options = [{ value: "test", label: "Test" }],
