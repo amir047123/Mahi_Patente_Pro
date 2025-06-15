@@ -2,11 +2,11 @@ import UserListTab from "./UserListTab";
 import ChatUserOverview from "./ChatUserOverview";
 import Typography from "@/Components/Typography";
 import { Button } from "@nextui-org/button";
-import { CircularProgress } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../../Context/AuthContext";
 import useChatStore from "../../../Store/useChatStore";
+import Spinner from "@/Components/ui/Spinner";
 
 const ChatManageUserList = ({ getAllChats, isLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -76,8 +76,8 @@ const ChatManageUserList = ({ getAllChats, isLoading }) => {
 
       <div className="max-h-[64vh] overflow-y-scroll scrollbar-hide scroll-smooth">
         {isLoading ? (
-          <div className="mt-20 text-center">
-            <CircularProgress size={50} />
+          <div className="mt-20 text-center flex justify-center items-center">
+            <Spinner size={50} />
           </div>
         ) : adminChats && adminChats?.length > 0 ? (
           adminChats?.map((chat, index) => (

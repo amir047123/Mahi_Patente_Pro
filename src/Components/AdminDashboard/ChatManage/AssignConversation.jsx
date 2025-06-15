@@ -3,7 +3,7 @@ import logo from "@/assets/Navbar/logo.svg";
 import { useEffect, useState } from "react";
 import { baseURL } from "@/Config/config";
 import toast from "react-hot-toast";
-import { CircularProgress } from "@mui/material";
+import Spinner from "@/Components/ui/Spinner";
 
 const AssignConversation = ({
   isOpen,
@@ -93,11 +93,7 @@ const AssignConversation = ({
           className="w-full"
           isDisabled={loading}
         >
-          {loading ? (
-            <CircularProgress style={{ color: "white" }} size={20} />
-          ) : (
-            "Assign"
-          )}
+          {loading ? <Spinner size={24} /> : "Assign"}
         </Button>
       </div>
     </PopoverContent>

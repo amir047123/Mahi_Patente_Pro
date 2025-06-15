@@ -7,19 +7,15 @@ import {
 } from "react-icons/io5";
 import { baseURL } from "@/Config/config";
 import toast from "react-hot-toast";
-import { useState } from "react";
 import useChatStore from "../../../Store/useChatStore";
-import LinearLoader from "@/Shared/Loading/LinearLoader";
 
 const ChatAction = ({ id, getAllChats }) => {
   const token = localStorage.getItem("token");
-  const [isLoading, setIsLoading] = useState(false);
   const { userListTab, activeChat, setActiveChat } = useChatStore();
 
   const updateCategory = async (category) => {
     const toastId = toast.loading("Updating category...");
     try {
-      setIsLoading(true);
       const response = await fetch(`${baseURL}/chat/change-category/${id}`, {
         method: "PATCH",
         headers: {
@@ -39,14 +35,12 @@ const ChatAction = ({ id, getAllChats }) => {
       toast.error(error.message || "Error updating category.");
     } finally {
       toast.dismiss(toastId);
-      setIsLoading(false);
     }
   };
 
   const deleteChat = async () => {
     const toastId = toast.loading("Deleting chat...");
     try {
-      setIsLoading(true);
       const response = await fetch(`${baseURL}/chat/delete/${id}`, {
         method: "DELETE",
         headers: {
@@ -68,13 +62,11 @@ const ChatAction = ({ id, getAllChats }) => {
       toast.error(error.message || "Error deleting chat.");
     } finally {
       toast.dismiss(toastId);
-      setIsLoading(false);
     }
   };
 
   return (
     <>
-      {isLoading && <LinearLoader />}
       <DropdownMenu
         className="bg-white p-2 shadow rounded-md"
         aria-label="Dropdown menu with icons"

@@ -23,10 +23,10 @@ import { FaPaperclip } from "react-icons/fa";
 import useImageUploader from "../../../Hooks/useImageUploader";
 import toast from "react-hot-toast";
 import { useNotificationsContext } from "../../../Context/NotificationsContext";
-import { CircularProgress } from "@mui/material";
 import CustomIcon from "@/Ui/CustomIcon";
 import useChatStore from "../../../Store/useChatStore";
 import Typography from "@/Components/Typography";
+import Spinner from "@/Components/ui/Spinner";
 
 const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
   const {
@@ -496,8 +496,8 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
             Select a chat to start messaging
           </Typography.Base>
         ) : isLoading ? (
-          <div className="my-20 text-center">
-            <CircularProgress size={50} />
+          <div className="my-20 text-center flex justify-center items-center">
+            <Spinner size={50} />
           </div>
         ) : fullActiveChat && messages?.length > 0 ? (
           <>
@@ -577,7 +577,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                 color="success"
               >
                 {disableJoin ? (
-                  <CircularProgress size={20} style={{ color: "white" }} />
+                  <Spinner size={20} className="text-white" />
                 ) : (
                   "Start Converstaion"
                 )}
@@ -624,7 +624,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                 />
                 {uploading ? (
                   <div className="size-6 flex items-center justify-center">
-                    <CircularProgress size={24} />
+                    <Spinner size={24} />
                   </div>
                 ) : (
                   <FaPaperclip size={20} />
