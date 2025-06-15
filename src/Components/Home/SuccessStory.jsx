@@ -1,6 +1,6 @@
 import Typography from "@/Components/Typography";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import demoImg from "@/assets/Home/SuccessStudents/demo-user.svg";
+import demoImg from "@/assets/UserDashboard/demoUser.png";
 
 const SuccessStory = () => {
   return (

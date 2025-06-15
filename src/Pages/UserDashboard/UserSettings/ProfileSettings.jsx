@@ -4,7 +4,7 @@ import CustomInput from "@/Shared/Form/CustomInput";
 import CustomSelect from "@/Shared/Form/CustomSelect";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import demoUser from "@/assets/UserDashboard/demoUser.svg";
+import demoUser from "@/assets/UserDashboard/demoUser.png";
 import Spinner from "@/Components/ui/Spinner";
 import toast from "react-hot-toast";
 import useImageUploader from "@/Hooks/useImageUploader";
@@ -15,7 +15,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
   const methods = useForm();
   const { handleSubmit, register, setValue } = methods;
   const [profilePic, setProfilePic] = useState(
-    user?.profile?.profilePicture || demoUser
+    user?.profile?.profilePicture || demoUser,
   );
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
       "profile.dateOfBirth",
       user?.profile?.dateOfBirth
         ? new Date(user?.profile?.dateOfBirth).toISOString().split("T")[0]
-        : ""
+        : "",
     );
     setProfilePic(user?.profile?.profilePicture || demoUser);
   }, [user, setValue]);
@@ -51,7 +51,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
       toast.error(
         `An error occurred while uploading: ${
           error instanceof Error ? error.message : error
-        }`
+        }`,
       );
     } finally {
       toast.dismiss(toastId);
@@ -77,7 +77,7 @@ const ProfileSettings = ({ user, onSubmit, isLoading }) => {
       toast.error(
         `An error occurred while removing profile picture: ${
           error instanceof Error ? error.message : error
-        }`
+        }`,
       );
     } finally {
       toast.dismiss(toastId);

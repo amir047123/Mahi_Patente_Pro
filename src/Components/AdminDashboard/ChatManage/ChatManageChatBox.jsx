@@ -6,13 +6,7 @@ import { Send } from "lucide-react";
 import ReceiverChat from "./ReceiverChat";
 import SenderChat from "./SenderChat";
 import AssignConversation from "./AssignConversation";
-import {
-  Button,
-  Dropdown,
-  DropdownTrigger,
-  Popover,
-  PopoverTrigger,
-} from "@nextui-org/react";
+import { Popover, PopoverTrigger } from "@/Components/ui/popover";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ProfileCard from "./ProfileCard";
 import ChatAction from "./ChatAction";
@@ -23,10 +17,15 @@ import { FaPaperclip } from "react-icons/fa";
 import useImageUploader from "../../../Hooks/useImageUploader";
 import toast from "react-hot-toast";
 import { useNotificationsContext } from "../../../Context/NotificationsContext";
-import { CircularProgress } from "@mui/material";
 import CustomIcon from "@/Ui/CustomIcon";
 import useChatStore from "../../../Store/useChatStore";
 import Typography from "@/Components/Typography";
+import Spinner from "@/Components/ui/Spinner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
 
 const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
   const {
@@ -58,6 +57,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
   const [disableJoin, setDisableJoin] = useState(false);
   const chatBoxRef = useRef(null);
   const setFullActiveChatRef = useRef(setFullActiveChat);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!activeChat) return;
@@ -370,11 +370,11 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
     >
       <div className="flex justify-between gap-5 items-center border-b pb-3 border-b-gray-200">
         <div className="flex items-center gap-[16px]">
-          <Popover backdrop="opaque" showArrow offset={10} placement="bottom">
-            <PopoverTrigger>
-              <Button
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
                 className="relative px-0 py-0 w-fit h-fit bg-transparent "
-                isDisabled={!activeChat}
+                disabled={!activeChat}
               >
                 <img
                   src={activeChat?.user?.profilePicture || demoImg}
@@ -384,7 +384,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                 {isActive && (
                   <div className="absolute bottom-0 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                 )}
-              </Button>
+              </button>
             </PopoverTrigger>
             <ProfileCard chat={activeChat} />
           </Popover>
@@ -451,27 +451,29 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Dropdown>
-            <DropdownTrigger>
-              <Button
-                className="relative px-0 py-0 w-fit h-fit bg-transparent bg-[#F2F2F2] p-2 rounded-lg min-w-0"
-                isDisabled={!activeChat}
+          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="relative w-fit h-fit bg-transparent p-2 rounded-lg min-w-0 cursor-pointer outline-none flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"
+                disabled={!activeChat}
               >
                 <RiMore2Fill className="text-xl text-gray-500" />
-              </Button>
-            </DropdownTrigger>
-            <ChatAction id={activeChat?._id} getAllChats={getAllChats} />
-          </Dropdown>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="max-w-56 text-secondaryText">
+              <ChatAction id={activeChat?._id} getAllChats={getAllChats} />
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <Popover backdrop="opaque" showArrow offset={10} placement="bottom">
-            <PopoverTrigger>
-              <Button
-                className="relative px-0 py-0 w-fit h-fit bg-transparent min-w-0 outline-none bg-[#F2F2F2] p-2 rounded-lg text-gray-500 flex gap-2 items-center text-sm"
-                isDisabled={!activeChat}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="relative w-fit h-fit bg-transparent min-w-0 outline-none bg-[#F2F2F2] rounded-lg text-gray-500 flex gap-2 items-center text-sm border p-2"
+                disabled={!activeChat}
               >
                 <CgProfile className="text-lg text-gray-500" />{" "}
                 <span className="hidden 2xl:block">See Profile</span>
-              </Button>
+              </button>
             </PopoverTrigger>
             <ProfileCard chat={activeChat} />
           </Popover>
@@ -496,8 +498,8 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
             Select a chat to start messaging
           </Typography.Base>
         ) : isLoading ? (
-          <div className="my-20 text-center">
-            <CircularProgress size={50} />
+          <div className="my-20 text-center flex justify-center items-center">
+            <Spinner size={50} />
           </div>
         ) : fullActiveChat && messages?.length > 0 ? (
           <>
@@ -570,18 +572,18 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
         <div className="flex gap-2 items-center absolute bottom-5 left-5 right-5">
           <div className="relative flex items-center justify-center rounded-lg bg-secondary w-full">
             {activeChat && (
-              <Button
-                isDisabled={!activeChat || disableJoin || isLoading}
+              <button
+                disabled={!activeChat || disableJoin || isLoading}
                 className="py-2 text-white"
-                onPress={adminJoin}
+                onClick={adminJoin}
                 color="success"
               >
                 {disableJoin ? (
-                  <CircularProgress size={20} style={{ color: "white" }} />
+                  <Spinner size={20} className="text-white" />
                 ) : (
                   "Start Converstaion"
                 )}
-              </Button>
+              </button>
             )}
           </div>
         </div>
@@ -624,7 +626,7 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
                 />
                 {uploading ? (
                   <div className="size-6 flex items-center justify-center">
-                    <CircularProgress size={24} />
+                    <Spinner size={24} />
                   </div>
                 ) : (
                   <FaPaperclip size={20} />
@@ -642,15 +644,15 @@ const ChatManageChatBox = ({ allAdmins, getAllChats }) => {
               ></textarea>
             </div>
 
-            <Button
-              isDisabled={!activeChat || isLoading}
-              className="px-5 rounded-lg bg-violet-500 hover:bg-violet-600 transition-colors w-fit min-w-0"
+            <button
+              disabled={!activeChat || isLoading}
+              className="px-5 rounded-lg bg-violet-500 hover:bg-violet-600 transition-colors w-fit min-w-0 min-h-10"
               aria-label="Send message"
-              onPress={handleSendMessage}
+              onClick={handleSendMessage}
               size="lg"
             >
               <Send className="w-5 h-5 text-white" />
-            </Button>
+            </button>
           </div>
         </div>
       ) : (

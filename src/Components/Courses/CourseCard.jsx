@@ -1,7 +1,7 @@
 import Typography from "@/Components/Typography";
 import { GoPlay } from "react-icons/go";
 import { HiOutlineUserCircle } from "react-icons/hi2";
-import demo from "@/assets/Courses/demo_img.svg";
+import demo from "@/assets/Home/Hero/hero-img.png";
 
 const CourseCard = () => {
   return (

@@ -1,10 +1,10 @@
-import { Button, PopoverContent } from "@nextui-org/react";
 import demoImg from "@/assets/Navbar/logo.svg";
 import Typography from "@/Components/Typography";
 import { BiLinkExternal } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useNotificationsContext } from "../../../Context/NotificationsContext";
 import { useEffect, useState } from "react";
+import { PopoverContent } from "@/Components/ui/popover";
 
 const ProfileCard = ({ chat }) => {
   const { visitors, onlineUsers } = useNotificationsContext();
@@ -21,7 +21,7 @@ const ProfileCard = ({ chat }) => {
   }, [visitors, onlineUsers, chat]);
 
   return (
-    <PopoverContent className="max-w-sm p-7 bg-white shadow">
+    <PopoverContent className="w-auto p-6" align="start">
       <div className="flex items-center gap-5">
         <div className="relative">
           <img
@@ -92,12 +92,8 @@ const ProfileCard = ({ chat }) => {
         </div>
       )}
 
-      <Button
-        as={Link}
-        isDisabled={!chat?.user}
-        variant="bordered"
-        color="primary"
-        className="border-1 border-slate-300 flex gap-2 items-center mt-10"
+      <Link
+        className="border-1 border-slate-300 flex gap-2 items-center mt-10 text-primary"
         to={
           chat?.user
             ? `/admin-dashboard/management/users/settings/${chat?.user?._id}`
@@ -106,7 +102,7 @@ const ProfileCard = ({ chat }) => {
       >
         <BiLinkExternal className="text-lg" />
         Go to Main Profile
-      </Button>
+      </Link>
     </PopoverContent>
   );
 };

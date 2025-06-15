@@ -1,6 +1,6 @@
 import { IoNotificationsOutline } from "react-icons/io5";
 import { SidebarTrigger } from "../ui/sidebar";
-import demoUser from "@/assets/UserDashboard/demoUser.svg";
+import demoUser from "@/assets/UserDashboard/demoUser.png";
 import { ChevronDown } from "lucide-react";
 import socket from "@/socket";
 import { useEffect, useRef, useState } from "react";

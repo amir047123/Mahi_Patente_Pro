@@ -1,4 +1,3 @@
-import { DropdownItem, DropdownMenu } from "@nextui-org/react";
 import { RiDeleteBin6Line, RiSpam3Fill } from "react-icons/ri";
 import { CiStar } from "react-icons/ci";
 import {
@@ -7,19 +6,16 @@ import {
 } from "react-icons/io5";
 import { baseURL } from "@/Config/config";
 import toast from "react-hot-toast";
-import { useState } from "react";
 import useChatStore from "../../../Store/useChatStore";
-import LinearLoader from "@/Shared/Loading/LinearLoader";
+import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
 
 const ChatAction = ({ id, getAllChats }) => {
   const token = localStorage.getItem("token");
-  const [isLoading, setIsLoading] = useState(false);
   const { userListTab, activeChat, setActiveChat } = useChatStore();
 
   const updateCategory = async (category) => {
     const toastId = toast.loading("Updating category...");
     try {
-      setIsLoading(true);
       const response = await fetch(`${baseURL}/chat/change-category/${id}`, {
         method: "PATCH",
         headers: {
@@ -39,14 +35,12 @@ const ChatAction = ({ id, getAllChats }) => {
       toast.error(error.message || "Error updating category.");
     } finally {
       toast.dismiss(toastId);
-      setIsLoading(false);
     }
   };
 
   const deleteChat = async () => {
     const toastId = toast.loading("Deleting chat...");
     try {
-      setIsLoading(true);
       const response = await fetch(`${baseURL}/chat/delete/${id}`, {
         method: "DELETE",
         headers: {
@@ -68,62 +62,51 @@ const ChatAction = ({ id, getAllChats }) => {
       toast.error(error.message || "Error deleting chat.");
     } finally {
       toast.dismiss(toastId);
-      setIsLoading(false);
     }
   };
 
   return (
     <>
-      {isLoading && <LinearLoader />}
-      <DropdownMenu
-        className="bg-white p-2 shadow rounded-md"
-        aria-label="Dropdown menu with icons"
-        variant="flat"
-        disabledKeys={[userListTab]}
+      <DropdownMenuItem
+        className="border mb-1 hover:!text-primary text-[#64748B] flex items-center gap-2"
+        key="Spam"
+        onClick={() => updateCategory("Spam")}
+        disabled={userListTab === "Spam"}
       >
-        <DropdownItem
-          className="border mb-1 hover:!text-primary text-[#64748B]"
-          key="Spam"
-          startContent={<RiSpam3Fill className="text-[16px]" />}
-          onPress={() => updateCategory("Spam")}
-        >
-          Move to Spam
-        </DropdownItem>
-        <DropdownItem
-          className="border mb-1 hover:!text-primary text-red-600"
-          key="Delete Chat"
-          startContent={<RiDeleteBin6Line className="text-[16px]" />}
-          onPress={() => deleteChat()}
-        >
-          Delete Chat
-        </DropdownItem>
-        <DropdownItem
-          className="border mb-1 hover:!text-primary text-[#64748B]"
-          key="Follow Up"
-          startContent={<CiStar className="text-[18px]" />}
-          onPress={() => updateCategory("Follow Up")}
-        >
-          Mark as follow up
-        </DropdownItem>
-        <DropdownItem
-          className="border mb-1 hover:!text-primary text-[#64748B]"
-          key="Unread"
-          startContent={<IoMailUnreadOutline className="text-[16px]" />}
-          onPress={() => updateCategory("Unread")}
-        >
-          Mark as unread
-        </DropdownItem>
-        <DropdownItem
-          className="border mb-1 hover:!text-primary text-[#64748B]"
-          key="Done"
-          startContent={
-            <IoCheckmarkDoneCircleOutline className="text-[18px]" />
-          }
-          onPress={() => updateCategory("Done")}
-        >
-          Move to done
-        </DropdownItem>
-      </DropdownMenu>
+        <RiSpam3Fill className="text-[16px]" />
+        Move to Spam
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="border mb-1 hover:!text-primary text-red-600 flex items-center gap-2"
+        key="Delete Chat"
+        onClick={() => deleteChat()}
+      >
+        <RiDeleteBin6Line className="text-[16px]" /> Delete Chat
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="border mb-1 hover:!text-primary text-[#64748B] flex items-center gap-2"
+        key="Follow Up"
+        onClick={() => updateCategory("Follow Up")}
+        disabled={userListTab === "Follow Up"}
+      >
+        <CiStar className="text-[18px]" /> Mark as follow up
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="border mb-1 hover:!text-primary text-[#64748B] flex items-center gap-2"
+        key="Unread"
+        onClick={() => updateCategory("Unread")}
+        disabled={userListTab === "Unread"}
+      >
+        <IoMailUnreadOutline className="text-[16px]" /> Mark as unread
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="border mb-1 hover:!text-primary text-[#64748B] flex items-center gap-2"
+        key="Done"
+        onClick={() => updateCategory("Done")}
+        disabled={userListTab === "Done"}
+      >
+        <IoCheckmarkDoneCircleOutline className="text-[18px]" /> Move to done
+      </DropdownMenuItem>
     </>
   );
 };

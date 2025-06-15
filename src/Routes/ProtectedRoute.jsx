@@ -31,7 +31,6 @@ const ProtectedRoute = ({ roles }) => {
         <Spinner size={60} />
       </div>
     );
-    // return <LinearLoader />;
   }
 
   if (!user || (roles && !roles.includes(user?.profile?.role))) {

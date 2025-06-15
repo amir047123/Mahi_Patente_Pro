@@ -15,11 +15,11 @@ import toast from "react-hot-toast";
 import { useAuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 import { useNotificationsContext } from "../../Context/NotificationsContext";
-import { CircularProgress } from "@mui/material";
 import useChatStore from "@/Store/useChatStore";
 import { baseURL } from "@/Config/config";
 import socket from "@/socket";
 import CustomIcon from "@/Ui/CustomIcon";
+import Spinner from "../ui/Spinner";
 
 const ChatBot = () => {
   const {
@@ -89,7 +89,7 @@ const ChatBot = () => {
   });
 
   const fetchMessages = async (page) => {
-    if (!fingerprint || !user) return;
+    if (!fingerprint || user) return;
     try {
       page === 1 && setIsLoading(true);
       const response = await axios.post(
@@ -160,7 +160,7 @@ const ChatBot = () => {
         ...(!fullChatRef.current?._id ? chatMessage : {}),
         ...(chatMessage?.type === "admin_join"
           ? {
-              admin: chatMessage?.message?.sender?.profile,
+              admin: chatMessage?.message?.sender,
             }
           : {}),
         ...(chatMessage?.type === "read_message" ||
@@ -304,7 +304,7 @@ const ChatBot = () => {
       if (fullChat && fullChat?.unreadCount > 0) {
         socket.emit("read_message", {
           chatroomId: fullChat?._id,
-          role: user?.role || "visitor",
+          role: user?.profile?.role || "visitor",
         });
       }
     };
@@ -394,7 +394,7 @@ const ChatBot = () => {
             >
               {isLoading ? (
                 <div className="my-20 text-center">
-                  <CircularProgress size={50} />
+                  <Spinner size={50} />
                 </div>
               ) : (
                 <>
@@ -480,9 +480,9 @@ const ChatBot = () => {
                                       alt="Mahi Patente Pro Logo"
                                       className="min-w-6 min-h-6 p-1"
                                     />
-                                  ) : user?.profilePicture ? (
+                                  ) : user?.profile?.profilePicture ? (
                                     <img
-                                      src={user?.profilePicture}
+                                      src={user?.profile?.profilePicture}
                                       alt="user"
                                       className="size-8 rounded-full"
                                     />
@@ -643,7 +643,7 @@ const ChatBot = () => {
                       />
                       {uploading ? (
                         <div className="size-6 flex items-center justify-center">
-                          <CircularProgress size={24} />
+                          <Spinner size={24} />
                         </div>
                       ) : (
                         <FaPaperclip size={20} />
