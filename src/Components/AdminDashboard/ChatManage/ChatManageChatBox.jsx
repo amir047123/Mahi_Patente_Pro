@@ -10,7 +10,7 @@ import { Popover, PopoverTrigger } from "@/Components/ui/popover";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ProfileCard from "./ProfileCard";
 import ChatAction from "./ChatAction";
-import { baseURL } from "@/Config/config";
+import { baseURL } from "@/Config";
 import socket from "@/socket";
 import { useAuthContext } from "../../../Context/AuthContext";
 import { FaPaperclip } from "react-icons/fa";
