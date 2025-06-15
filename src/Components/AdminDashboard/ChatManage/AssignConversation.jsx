@@ -1,6 +1,6 @@
 import logo from "@/assets/Navbar/logo.svg";
 import { useEffect, useState } from "react";
-import { baseURL } from "@/Config/config";
+import { baseURL } from "@/Config";
 import toast from "react-hot-toast";
 import Spinner from "@/Components/ui/Spinner";
 import { PopoverContent } from "@/Components/ui/popover";
