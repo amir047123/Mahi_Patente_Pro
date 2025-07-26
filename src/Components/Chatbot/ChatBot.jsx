@@ -16,7 +16,7 @@ import { useAuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 import { useNotificationsContext } from "../../Context/NotificationsContext";
 import useChatStore from "@/Store/useChatStore";
-import { baseURL } from "@/Config/config";
+import { baseURL } from "@/Config";
 import socket from "@/socket";
 import CustomIcon from "@/Ui/CustomIcon";
 import Spinner from "../ui/Spinner";

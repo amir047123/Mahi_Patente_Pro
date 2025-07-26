@@ -5,7 +5,7 @@ import ChatManageChatBox from "./ChatManageChatBox";
 import axios from "axios";
 import useChatStore from "../../../Store/useChatStore";
 import socket from "@/socket";
-import { baseURL } from "@/Config/config";
+import { baseURL } from "@/Config";
 
 const ChatManage = () => {
   const [isLoading, setIsLoading] = useState(false);

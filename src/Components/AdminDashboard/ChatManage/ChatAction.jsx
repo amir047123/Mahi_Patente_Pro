@@ -4,7 +4,7 @@ import {
   IoCheckmarkDoneCircleOutline,
   IoMailUnreadOutline,
 } from "react-icons/io5";
-import { baseURL } from "@/Config/config";
+import { baseURL } from "@/Config";
 import toast from "react-hot-toast";
 import useChatStore from "../../../Store/useChatStore";
 import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
